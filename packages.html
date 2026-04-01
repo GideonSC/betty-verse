@@ -19,6 +19,48 @@
       <link rel="stylesheet" type="text/css" href="css/style.css">
       <!-- Responsive-->
       <link rel="stylesheet" href="css/responsive.css">
+      <style>
+         .dropdown-submenu {
+            position: relative;
+         }
+         .dropdown-submenu > .dropdown-menu {
+            top: 0;
+            left: 100%;
+            margin-top: -1px;
+            visibility: hidden;
+            display: block;
+            opacity: 0;
+            transition: opacity .2s ease;
+         }
+         .dropdown-submenu.show > .dropdown-menu,
+         .dropdown-submenu .dropdown-menu.show {
+            visibility: visible;
+            opacity: 1;
+         }
+         .dropdown-menu .dropdown-toggle::after {
+            display: inline-block;
+            margin-left: .255em;
+            vertical-align: .255em;
+            content: "";
+            border-top: .3em solid;
+            border-right: .3em solid transparent;
+            border-left: .3em solid transparent;
+         }
+         .dropdown-menu .dropdown-item.dropdown-toggle::after {
+            float: right;
+            margin-top: .3rem;
+         }
+         @media (max-width: 991px) {
+            .dropdown-submenu > .dropdown-menu {
+               position: static;
+               top: auto;
+               left: auto;
+               margin: .25rem 0 0 1rem;
+               opacity: 1;
+               visibility: visible;
+            }
+         }
+      </style>
       <!-- fevicon -->
       <link rel="icon" href="images/logo.png" type="image/png" />
       <!-- font css -->
@@ -44,8 +86,61 @@
                      <li class="nav-item">
                         <a class="nav-link" href="about.html">About</a>
                      </li>
-                     <li class="nav-item active">
-                        <a class="nav-link" href="packages.html">Packages</a>
+                     <li class="nav-item dropdown active">
+                        <a class="nav-link dropdown-toggle" href="#" id="packagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Packages</a>
+                        <div class="dropdown-menu" aria-labelledby="packagesDropdown">
+                           <div class="dropdown-submenu">
+                              <a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">Birthday</a>
+                              <div class="dropdown-menu">
+                                 <a class="dropdown-item" href="#">Custom Request</a>
+                                 <a class="dropdown-item" href="#">Kids Birthday</a>
+                                 <a class="dropdown-item" href="#">Betty And Confetti</a>
+                                 <a class="dropdown-item" href="#">Car Boot</a>
+                                 <div class="dropdown-submenu">
+                                    <a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">Surprise By Betty At</a>
+                                    <div class="dropdown-menu">
+                                       <a class="dropdown-item" href="#">Home</a>
+                                       <a class="dropdown-item" href="#">Hotel</a>
+                                       <a class="dropdown-item" href="#">University</a>
+                                       <a class="dropdown-item" href="#">Workplace</a>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="dropdown-submenu">
+                              <a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">Anniversary</a>
+                              <div class="dropdown-menu">
+                                 <a class="dropdown-item" href="#">By Choice</a>
+                                 <div class="dropdown-submenu">
+                                    <a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">Anniversary Decorations</a>
+                                    <div class="dropdown-menu">
+                                       <a class="dropdown-item" href="#">Room Decoration</a>
+                                       <a class="dropdown-item" href="#">Decoration At Home</a>
+                                       <a class="dropdown-item" href="#">Decoration At Hotel</a>
+                                       <a class="dropdown-item" href="#">Car Boot Decoration</a>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="dropdown-submenu">
+                              <a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">Your Occasion</a>
+                              <div class="dropdown-menu">
+                                 <a class="dropdown-item" href="#">By Choice</a>
+                                 <a class="dropdown-item" href="#">Hall Occasion</a>
+                                 <a class="dropdown-item" href="#">Valentine’s Day</a>
+                                 <a class="dropdown-item" href="#">Baby Shower</a>
+                                 <a class="dropdown-item" href="#">Proposal</a>
+                              </div>
+                           </div>
+                           <div class="dropdown-submenu">
+                              <a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">Festival</a>
+                              <div class="dropdown-menu">
+                                 <a class="dropdown-item" href="#">Christmas Decorations</a>
+                                 <a class="dropdown-item" href="#">New Year</a>
+                                 <a class="dropdown-item" href="#">Easter</a>
+                              </div>
+                           </div>
+                        </div>
                      </li>
                      <li class="nav-item">
                         <a class="nav-link" href="services.html">Services</a>
@@ -148,6 +243,27 @@
       <script src="js/popper.min.js"></script>
       <script src="js/bootstrap.bundle.min.js"></script>
       <script src="js/jquery-3.0.0.min.js"></script>
+      <script>
+         document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.dropdown-submenu > .dropdown-toggle').forEach(function (toggle) {
+               toggle.addEventListener('click', function (event) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  var submenu = this.nextElementSibling;
+                  if (submenu) {
+                     submenu.classList.toggle('show');
+                  }
+               });
+            });
+            document.querySelectorAll('.dropdown').forEach(function (dropdown) {
+               dropdown.addEventListener('hidden.bs.dropdown', function () {
+                  this.querySelectorAll('.dropdown-menu.show').forEach(function (submenu) {
+                     submenu.classList.remove('show');
+                  });
+               });
+            });
+         });
+      </script>
       <script src="js/plugin.js"></script>
       <!-- sidebar -->
       <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
