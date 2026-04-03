@@ -17,7 +17,12 @@ $(function () {
 	-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */
 
 	$(document).ready(function () {
-		$('header nav').meanmenu();
+		$('header nav').meanmenu({
+			meanScreenWidth: 767,
+			meanExpand: '<span class="mean-expand-icon">+</span>',
+			meanContract: '<span class="mean-expand-icon">-</span>',
+			meanExpandClass: 'mean-expand'
+		});
 	});
 	
 	/* Tooltip

@@ -44,8 +44,17 @@
                      <li class="nav-item">
                         <a class="nav-link" href="about.html">About</a>
                      </li>
-                     <li class="nav-item">
-                        <a class="nav-link" href="packages.html">Packages</a>
+                     <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Packages
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                           <li><a class="dropdown-item" href="packages.html">All Packages</a></li>
+                           <li><a class="dropdown-item" href="packages.html?filter=birthday">Birthday</a></li>
+                           <li><a class="dropdown-item" href="packages.html?filter=anniversary">Anniversary</a></li>
+                           <li><a class="dropdown-item" href="packages.html?filter=festival">Festival</a></li>
+                           <li><a class="dropdown-item" href="packages.html?filter=surprise">Surprise</a></li>
+                        </ul>
                      </li>
                      <li class="nav-item">
                         <a class="nav-link" href="services.html">Services</a>
@@ -59,15 +68,25 @@
                   </ul>
                   <form class="form-inline my-2 my-lg-0">
                      <div class="login_bt"><a href="login/login_index.html">Login <span style="color: #222222;"><i class="fa fa-user" aria-hidden="true"></i></span></a></div>
-                     <input type="text" id="search-input" class="search-input" placeholder="Search...">
-                     <div class="fa fa-search form-control-feedback" onclick="toggleSearch()"></div>
                   </form>
                </div>
+               <input type="text" id="search-input" class="search-input" placeholder="Search...">
+               <div class="fa fa-search form-control-feedback" onclick="toggleSearch()"></div>
             </nav>
          </div>
          <!-- banner section start --> 
          <div class="banner_section layout_padding">
             <div class="container">
+               <div class="hero-objects">
+                  <div class="hero-object hero-object-1"></div>
+                  <div class="hero-object hero-object-2"></div>
+                  <div class="hero-object hero-object-3"></div>
+               </div>
+               <div class="hero-badges d-flex flex-wrap align-items-center gap-3 mb-4">
+                  <span class="hero-pill">Express surprise design</span>
+                  <span class="hero-pill">Curated premium packages</span>
+                  <span class="hero-pill">Fast gift delivery</span>
+               </div>
                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                   <ol class="carousel-indicators">
                      <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active">01</li>
@@ -79,9 +98,9 @@
                      <div class="carousel-item active">
                         <div class="row">
                            <div class="col-sm-6">
-                              <h1 class="banner_taital">Betty Verse</h1>
-                              <p class="banner_text">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem</p>
-                              <div class="started_text"><a href="#">more..</a></div>
+                              <h1 class="banner_taital">BettyVerse Surprise Gifts</h1>
+                              <p class="banner_text">Create unforgettable surprise moments with curated gift packages delivered to home, hotel, university, or workplace.</p>
+                              <div class="started_text"><a href="packages.html">Explore Packages</a></div>
                            </div>
                            <div class="col-sm-6">
                               <div class="banner_img"><img src="images/banner-img.png"></div>
@@ -91,9 +110,9 @@
                      <div class="carousel-item">
                         <div class="row">
                            <div class="col-sm-6">
-                              <h1 class="banner_taital">Ice Cream</h1>
-                              <p class="banner_text">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem</p>
-                              <div class="started_text"><a href="#">Order Now</a></div>
+                              <h1 class="banner_taital">Make Every Celebration Magical</h1>
+                              <p class="banner_text">From birthdays to anniversaries, Betty crafts surprise packages with premium decor, personalized notes, and joyful unboxing.</p>
+                              <div class="started_text"><a href="packages.html">Book A Surprise</a></div>
                            </div>
                            <div class="col-sm-6">
                               <div class="banner_img"><img src="images/banner-img.png"></div>
@@ -103,9 +122,9 @@
                      <div class="carousel-item">
                         <div class="row">
                            <div class="col-sm-6">
-                              <h1 class="banner_taital">Ice Cream</h1>
-                              <p class="banner_text">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem</p>
-                              <div class="started_text"><a href="#">Order Now</a></div>
+                              <h1 class="banner_taital">Personalized Surprise Delivery</h1>
+                              <p class="banner_text">Pick a surprise theme, select the location, and let Betty deliver delight with every package.</p>
+                              <div class="started_text"><a href="packages.html">Start Your Surprise</a></div>
                            </div>
                            <div class="col-sm-6">
                               <div class="banner_img"><img src="images/banner-img.png"></div>
@@ -115,9 +134,9 @@
                      <div class="carousel-item">
                         <div class="row">
                            <div class="col-sm-6">
-                              <h1 class="banner_taital">Ice Cream</h1>
-                              <p class="banner_text">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem</p>
-                              <div class="started_text"><a href="#">Order Now</a></div>
+                              <h1 class="banner_taital">Create Memories with Betty</h1>
+                              <p class="banner_text">Easy surprise ordering, premium packaging, and thoughtful gifts designed to make every celebration memorable.</p>
+                              <div class="started_text"><a href="packages.html">View Packages</a></div>
                            </div>
                            <div class="col-sm-6">
                               <div class="banner_img"><img src="images/banner-img.png"></div>
@@ -139,9 +158,9 @@
                   <div class="about_img"><img src="images/about-img.png"></div>
                </div>
                <div class="col-md-6">
-                  <h1 class="about_taital">About Packages</h1>
-                  <p class="about_text">Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore euconsectetur adipiscing esequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu</p>
-                  <div class="read_bt_1"><a href="#">Read More</a></div>
+                  <h1 class="about_taital">About BettyVerse Surprise Gifts</h1>
+                  <p class="about_text">We design surprise packages for every celebration: birthdays, anniversaries, proposals, and special moments. Our team handles the details so you can enjoy the joy of giving.</p>
+                  <div class="read_bt_1"><a href="packages.html">Browse All Packages</a></div>
                </div>
             </div>
          </div>
@@ -152,8 +171,8 @@
          <div class="container">
             <div class="row">
                <div class="col-md-12">
-                  <h1 class="cream_taital">Our Featured Ice Cream</h1>
-                  <p class="cream_text">tempor incididunt ut labore et dolore magna aliqua</p>
+                  <h1 class="cream_taital">Featured Surprise Packages</h1>
+                  <p class="cream_text">Handpicked packages for gifts, decor, and surprise reveals designed to delight.</p>
                </div>
             </div>
             <div class="cream_section_2">
@@ -161,25 +180,25 @@
                   <div class="col-md-4">
                      <div class="cream_box">
                         <div class="cream_img"><img src="images/img-1.png"></div>
-                        <div class="price_text">$10</div>
-                        <h6 class="strawberry_text">Strawberry Ice Cream</h6>
-                        <div class="cart_bt"><a href="#">Add To Cart</a></div>
+                        <div class="price_text">$99</div>
+                        <h6 class="strawberry_text">Surprise Box Deluxe</h6>
+                        <div class="cart_bt"><a href="#">View Package</a></div>
                      </div>
                   </div>
                   <div class="col-md-4">
                      <div class="cream_box">
                         <div class="cream_img"><img src="images/img-2.png"></div>
-                        <div class="price_text">$10</div>
-                        <h6 class="strawberry_text">Strawberry Ice Cream</h6>
-                        <div class="cart_bt"><a href="#">Add To Cart</a></div>
+                        <div class="price_text">$115</div>
+                        <h6 class="strawberry_text">Confetti Surprise Set</h6>
+                        <div class="cart_bt"><a href="#">View Package</a></div>
                      </div>
                   </div>
                   <div class="col-md-4">
                      <div class="cream_box">
                         <div class="cream_img"><img src="images/img-1.png"></div>
-                        <div class="price_text">$10</div>
-                        <h6 class="strawberry_text">Strawberry Ice Cream</h6>
-                        <div class="cart_bt"><a href="#">Add To Cart</a></div>
+                        <div class="price_text">$105</div>
+                        <h6 class="strawberry_text">Romantic Gift Reveal</h6>
+                        <div class="cart_bt"><a href="#">View Package</a></div>
                      </div>
                   </div>
                </div>
@@ -189,25 +208,25 @@
                   <div class="col-md-4">
                      <div class="cream_box">
                         <div class="cream_img"><img src="images/img-3.png"></div>
-                        <div class="price_text">$10</div>
-                        <h6 class="strawberry_text">Strawberry Ice Cream</h6>
-                        <div class="cart_bt"><a href="#">Add To Cart</a></div>
+                        <div class="price_text">$119</div>
+                        <h6 class="strawberry_text">Anniversary Glow</h6>
+                        <div class="cart_bt"><a href="#">View Package</a></div>
                      </div>
                   </div>
                   <div class="col-md-4">
                      <div class="cream_box">
                         <div class="cream_img"><img src="images/img-4.png"></div>
-                        <div class="price_text">$10</div>
-                        <h6 class="strawberry_text">Strawberry Ice Cream</h6>
-                        <div class="cart_bt"><a href="#">Add To Cart</a></div>
+                        <div class="price_text">$129</div>
+                        <h6 class="strawberry_text">Festival Surprise</h6>
+                        <div class="cart_bt"><a href="#">View Package</a></div>
                      </div>
                   </div>
                   <div class="col-md-4">
                      <div class="cream_box">
                         <div class="cream_img"><img src="images/img-5.png"></div>
-                        <div class="price_text">$10</div>
-                        <h6 class="strawberry_text">Strawberry Ice Cream</h6>
-                        <div class="cart_bt"><a href="#">Add To Cart</a></div>
+                        <div class="price_text">$99</div>
+                        <h6 class="strawberry_text">Pop-Up Surprise Box</h6>
+                        <div class="cart_bt"><a href="#">View Package</a></div>
                      </div>
                   </div>
                </div>
@@ -221,28 +240,28 @@
          <div class="container">
             <div class="row">
                <div class="col-md-12">
-                  <h1 class="services_taital">Our Ice Cream Services</h1>
-                  <p class="services_text">tempor incididunt ut labore et dolore magna aliqua</p>
+                  <h1 class="services_taital">Our Surprise Services</h1>
+                  <p class="services_text">Crafted experiences for birthdays, anniversaries, festivals, and every unforgettable moment.</p>
                </div>
             </div>
             <div class="services_section_2">
                <div class="row">
                   <div class="col-md-4">
                      <div class="services_box">
-                        <h5 class="tasty_text"><span class="icon_img"><img src="images/icon-1.png"></span>Cookies Ice Cream</h5>
-                        <p class="lorem_text">commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fat </p>
+                        <h5 class="tasty_text"><span class="icon_img"><img src="images/icon-1.png"></span>Personalized Gift Styling</h5>
+                        <p class="lorem_text">Bespoke package design, curated decor, and custom details for every celebration.</p>
                      </div>
                   </div>
                   <div class="col-md-4">
                      <div class="services_box">
-                        <h5 class="tasty_text"><span class="icon_img"><img src="images/icon-2.png"></span>Cookies Ice Cream</h5>
-                        <p class="lorem_text">commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fat </p>
+                        <h5 class="tasty_text"><span class="icon_img"><img src="images/icon-2.png"></span>Surprise Location Setup</h5>
+                        <p class="lorem_text">We prepare the perfect venue, from bedroom surprises to hotel and workplace celebrations.</p>
                      </div>
                   </div>
                   <div class="col-md-4">
                      <div class="services_box">
-                        <h5 class="tasty_text"><span class="icon_img"><img src="images/icon-1.png"></span>Cookies Ice Cream</h5>
-                        <p class="lorem_text">commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fat </p>
+                        <h5 class="tasty_text"><span class="icon_img"><img src="images/icon-1.png"></span>Express Surprise Delivery</h5>
+                        <p class="lorem_text">Fast, thoughtful delivery that keeps every reveal fresh, fun, and beautifully presented.</p>
                      </div>
                   </div>
                </div>

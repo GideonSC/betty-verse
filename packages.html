@@ -19,48 +19,8 @@
       <link rel="stylesheet" type="text/css" href="css/style.css">
       <!-- Responsive-->
       <link rel="stylesheet" href="css/responsive.css">
-      <style>
-         .dropdown-submenu {
-            position: relative;
-         }
-         .dropdown-submenu > .dropdown-menu {
-            top: 0;
-            left: 100%;
-            margin-top: -1px;
-            visibility: hidden;
-            display: block;
-            opacity: 0;
-            transition: opacity .2s ease;
-         }
-         .dropdown-submenu.show > .dropdown-menu,
-         .dropdown-submenu .dropdown-menu.show {
-            visibility: visible;
-            opacity: 1;
-         }
-         .dropdown-menu .dropdown-toggle::after {
-            display: inline-block;
-            margin-left: .255em;
-            vertical-align: .255em;
-            content: "";
-            border-top: .3em solid;
-            border-right: .3em solid transparent;
-            border-left: .3em solid transparent;
-         }
-         .dropdown-menu .dropdown-item.dropdown-toggle::after {
-            float: right;
-            margin-top: .3rem;
-         }
-         @media (max-width: 991px) {
-            .dropdown-submenu > .dropdown-menu {
-               position: static;
-               top: auto;
-               left: auto;
-               margin: .25rem 0 0 1rem;
-               opacity: 1;
-               visibility: visible;
-            }
-         }
-      </style>
+      <link rel="stylesheet" href="css/packages.css">
+      <!-- fevicon -->
       <!-- fevicon -->
       <link rel="icon" href="images/logo.png" type="image/png" />
       <!-- font css -->
@@ -87,57 +47,57 @@
                         <a class="nav-link" href="about.html">About</a>
                      </li>
                      <li class="nav-item dropdown active">
-                        <a class="nav-link dropdown-toggle" href="#" id="packagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Packages</a>
+                        <a class="nav-link dropdown-toggle" href="#" id="packagesDropdown" role="button" aria-haspopup="true" aria-expanded="false">Packages</a>
                         <div class="dropdown-menu" aria-labelledby="packagesDropdown">
                            <div class="dropdown-submenu">
-                              <a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">Birthday</a>
+                              <a class="dropdown-item dropdown-toggle" href="#">Birthday</a>
                               <div class="dropdown-menu">
-                                 <a class="dropdown-item" href="#">Custom Request</a>
-                                 <a class="dropdown-item" href="#">Kids Birthday</a>
-                                 <a class="dropdown-item" href="#">Betty And Confetti</a>
-                                 <a class="dropdown-item" href="#">Car Boot</a>
+                                 <a class="dropdown-item" href="packages.html?filter=custom-request">Custom Request</a>
+                                 <a class="dropdown-item" href="packages.html?filter=kids-birthday">Kids Birthday</a>
+                                 <a class="dropdown-item" href="packages.html?filter=betty-confetti">Betty And Confetti</a>
+                                 <a class="dropdown-item" href="packages.html?filter=car-boot">Car Boot</a>
                                  <div class="dropdown-submenu">
-                                    <a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">Surprise By Betty At</a>
+                                    <a class="dropdown-item dropdown-toggle" href="#">Surprise By Betty At</a>
                                     <div class="dropdown-menu">
-                                       <a class="dropdown-item" href="#">Home</a>
-                                       <a class="dropdown-item" href="#">Hotel</a>
-                                       <a class="dropdown-item" href="#">University</a>
-                                       <a class="dropdown-item" href="#">Workplace</a>
+                                       <a class="dropdown-item" href="packages.html?filter=home">Home</a>
+                                       <a class="dropdown-item" href="packages.html?filter=hotel">Hotel</a>
+                                       <a class="dropdown-item" href="packages.html?filter=university">University</a>
+                                       <a class="dropdown-item" href="packages.html?filter=workplace">Workplace</a>
                                     </div>
                                  </div>
                               </div>
                            </div>
                            <div class="dropdown-submenu">
-                              <a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">Anniversary</a>
+                              <a class="dropdown-item dropdown-toggle" href="#">Anniversary</a>
                               <div class="dropdown-menu">
-                                 <a class="dropdown-item" href="#">By Choice</a>
+                                 <a class="dropdown-item" href="packages.html?filter=anniversary-choice">By Choice</a>
                                  <div class="dropdown-submenu">
-                                    <a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">Anniversary Decorations</a>
+                                    <a class="dropdown-item dropdown-toggle" href="#">Anniversary Decorations</a>
                                     <div class="dropdown-menu">
-                                       <a class="dropdown-item" href="#">Room Decoration</a>
-                                       <a class="dropdown-item" href="#">Decoration At Home</a>
-                                       <a class="dropdown-item" href="#">Decoration At Hotel</a>
-                                       <a class="dropdown-item" href="#">Car Boot Decoration</a>
+                                       <a class="dropdown-item" href="packages.html?filter=anniversary-room">Room Decoration</a>
+                                       <a class="dropdown-item" href="packages.html?filter=anniversary-home">Decoration At Home</a>
+                                       <a class="dropdown-item" href="packages.html?filter=anniversary-hotel">Decoration At Hotel</a>
+                                       <a class="dropdown-item" href="packages.html?filter=anniversary-car">Car Boot Decoration</a>
                                     </div>
                                  </div>
                               </div>
                            </div>
                            <div class="dropdown-submenu">
-                              <a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">Your Occasion</a>
+                              <a class="dropdown-item dropdown-toggle" href="#">Your Occasion</a>
                               <div class="dropdown-menu">
-                                 <a class="dropdown-item" href="#">By Choice</a>
-                                 <a class="dropdown-item" href="#">Hall Occasion</a>
-                                 <a class="dropdown-item" href="#">Valentine’s Day</a>
-                                 <a class="dropdown-item" href="#">Baby Shower</a>
-                                 <a class="dropdown-item" href="#">Proposal</a>
+                                 <a class="dropdown-item" href="packages.html?filter=occasion-choice">By Choice</a>
+                                 <a class="dropdown-item" href="packages.html?filter=hall">Hall Occasion</a>
+                                 <a class="dropdown-item" href="packages.html?filter=valentine">Valentine’s Day</a>
+                                 <a class="dropdown-item" href="packages.html?filter=baby-shower">Baby Shower</a>
+                                 <a class="dropdown-item" href="packages.html?filter=proposal">Proposal</a>
                               </div>
                            </div>
                            <div class="dropdown-submenu">
-                              <a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">Festival</a>
+                              <a class="dropdown-item dropdown-toggle" href="#">Festival</a>
                               <div class="dropdown-menu">
-                                 <a class="dropdown-item" href="#">Christmas Decorations</a>
-                                 <a class="dropdown-item" href="#">New Year</a>
-                                 <a class="dropdown-item" href="#">Easter</a>
+                                 <a class="dropdown-item" href="packages.html?filter=christmas">Christmas Decorations</a>
+                                 <a class="dropdown-item" href="packages.html?filter=new-year">New Year</a>
+                                 <a class="dropdown-item" href="packages.html?filter=easter">Easter</a>
                               </div>
                            </div>
                         </div>
@@ -162,75 +122,246 @@
          </div>
       </div>
       <!-- header section end -->
-      <!-- cream sectuion start -->
-      <div class="cream_section layout_padding">
+      <!-- gift packages section start -->
+      <div class="gift_section layout_padding">
          <div class="container">
             <div class="row">
                <div class="col-md-12">
-                  <h1 class="cream_taital">Our Featured Ice Cream</h1>
-                  <p class="cream_text">tempor incididunt ut labore et dolore magna aliqua</p>
+                  <h1 class="cream_taital">Surprise Gift Packages</h1>
+                  <p class="cream_text">Choose your celebration package and let BettyVerse design the perfect unforgettable moment.</p>
                </div>
             </div>
-            <div class="cream_section_2">
-               <div class="row">
-                  <div class="col-md-4">
-                     <div class="cream_box">
-                        <div class="cream_img"><img src="images/img-1.png"></div>
-                        <div class="price_text">$10</div>
-                        <h6 class="strawberry_text">Strawberry Ice Cream</h6>
-                        <div class="cart_bt"><a href="#">Add To Cart</a></div>
+            <div class="package-filter-row d-flex flex-wrap align-items-center mb-4">
+               <button class="filter-pill active" data-filter="all">All</button>
+               <button class="filter-pill" data-filter="birthday">Birthday</button>
+               <button class="filter-pill" data-filter="anniversary">Anniversary</button>
+               <button class="filter-pill" data-filter="festival">Festival</button>
+               <button class="filter-pill" data-filter="surprise">Surprise</button>
+            </div>
+            <div class="row package-cards-row">
+               <div class="col-lg-4 col-md-6 mb-4 package-card-item" data-category="birthday">
+                  <div class="package-card">
+                     <span class="package-label">Birthday</span>
+                     <img src="images/img-1.png" alt="Betty's Birthday Bliss">
+                     <h3>Betty's Birthday Bliss</h3>
+                     <p>Balloon styling, cake surprise, and a custom gift reveal designed to make every birthday shine.</p>
+                     <div class="package-actions">
+                        <input type="text" class="package-price-input" value="$99" readonly>
+                        <button class="add-cart">Add to Cart</button>
                      </div>
-                  </div>
-                  <div class="col-md-4">
-                     <div class="cream_box">
-                        <div class="cream_img"><img src="images/img-2.png"></div>
-                        <div class="price_text">$10</div>
-                        <h6 class="strawberry_text">Strawberry Ice Cream</h6>
-                        <div class="cart_bt"><a href="#">Add To Cart</a></div>
-                     </div>
-                  </div>
-                  <div class="col-md-4">
-                     <div class="cream_box">
-                        <div class="cream_img"><img src="images/img-1.png"></div>
-                        <div class="price_text">$10</div>
-                        <h6 class="strawberry_text">Strawberry Ice Cream</h6>
-                        <div class="cart_bt"><a href="#">Add To Cart</a></div>
+                     <button class="details-toggle">View details</button>
+                     <div class="package-details">
+                        <p>Includes themed party decor, a keepsake gift box, and surprise delivery with personal touches.</p>
                      </div>
                   </div>
                </div>
-            </div>
-            <div class="cream_section_2">
-               <div class="row">
-                  <div class="col-md-4">
-                     <div class="cream_box">
-                        <div class="cream_img"><img src="images/img-3.png"></div>
-                        <div class="price_text">$10</div>
-                        <h6 class="strawberry_text">Strawberry Ice Cream</h6>
-                        <div class="cart_bt"><a href="#">Add To Cart</a></div>
+               <div class="col-lg-4 col-md-6 mb-4 package-card-item" data-category="birthday">
+                  <div class="package-card">
+                     <span class="package-label">Birthday</span>
+                     <img src="images/img-2.png" alt="Confetti Surprise Box">
+                     <h3>Confetti Surprise Box</h3>
+                     <p>A joyful unboxing experience with confetti, flowers, and a curated gift set for the birthday star.</p>
+                     <div class="package-actions">
+                        <input type="text" class="package-price-input" value="$115" readonly>
+                        <button class="add-cart">Add to Cart</button>
+                     </div>
+                     <button class="details-toggle">View details</button>
+                     <div class="package-details">
+                        <p>Perfect for sweet celebrations at home, work, or wherever you want the surprise moment to happen.</p>
                      </div>
                   </div>
-                  <div class="col-md-4">
-                     <div class="cream_box">
-                        <div class="cream_img"><img src="images/img-4.png"></div>
-                        <div class="price_text">$10</div>
-                        <h6 class="strawberry_text">Strawberry Ice Cream</h6>
-                        <div class="cart_bt"><a href="#">Add To Cart</a></div>
+               </div>
+               <div class="col-lg-4 col-md-6 mb-4 package-card-item" data-category="anniversary">
+                  <div class="package-card">
+                     <span class="package-label">Anniversary</span>
+                     <img src="images/img-3.png" alt="Anniversary Glow">
+                     <h3>Anniversary Glow</h3>
+                     <p>Romantic setup with candles, petals, and a thoughtful gift touch for your anniversary celebration.</p>
+                     <div class="package-actions">
+                        <input type="text" class="package-price-input" value="$129" readonly>
+                        <button class="add-cart">Add to Cart</button>
+                     </div>
+                     <button class="details-toggle">View details</button>
+                     <div class="package-details">
+                        <p>Designed to create a warm and memorable evening with effortless styling and surprise details.</p>
                      </div>
                   </div>
-                  <div class="col-md-4">
-                     <div class="cream_box">
-                        <div class="cream_img"><img src="images/img-5.png"></div>
-                        <div class="price_text">$10</div>
-                        <h6 class="strawberry_text">Strawberry Ice Cream</h6>
-                        <div class="cart_bt"><a href="#">Add To Cart</a></div>
+               </div>
+               <div class="col-lg-4 col-md-6 mb-4 package-card-item" data-category="anniversary">
+                  <div class="package-card">
+                     <span class="package-label">Anniversary</span>
+                     <img src="images/img-4.png" alt="Romance Reveal">
+                     <h3>Romance Reveal</h3>
+                     <p>Elegant decor, custom gift styling, and a surprise reveal that brings the celebration to life.</p>
+                     <div class="package-actions">
+                        <input type="text" class="package-price-input" value="$139" readonly>
+                        <button class="add-cart">Add to Cart</button>
+                     </div>
+                     <button class="details-toggle">View details</button>
+                     <div class="package-details">
+                        <p>Includes personal touches, luxury wrapping, and a romantic ambiance for your special day.</p>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-lg-4 col-md-6 mb-4 package-card-item" data-category="festival">
+                  <div class="package-card">
+                     <span class="package-label">Festival</span>
+                     <img src="images/img-5.png" alt="Festive Magic Set">
+                     <h3>Festive Magic Set</h3>
+                     <p>Celebrate holidays with a vibrant gift package crafted for warm memories and festive surprises.</p>
+                     <div class="package-actions">
+                        <input type="text" class="package-price-input" value="$125" readonly>
+                        <button class="add-cart">Add to Cart</button>
+                     </div>
+                     <button class="details-toggle">View details</button>
+                     <div class="package-details">
+                        <p>Includes themed decorations, gift wrapping, and carefully chosen treats for a joyful celebration.</p>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-lg-4 col-md-6 mb-4 package-card-item" data-category="surprise">
+                  <div class="package-card">
+                     <span class="package-label">Surprise</span>
+                     <img src="images/img-1.png" alt="Pop-Up Surprise">
+                     <h3>Pop-Up Surprise</h3>
+                     <p>A playful surprise package with a mix of gifts, flowers, and a personalized moment reveal.</p>
+                     <div class="package-actions">
+                        <input type="text" class="package-price-input" value="$99" readonly>
+                        <button class="add-cart">Add to Cart</button>
+                     </div>
+                     <button class="details-toggle">View details</button>
+                     <div class="package-details">
+                        <p>Ideal for pop-up proposals, secret deliveries, or any moment that deserves an extra wow.</p>
                      </div>
                   </div>
                </div>
             </div>
-            <div class="seemore_bt"><a href="#">See More</a></div>
+            <div class="no-results d-none">No packages match this selection. Try another category.</div>
          </div>
       </div>
-      <!-- cream sectuion end -->
+      <!-- gift packages section end -->
+      <style>
+         .gift_section { background: #fff4f8; }
+         .package-filter-row { margin-bottom: 28px; }
+         .filter-pill {
+            background: #ffe7ef;
+            border: 1px solid rgba(255,110,143,.35);
+            border-radius: 999px;
+            color: #d14274;
+            font-weight: 700;
+            padding: 11px 20px;
+            margin: 0 10px 10px 0;
+            cursor: pointer;
+            transition: all .2s ease;
+         }
+         .filter-pill.active,
+         .filter-pill:hover {
+            background: #ff6e8f;
+            color: #fff;
+            border-color: #ff6e8f;
+         }
+         .package-card-item { display: block; }
+         .package-card {
+            border: 1px solid rgba(255,110,143,.20);
+            background: #fff;
+            box-shadow: 0 25px 60px rgba(255,110,143,.12);
+            padding: 28px;
+            border-radius: 24px;
+            transition: transform .25s ease, box-shadow .25s ease;
+         }
+         .package-card:hover { transform: translateY(-4px); box-shadow: 0 32px 75px rgba(255,110,143,.16); }
+         .package-card img { border-radius: 20px; margin-bottom: 20px; }
+         .package-card h3 { margin-top: 0; }
+         .package-price-input { width: 110px; }
+         .package-actions .add-cart { flex: 1; }
+         .no-results { padding: 28px; background: #fff; border: 1px solid rgba(115,82,255,.15); border-radius: 18px; color: #34275e; margin-top: 20px; }
+         @media (max-width: 767px) {
+            .filter-pill { flex: 1 1 100%; }
+         }
+      </style>
+      <script>
+         document.addEventListener('DOMContentLoaded', function () {
+            var filterMap = {
+               'custom-request': 'birthday',
+               'kids-birthday': 'birthday',
+               'betty-confetti': 'birthday',
+               'car-boot': 'birthday',
+               'home': 'surprise',
+               'hotel': 'surprise',
+               'university': 'surprise',
+               'workplace': 'surprise',
+               'anniversary-choice': 'anniversary',
+               'anniversary-room': 'anniversary',
+               'anniversary-home': 'anniversary',
+               'anniversary-hotel': 'anniversary',
+               'anniversary-car': 'anniversary',
+               'occasion-choice': 'surprise',
+               'hall': 'surprise',
+               'valentine': 'festival',
+               'baby-shower': 'surprise',
+               'proposal': 'surprise',
+               'christmas': 'festival',
+               'new-year': 'festival',
+               'easter': 'festival'
+            };
+            function getUrlFilter() {
+               var params = new URLSearchParams(window.location.search);
+               return params.get('filter') || 'all';
+            }
+            function normalizeFilter(value) {
+               return filterMap[value] || value || 'all';
+            }
+            function setActiveFilter(filter) {
+               document.querySelectorAll('.filter-pill').forEach(function (pill) {
+                  pill.classList.toggle('active', pill.dataset.filter === filter);
+               });
+            }
+            function showPackages(filter) {
+               var cards = document.querySelectorAll('.package-card-item');
+               var visibleCount = 0;
+               cards.forEach(function (card) {
+                  var category = card.dataset.category;
+                  var visible = filter === 'all' || category === filter;
+                  card.style.display = visible ? 'block' : 'none';
+                  if (visible) visibleCount++;
+               });
+               var noResults = document.querySelector('.no-results');
+               if (noResults) {
+                  noResults.classList.toggle('d-none', visibleCount > 0);
+               }
+            }
+            function updateUrl(filter) {
+               var url = new URL(window.location);
+               if (filter === 'all') {
+                  url.searchParams.delete('filter');
+               } else {
+                  url.searchParams.set('filter', filter);
+               }
+               window.history.replaceState({}, '', url);
+            }
+            function applyFilter(filter) {
+               var normalized = normalizeFilter(filter);
+               setActiveFilter(normalized);
+               showPackages(normalized);
+               updateUrl(normalized);
+            }
+            document.querySelectorAll('.filter-pill').forEach(function (pill) {
+               pill.addEventListener('click', function () {
+                  applyFilter(this.dataset.filter);
+               });
+            });
+            var initialFilter = normalizeFilter(getUrlFilter());
+            applyFilter(initialFilter);
+            document.querySelectorAll('.package-card .details-toggle').forEach(function (toggle) {
+               toggle.addEventListener('click', function () {
+                  var card = this.closest('.package-card');
+                  if (!card) return;
+                  card.classList.toggle('expanded');
+                  this.textContent = card.classList.contains('expanded') ? 'Hide details' : 'View details';
+               });
+            });
+         });
+      </script>
       <!-- copyright section start -->
       <div class="copyright_section margin_top90">
          <div class="container">
@@ -242,24 +373,37 @@
       <script src="js/jquery.min.js"></script>
       <script src="js/popper.min.js"></script>
       <script src="js/bootstrap.bundle.min.js"></script>
-      <script src="js/jquery-3.0.0.min.js"></script>
       <script>
          document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('.dropdown-submenu > .dropdown-toggle').forEach(function (toggle) {
+            function closeAllDropdowns(except) {
+               document.querySelectorAll('.dropdown.show, .dropdown-submenu.show').forEach(function (openEl) {
+                  if (except && (openEl === except || openEl.contains(except))) {
+                     return;
+                  }
+                  openEl.classList.remove('show');
+               });
+            }
+            document.querySelectorAll('.dropdown-toggle').forEach(function (toggle) {
                toggle.addEventListener('click', function (event) {
                   event.preventDefault();
                   event.stopPropagation();
-                  var submenu = this.nextElementSibling;
-                  if (submenu) {
-                     submenu.classList.toggle('show');
+                  var parentDropdown = this.closest('.dropdown, .dropdown-submenu');
+                  if (!parentDropdown) return;
+                  var isOpen = parentDropdown.classList.contains('show');
+                  closeAllDropdowns(parentDropdown);
+                  if (isOpen) {
+                     parentDropdown.classList.remove('show');
+                  } else {
+                     parentDropdown.classList.add('show');
                   }
                });
             });
-            document.querySelectorAll('.dropdown').forEach(function (dropdown) {
-               dropdown.addEventListener('hidden.bs.dropdown', function () {
-                  this.querySelectorAll('.dropdown-menu.show').forEach(function (submenu) {
-                     submenu.classList.remove('show');
-                  });
+            document.addEventListener('click', function () {
+               closeAllDropdowns();
+            });
+            document.querySelectorAll('.dropdown-menu .dropdown-item:not(.dropdown-toggle)').forEach(function (item) {
+               item.addEventListener('click', function () {
+                  closeAllDropdowns();
                });
             });
          });
