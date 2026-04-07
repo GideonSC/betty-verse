@@ -1,40 +1,28 @@
 <!DOCTYPE html>
 <html>
    <head>
-      <!-- basic -->
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <!-- mobile metas -->
-      <meta name="viewport" content="width=device-width, initial-scale=1">
       <meta name="viewport" content="initial-scale=1, maximum-scale=1">
-      <!-- site metas -->
       <title>Packages</title>
       <meta name="keywords" content="">
       <meta name="description" content="">
       <meta name="author" content="">
-      <!-- bootstrap css -->
       <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-      <!-- style css -->
       <link rel="stylesheet" type="text/css" href="css/style.css">
-      <!-- Responsive-->
       <link rel="stylesheet" href="css/responsive.css">
       <link rel="stylesheet" href="css/packages.css">
-      <!-- fevicon -->
-      <!-- fevicon -->
-      <link rel="icon" href="images/logo.png" type="image/png" />
-      <!-- font css -->
+      <link rel="icon" href="images/logo.png" type="image/png">
       <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
-      <!-- Scrollbar Custom CSS -->
       <link rel="stylesheet" href="css/jquery.mCustomScrollbar.min.css">
-      <!-- Tweaks for older IEs-->
       <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
    </head>
-   <body>
+   <body class="packages-page">
       <div class="header_section header_bg">
          <div class="container">
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
-               <a class="navbar-brand"href="index.html"><img src="images/logo.png"></a>
+               <a class="navbar-brand" href="index.html"><img src="images/logo.png" alt="BettyVerse logo"></a>
                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                <span class="navbar-toggler-icon"></span>
                </button>
@@ -47,7 +35,7 @@
                         <a class="nav-link" href="about.html">About</a>
                      </li>
                      <li class="nav-item dropdown active">
-                        <a class="nav-link dropdown-toggle" href="#" id="packagesDropdown" role="button" aria-haspopup="true" aria-expanded="false">Packages</a>
+                        <a class="nav-link dropdown-toggle" href="#" id="packagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Packages</a>
                         <div class="dropdown-menu" aria-labelledby="packagesDropdown">
                            <div class="dropdown-submenu">
                               <a class="dropdown-item dropdown-toggle" href="#">Birthday</a>
@@ -87,7 +75,7 @@
                               <div class="dropdown-menu">
                                  <a class="dropdown-item" href="packages.html?filter=occasion-choice">By Choice</a>
                                  <a class="dropdown-item" href="packages.html?filter=hall">Hall Occasion</a>
-                                 <a class="dropdown-item" href="packages.html?filter=valentine">Valentine’s Day</a>
+                                 <a class="dropdown-item" href="packages.html?filter=valentine">Valentine's Day</a>
                                  <a class="dropdown-item" href="packages.html?filter=baby-shower">Baby Shower</a>
                                  <a class="dropdown-item" href="packages.html?filter=proposal">Proposal</a>
                               </div>
@@ -109,176 +97,337 @@
                         <a class="nav-link" href="blog.html">Blog</a>
                      </li>
                      <li class="nav-item">
-                        <a class="nav-link" href="contact.html">Contact Us</a>
+                        <a class="nav-link" href="contact.html">Booking</a>
                      </li>
                   </ul>
                   <form class="form-inline my-2 my-lg-0">
-                     <div class="login_bt"><a href="login/login_index.html">Login <span style="color: #222222;"><i class="fa fa-user" aria-hidden="true"></i></span></a></div>
-                     <input type="text" id="search-input" class="search-input" placeholder="Search...">
-                     <div class="fa fa-search form-control-feedback" onclick="toggleSearch()"></div>
+                     <div class="search-container">
+                        <input type="text" id="search-input" class="search-input" placeholder="Search...">
+                        <div class="fa fa-search form-control-feedback" onclick="toggleSearch()"></div>
+                     </div>
+                     <a class="cart_link" href="cart.html" data-cart-link aria-label="View cart">
+                        <span class="cart_link_icon"><i class="fa fa-shopping-cart" aria-hidden="true"></i></span>
+                        <span class="cart_link_text">Cart</span>
+                        <span class="cart_count" data-cart-count aria-live="polite">0</span>
+                     </a>
+                     <div class="login_bt"><a href="login/login_index.html">Login <span style="color: #ffffff;"><i class="fa fa-user" aria-hidden="true"></i></span></a></div>
                   </form>
                </div>
             </nav>
          </div>
       </div>
-      <!-- header section end -->
-      <!-- gift packages section start -->
-      <div class="gift_section layout_padding">
+      <section class="packages-hero">
          <div class="container">
-            <div class="row">
-               <div class="col-md-12">
-                  <h1 class="cream_taital">Surprise Gift Packages</h1>
-                  <p class="cream_text">Choose your celebration package and let BettyVerse design the perfect unforgettable moment.</p>
+            <div class="row align-items-center">
+               <div class="col-lg-7">
+                  <span class="hero-eyebrow"><i class="fa fa-diamond" aria-hidden="true"></i>BettyVerse Package Studio</span>
+                  <h1 class="hero-title">Beautiful surprise packages, styled professionally from concept to delivery.</h1>
+                  <p class="hero-copy">Explore curated birthday, anniversary, festival, and custom surprise experiences designed to feel polished, thoughtful, and unforgettable.</p>
+                  <div class="hero-actions">
+                     <a class="hero-btn primary" href="#packages-grid">Browse Packages</a>
+                     <a class="hero-btn secondary" href="contact.html">Start Booking</a>
+                  </div>
+               </div>
+               <div class="col-lg-5">
+                  <div class="hero-panel">
+                     <div class="hero-panel-header">
+                        <span><i class="fa fa-star-o" aria-hidden="true"></i>Why clients choose BettyVerse</span>
+                        <strong>Premium planning</strong>
+                     </div>
+                     <div class="hero-metrics">
+                        <div class="hero-metric">
+                           <strong>4</strong>
+                           <span>core celebration categories</span>
+                        </div>
+                        <div class="hero-metric">
+                           <strong>24h</strong>
+                           <span>fast response on booking requests</span>
+                        </div>
+                        <div class="hero-metric">
+                           <strong>100%</strong>
+                           <span>blue-and-white premium presentation</span>
+                        </div>
+                     </div>
+                     <ul class="hero-list">
+                        <li>Tailored styling with coordinated decor and gifting</li>
+                        <li>Simple package filtering for faster selection</li>
+                        <li>Flexible setup for homes, hotels, workplaces, and events</li>
+                     </ul>
+                  </div>
                </div>
             </div>
-            <div class="package-filter-row d-flex flex-wrap align-items-center mb-4">
-               <button class="filter-pill active" data-filter="all">All</button>
+         </div>
+      </section>
+      <section class="package-overview">
+         <div class="container">
+            <div class="overview-strip">
+               <div class="overview-card">
+                  <span class="overview-label"><i class="fa fa-shield" aria-hidden="true"></i>Signature Quality</span>
+                  <h2>Clean presentation, premium details, and reliable coordination.</h2>
+               </div>
+               <div class="overview-card small">
+                  <strong>Custom themes</strong>
+                  <p>We adapt each package to your style, mood, and occasion.</p>
+               </div>
+               <div class="overview-card small">
+                  <strong>Flexible setup</strong>
+                  <p>Indoor, outdoor, hotel, office, and at-home surprise support.</p>
+               </div>
+            </div>
+         </div>
+      </section>
+      <section class="gift_section package-showcase" id="packages-grid">
+         <div class="container">
+            <div class="section-intro">
+               <span class="section-tag"><i class="fa fa-th-large" aria-hidden="true"></i>Package Collections</span>
+               <h2>Choose the experience that fits your moment.</h2>
+               <p>Filter by celebration type, review what is included, and shortlist the package that suits your event best.</p>
+            </div>
+            <div class="package-filter-row d-flex flex-wrap align-items-center">
+               <button class="filter-pill active" data-filter="all">All Packages</button>
                <button class="filter-pill" data-filter="birthday">Birthday</button>
                <button class="filter-pill" data-filter="anniversary">Anniversary</button>
                <button class="filter-pill" data-filter="festival">Festival</button>
                <button class="filter-pill" data-filter="surprise">Surprise</button>
             </div>
             <div class="row package-cards-row">
-               <div class="col-lg-4 col-md-6 mb-4 package-card-item" data-category="birthday">
-                  <div class="package-card">
-                     <span class="package-label">Birthday</span>
-                     <img src="images/img-1.png" alt="Betty's Birthday Bliss">
-                     <h3>Betty's Birthday Bliss</h3>
-                     <p>Balloon styling, cake surprise, and a custom gift reveal designed to make every birthday shine.</p>
+               <div class="col-lg-6 col-xl-4 mb-4 package-card-item" data-category="birthday">
+                  <article class="package-card" data-package-id="betty-birthday-bliss" data-package-name="Betty's Birthday Bliss" data-package-category="Birthday" data-package-price="99" data-package-image="images/img-1.png" data-package-summary="A cheerful birthday setup with balloons, cake styling, and a memorable gift reveal for intimate celebrations.">
+                     <div class="package-media">
+                        <img src="images/img-1.png" alt="Betty's Birthday Bliss package">
+                        <span class="package-label"><i class="fa fa-gift" aria-hidden="true"></i>Birthday</span>
+                     </div>
+                     <div class="package-card-top">
+                        <h3>Betty's Birthday Bliss</h3>
+                        <span class="package-price">$99</span>
+                     </div>
+                     <p class="package-summary">A cheerful birthday setup with balloons, cake styling, and a memorable gift reveal for intimate celebrations.</p>
+                     <ul class="package-highlights">
+                        <li>Styled balloons and table accents</li>
+                        <li>Gift presentation and reveal moment</li>
+                        <li>Ideal for home celebrations</li>
+                     </ul>
                      <div class="package-actions">
-                        <input type="text" class="package-price-input" value="$99" readonly>
-                        <button class="add-cart">Add to Cart</button>
+                        <button class="add-cart" type="button" data-add-to-cart>Add to Cart</button>
+                        <button class="details-toggle" type="button">View details</button>
                      </div>
-                     <button class="details-toggle">View details</button>
                      <div class="package-details">
-                        <p>Includes themed party decor, a keepsake gift box, and surprise delivery with personal touches.</p>
+                        <p>Includes themed decor coordination, keepsake gift packaging, and a simple surprise flow that makes the celebration feel polished from start to finish.</p>
                      </div>
+                  </article>
+               </div>
+               <div class="col-lg-6 col-xl-4 mb-4 package-card-item" data-category="birthday">
+                  <article class="package-card" data-package-id="confetti-surprise-box" data-package-name="Confetti Surprise Box" data-package-category="Birthday" data-package-price="115" data-package-image="images/img-2.png" data-package-summary="A playful unboxing package with flowers, confetti, and layered gifting for a standout birthday reveal.">
+                     <div class="package-media">
+                        <img src="images/img-2.png" alt="Confetti Surprise Box package">
+                        <span class="package-label"><i class="fa fa-gift" aria-hidden="true"></i>Birthday</span>
+                     </div>
+                     <div class="package-card-top">
+                        <h3>Confetti Surprise Box</h3>
+                        <span class="package-price">$115</span>
+                     </div>
+                     <p class="package-summary">A playful unboxing package with flowers, confetti, and layered gifting for a standout birthday reveal.</p>
+                     <ul class="package-highlights">
+                        <li>Confetti unbox experience</li>
+                        <li>Curated floral and gift styling</li>
+                        <li>Works for home or workplace delivery</li>
+                     </ul>
+                     <div class="package-actions">
+                        <button class="add-cart" type="button" data-add-to-cart>Add to Cart</button>
+                        <button class="details-toggle" type="button">View details</button>
+                     </div>
+                     <div class="package-details">
+                        <p>Best for clients who want a compact but elevated surprise. The presentation is designed to feel festive, personal, and camera-ready.</p>
+                     </div>
+                  </article>
+               </div>
+               <div class="col-lg-6 col-xl-4 mb-4 package-card-item" data-category="anniversary">
+                  <article class="package-card" data-package-id="anniversary-glow" data-package-name="Anniversary Glow" data-package-category="Anniversary" data-package-price="129" data-package-image="images/img-3.png" data-package-summary="A romantic atmosphere package with candles, petals, and elegant styling to elevate a special evening.">
+                     <div class="package-media">
+                        <img src="images/img-3.png" alt="Anniversary Glow package">
+                        <span class="package-label"><i class="fa fa-heart" aria-hidden="true"></i>Anniversary</span>
+                     </div>
+                     <div class="package-card-top">
+                        <h3>Anniversary Glow</h3>
+                        <span class="package-price">$129</span>
+                     </div>
+                     <p class="package-summary">A romantic atmosphere package with candles, petals, and elegant styling to elevate a special evening.</p>
+                     <ul class="package-highlights">
+                        <li>Ambient candle and petal styling</li>
+                        <li>Refined romantic layout</li>
+                        <li>Suitable for rooms and intimate venues</li>
+                     </ul>
+                     <div class="package-actions">
+                        <button class="add-cart" type="button" data-add-to-cart>Add to Cart</button>
+                        <button class="details-toggle" type="button">View details</button>
+                     </div>
+                     <div class="package-details">
+                        <p>Designed for couples who want a balanced look, thoughtful details, and a setup that feels elegant without being overdone.</p>
+                     </div>
+                  </article>
+               </div>
+               <div class="col-lg-6 col-xl-4 mb-4 package-card-item" data-category="anniversary">
+                  <article class="package-card" data-package-id="romance-reveal" data-package-name="Romance Reveal" data-package-category="Anniversary" data-package-price="139" data-package-image="images/img-4.png" data-package-summary="An upscale anniversary experience with luxury wrapping, layered details, and a reveal sequence built for impact.">
+                     <div class="package-media">
+                        <img src="images/img-4.png" alt="Romance Reveal package">
+                        <span class="package-label"><i class="fa fa-heart" aria-hidden="true"></i>Anniversary</span>
+                     </div>
+                     <div class="package-card-top">
+                        <h3>Romance Reveal</h3>
+                        <span class="package-price">$139</span>
+                     </div>
+                     <p class="package-summary">An upscale anniversary experience with luxury wrapping, layered details, and a reveal sequence built for impact.</p>
+                     <ul class="package-highlights">
+                        <li>Luxury gift styling</li>
+                        <li>Decor setup with personal touches</li>
+                        <li>Strong fit for hotel or private dinner moments</li>
+                     </ul>
+                     <div class="package-actions">
+                        <button class="add-cart" type="button" data-add-to-cart>Add to Cart</button>
+                        <button class="details-toggle" type="button">View details</button>
+                     </div>
+                     <div class="package-details">
+                        <p>This package focuses on elegance and emotional impact, making it ideal for milestone anniversaries or a beautifully planned surprise evening.</p>
+                     </div>
+                  </article>
+               </div>
+               <div class="col-lg-6 col-xl-4 mb-4 package-card-item" data-category="festival">
+                  <article class="package-card" data-package-id="festive-magic-set" data-package-name="Festive Magic Set" data-package-category="Festival" data-package-price="125" data-package-image="images/img-5.png" data-package-summary="A celebration-ready package for festive periods, combining themed decor, styled gifts, and warm presentation.">
+                     <div class="package-media">
+                        <img src="images/img-5.png" alt="Festive Magic Set package">
+                        <span class="package-label"><i class="fa fa-star" aria-hidden="true"></i>Festival</span>
+                     </div>
+                     <div class="package-card-top">
+                        <h3>Festive Magic Set</h3>
+                        <span class="package-price">$125</span>
+                     </div>
+                     <p class="package-summary">A celebration-ready package for festive periods, combining themed decor, styled gifts, and warm presentation.</p>
+                     <ul class="package-highlights">
+                        <li>Seasonal decor coordination</li>
+                        <li>Gift wrap and presentation styling</li>
+                        <li>Great for Christmas, New Year, and Easter moments</li>
+                     </ul>
+                     <div class="package-actions">
+                        <button class="add-cart" type="button" data-add-to-cart>Add to Cart</button>
+                        <button class="details-toggle" type="button">View details</button>
+                     </div>
+                     <div class="package-details">
+                        <p>A polished option for families, teams, and hosts who want festive decor and gifting to look coordinated and memorable.</p>
+                     </div>
+                  </article>
+               </div>
+               <div class="col-lg-6 col-xl-4 mb-4 package-card-item" data-category="surprise">
+                  <article class="package-card" data-package-id="pop-up-surprise" data-package-name="Pop-Up Surprise" data-package-category="Surprise" data-package-price="99" data-package-image="images/img-1.png" data-package-summary="A versatile surprise package built for spontaneous wow moments, from proposals to appreciation gifts and secret setups.">
+                     <div class="package-media">
+                        <img src="images/img-1.png" alt="Pop-Up Surprise package">
+                        <span class="package-label"><i class="fa fa-magic" aria-hidden="true"></i>Surprise</span>
+                     </div>
+                     <div class="package-card-top">
+                        <h3>Pop-Up Surprise</h3>
+                        <span class="package-price">$99</span>
+                     </div>
+                     <p class="package-summary">A versatile surprise package built for spontaneous wow moments, from proposals to appreciation gifts and secret setups.</p>
+                     <ul class="package-highlights">
+                        <li>Flexible concept and setup format</li>
+                        <li>Can be adapted for proposals and reveals</li>
+                        <li>Works across multiple locations</li>
+                     </ul>
+                     <div class="package-actions">
+                        <button class="add-cart" type="button" data-add-to-cart>Add to Cart</button>
+                        <button class="details-toggle" type="button">View details</button>
+                     </div>
+                     <div class="package-details">
+                        <p>Perfect when you want BettyVerse to create a neat, well-timed surprise that feels intentional, stylish, and highly personal.</p>
+                     </div>
+                  </article>
+               </div>
+            </div>
+            <div class="no-results d-none">No packages match this selection right now. Try another category.</div>
+         </div>
+      </section>
+      <section class="package-process">
+         <div class="container">
+            <div class="section-intro narrow">
+               <span class="section-tag"><i class="fa fa-compass" aria-hidden="true"></i>How It Works</span>
+               <h2>A simple booking flow with professional execution.</h2>
+            </div>
+            <div class="row">
+               <div class="col-md-4 mb-4">
+                  <div class="process-card">
+                     <span class="process-step">01</span>
+                     <h3>Choose a package</h3>
+                     <p>Select a category and review the package details that match your celebration goals.</p>
                   </div>
                </div>
-               <div class="col-lg-4 col-md-6 mb-4 package-card-item" data-category="birthday">
-                  <div class="package-card">
-                     <span class="package-label">Birthday</span>
-                     <img src="images/img-2.png" alt="Confetti Surprise Box">
-                     <h3>Confetti Surprise Box</h3>
-                     <p>A joyful unboxing experience with confetti, flowers, and a curated gift set for the birthday star.</p>
-                     <div class="package-actions">
-                        <input type="text" class="package-price-input" value="$115" readonly>
-                        <button class="add-cart">Add to Cart</button>
-                     </div>
-                     <button class="details-toggle">View details</button>
-                     <div class="package-details">
-                        <p>Perfect for sweet celebrations at home, work, or wherever you want the surprise moment to happen.</p>
-                     </div>
+               <div class="col-md-4 mb-4">
+                  <div class="process-card">
+                     <span class="process-step">02</span>
+                     <h3>Share your brief</h3>
+                     <p>Tell us your preferred date, location, color styling, and any custom requests you want included.</p>
                   </div>
                </div>
-               <div class="col-lg-4 col-md-6 mb-4 package-card-item" data-category="anniversary">
-                  <div class="package-card">
-                     <span class="package-label">Anniversary</span>
-                     <img src="images/img-3.png" alt="Anniversary Glow">
-                     <h3>Anniversary Glow</h3>
-                     <p>Romantic setup with candles, petals, and a thoughtful gift touch for your anniversary celebration.</p>
-                     <div class="package-actions">
-                        <input type="text" class="package-price-input" value="$129" readonly>
-                        <button class="add-cart">Add to Cart</button>
-                     </div>
-                     <button class="details-toggle">View details</button>
-                     <div class="package-details">
-                        <p>Designed to create a warm and memorable evening with effortless styling and surprise details.</p>
-                     </div>
-                  </div>
-               </div>
-               <div class="col-lg-4 col-md-6 mb-4 package-card-item" data-category="anniversary">
-                  <div class="package-card">
-                     <span class="package-label">Anniversary</span>
-                     <img src="images/img-4.png" alt="Romance Reveal">
-                     <h3>Romance Reveal</h3>
-                     <p>Elegant decor, custom gift styling, and a surprise reveal that brings the celebration to life.</p>
-                     <div class="package-actions">
-                        <input type="text" class="package-price-input" value="$139" readonly>
-                        <button class="add-cart">Add to Cart</button>
-                     </div>
-                     <button class="details-toggle">View details</button>
-                     <div class="package-details">
-                        <p>Includes personal touches, luxury wrapping, and a romantic ambiance for your special day.</p>
-                     </div>
-                  </div>
-               </div>
-               <div class="col-lg-4 col-md-6 mb-4 package-card-item" data-category="festival">
-                  <div class="package-card">
-                     <span class="package-label">Festival</span>
-                     <img src="images/img-5.png" alt="Festive Magic Set">
-                     <h3>Festive Magic Set</h3>
-                     <p>Celebrate holidays with a vibrant gift package crafted for warm memories and festive surprises.</p>
-                     <div class="package-actions">
-                        <input type="text" class="package-price-input" value="$125" readonly>
-                        <button class="add-cart">Add to Cart</button>
-                     </div>
-                     <button class="details-toggle">View details</button>
-                     <div class="package-details">
-                        <p>Includes themed decorations, gift wrapping, and carefully chosen treats for a joyful celebration.</p>
-                     </div>
-                  </div>
-               </div>
-               <div class="col-lg-4 col-md-6 mb-4 package-card-item" data-category="surprise">
-                  <div class="package-card">
-                     <span class="package-label">Surprise</span>
-                     <img src="images/img-1.png" alt="Pop-Up Surprise">
-                     <h3>Pop-Up Surprise</h3>
-                     <p>A playful surprise package with a mix of gifts, flowers, and a personalized moment reveal.</p>
-                     <div class="package-actions">
-                        <input type="text" class="package-price-input" value="$99" readonly>
-                        <button class="add-cart">Add to Cart</button>
-                     </div>
-                     <button class="details-toggle">View details</button>
-                     <div class="package-details">
-                        <p>Ideal for pop-up proposals, secret deliveries, or any moment that deserves an extra wow.</p>
-                     </div>
+               <div class="col-md-4 mb-4">
+                  <div class="process-card">
+                     <span class="process-step">03</span>
+                     <h3>Enjoy the reveal</h3>
+                     <p>We coordinate the final setup so your surprise looks refined, seamless, and celebration-ready.</p>
                   </div>
                </div>
             </div>
-            <div class="no-results d-none">No packages match this selection. Try another category.</div>
          </div>
-      </div>
-      <!-- gift packages section end -->
-      <style>
-         .gift_section { background: #fff4f8; }
-         .package-filter-row { margin-bottom: 28px; }
-         .filter-pill {
-            background: #ffe7ef;
-            border: 1px solid rgba(255,110,143,.35);
-            border-radius: 999px;
-            color: #d14274;
-            font-weight: 700;
-            padding: 11px 20px;
-            margin: 0 10px 10px 0;
-            cursor: pointer;
-            transition: all .2s ease;
-         }
-         .filter-pill.active,
-         .filter-pill:hover {
-            background: #ff6e8f;
-            color: #fff;
-            border-color: #ff6e8f;
-         }
-         .package-card-item { display: block; }
-         .package-card {
-            border: 1px solid rgba(255,110,143,.20);
-            background: #fff;
-            box-shadow: 0 25px 60px rgba(255,110,143,.12);
-            padding: 28px;
-            border-radius: 24px;
-            transition: transform .25s ease, box-shadow .25s ease;
-         }
-         .package-card:hover { transform: translateY(-4px); box-shadow: 0 32px 75px rgba(255,110,143,.16); }
-         .package-card img { border-radius: 20px; margin-bottom: 20px; }
-         .package-card h3 { margin-top: 0; }
-         .package-price-input { width: 110px; }
-         .package-actions .add-cart { flex: 1; }
-         .no-results { padding: 28px; background: #fff; border: 1px solid rgba(115,82,255,.15); border-radius: 18px; color: #34275e; margin-top: 20px; }
-         @media (max-width: 767px) {
-            .filter-pill { flex: 1 1 100%; }
-         }
-      </style>
+      </section>
+      <section class="package-cta">
+         <div class="container">
+            <div class="cta-panel">
+               <div>
+                  <span class="section-tag"><i class="fa fa-paper-plane-o" aria-hidden="true"></i>Ready To Book?</span>
+                  <h2>Let BettyVerse create a package that feels premium and personal.</h2>
+                  <p>Reach out for custom requests, date availability, and tailored celebration planning.</p>
+               </div>
+               <div class="cta-actions">
+                  <a class="hero-btn primary" href="contact.html">Start Booking</a>
+                  <a class="hero-btn secondary" href="services.html">View Services</a>
+               </div>
+            </div>
+         </div>
+      </section>
+      <footer class="site_footer margin_top90">
+         <div class="container">
+            <div class="footer_top">
+               <div class="footer_brand_column">
+                  <a class="footer_brand" href="index.html">
+                     <img src="images/logo.png" alt="BettyVerse logo">
+                     <span>BettyVerse</span>
+                  </a>
+                  <p class="footer_copy">Premium surprise styling, thoughtful gifting, and celebration planning for clients across the UK.</p>
+                  <p class="footer_service_note">Based in Dunfermline, Scotland and available for bookings anywhere in the UK.</p>
+               </div>
+               <div class="footer_links_column">
+                  <h3 class="footer_title">Quick Links</h3>
+                  <ul class="footer_links">
+                     <li><a href="index.html">Home</a></li>
+                     <li><a href="packages.html">Packages</a></li>
+                     <li><a href="services.html">Services</a></li>
+                     <li><a href="contact.html">Booking</a></li>
+                     <li><a href="cart.html">Cart</a></li>
+                  </ul>
+               </div>
+               <div class="footer_contact_column">
+                  <h3 class="footer_title">Contact Details</h3>
+                  <ul class="footer_contact_list">
+                     <li><span>Address</span><strong>59 Don Road, Dunfermline, Scotland, UK</strong></li>
+                     <li><span>Postcode</span><strong>KY11 4NH</strong></li>
+                     <li><span>Phone</span><a href="tel:07467036297">07467036297</a></li>
+                  </ul>
+               </div>
+            </div>
+            <div class="footer_bottom">
+               <p class="copyright_text">2026 BettyVerse. Crafted for unforgettable celebrations.</p>
+            </div>
+         </div>
+      </footer>
+      <script src="js/jquery.min.js"></script>
+      <script src="js/bootstrap.bundle.min.js"></script>
       <script>
          document.addEventListener('DOMContentLoaded', function () {
             var filterMap = {
@@ -304,6 +453,35 @@
                'new-year': 'festival',
                'easter': 'festival'
             };
+            function closeAllDropdowns(except) {
+               document.querySelectorAll('.dropdown.show, .dropdown-submenu.show').forEach(function (openEl) {
+                  if (except && (openEl === except || openEl.contains(except))) {
+                     return;
+                  }
+                  openEl.classList.remove('show');
+               });
+            }
+            document.querySelectorAll('.dropdown-toggle').forEach(function (toggle) {
+               toggle.addEventListener('click', function (event) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  var parentDropdown = this.closest('.dropdown, .dropdown-submenu');
+                  if (!parentDropdown) {
+                     return;
+                  }
+                  var isOpen = parentDropdown.classList.contains('show');
+                  closeAllDropdowns(parentDropdown);
+                  parentDropdown.classList.toggle('show', !isOpen);
+               });
+            });
+            document.addEventListener('click', function () {
+               closeAllDropdowns();
+            });
+            document.querySelectorAll('.dropdown-menu .dropdown-item:not(.dropdown-toggle)').forEach(function (item) {
+               item.addEventListener('click', function () {
+                  closeAllDropdowns();
+               });
+            });
             function getUrlFilter() {
                var params = new URLSearchParams(window.location.search);
                return params.get('filter') || 'all';
@@ -323,7 +501,9 @@
                   var category = card.dataset.category;
                   var visible = filter === 'all' || category === filter;
                   card.style.display = visible ? 'block' : 'none';
-                  if (visible) visibleCount++;
+                  if (visible) {
+                     visibleCount += 1;
+                  }
                });
                var noResults = document.querySelector('.no-results');
                if (noResults) {
@@ -350,68 +530,22 @@
                   applyFilter(this.dataset.filter);
                });
             });
-            var initialFilter = normalizeFilter(getUrlFilter());
-            applyFilter(initialFilter);
             document.querySelectorAll('.package-card .details-toggle').forEach(function (toggle) {
                toggle.addEventListener('click', function () {
                   var card = this.closest('.package-card');
-                  if (!card) return;
+                  if (!card) {
+                     return;
+                  }
                   card.classList.toggle('expanded');
                   this.textContent = card.classList.contains('expanded') ? 'Hide details' : 'View details';
                });
             });
-         });
-      </script>
-      <!-- copyright section start -->
-      <div class="copyright_section margin_top90">
-         <div class="container">
-            <p class="copyright_text">2026 All Rights Reserved. Design by <a href="https://html.design">Free Html Templates</a></p>
-         </div>
-      </div>
-      <!-- copyright section end -->
-      <!-- Javascript files-->
-      <script src="js/jquery.min.js"></script>
-      <script src="js/popper.min.js"></script>
-      <script src="js/bootstrap.bundle.min.js"></script>
-      <script>
-         document.addEventListener('DOMContentLoaded', function () {
-            function closeAllDropdowns(except) {
-               document.querySelectorAll('.dropdown.show, .dropdown-submenu.show').forEach(function (openEl) {
-                  if (except && (openEl === except || openEl.contains(except))) {
-                     return;
-                  }
-                  openEl.classList.remove('show');
-               });
-            }
-            document.querySelectorAll('.dropdown-toggle').forEach(function (toggle) {
-               toggle.addEventListener('click', function (event) {
-                  event.preventDefault();
-                  event.stopPropagation();
-                  var parentDropdown = this.closest('.dropdown, .dropdown-submenu');
-                  if (!parentDropdown) return;
-                  var isOpen = parentDropdown.classList.contains('show');
-                  closeAllDropdowns(parentDropdown);
-                  if (isOpen) {
-                     parentDropdown.classList.remove('show');
-                  } else {
-                     parentDropdown.classList.add('show');
-                  }
-               });
-            });
-            document.addEventListener('click', function () {
-               closeAllDropdowns();
-            });
-            document.querySelectorAll('.dropdown-menu .dropdown-item:not(.dropdown-toggle)').forEach(function (item) {
-               item.addEventListener('click', function () {
-                  closeAllDropdowns();
-               });
-            });
+            applyFilter(normalizeFilter(getUrlFilter()));
          });
       </script>
       <script src="js/plugin.js"></script>
-      <!-- sidebar -->
       <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+      <script src="js/cart.js"></script>
       <script src="js/custom.js"></script>
-      <!-- javascript --> 
    </body>
 </html>

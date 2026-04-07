@@ -23,14 +23,14 @@
 }
 
 :root {
-    --brand: #ff6578;
-    --brand-dark: #c43b5b;
-    --brand-soft: #ffe5ed;
-    --brand-alt: #ffd0dc;
+    --brand: #021A54;
+    --brand-dark: #021A54;
+    --brand-soft: #FFCEE3;
+    --brand-alt: #FFCEE3;
     --surface: #ffffff;
     --text: #4c3144;
-    --text-muted: #716074;
-    --shadow: rgba(255,101,120,0.18);
+    --text-muted: #FFCEE3;
+    --shadow: rgba(2,26,84,0.18);
 }
 
 html {
@@ -308,12 +308,12 @@ button {
 .login_bt a {
     font-size: 16px;
     color: #ffffff;
-    background: linear-gradient(135deg, #ff6578, #ff8aa7);
+    background: #021A54;
     padding: 10px 20px;
     display: inline-flex;
     align-items: center;
     border-radius: 999px;
-    box-shadow: 0 15px 30px rgba(255,101,120,0.22);
+    box-shadow: 0 15px 30px rgba(2,26,84,0.22);
 }
 
 .login_bt a:hover {
@@ -358,7 +358,7 @@ button {
     padding: 100px 0px 160px 0px;
     position: relative;
     overflow: hidden;
-    background: radial-gradient(circle at top left, rgba(255,101,120,0.18), transparent 28%), radial-gradient(circle at top right, rgba(255,138,167,0.14), transparent 30%), linear-gradient(180deg, #fff1f5 0%, #fff7fb 55%, #ffffff 100%);
+    background: transparent;
 }
 
 .banner_taital {
@@ -443,8 +443,8 @@ button {
     align-items: center;
     padding: 12px 18px;
     border-radius: 999px;
-    background: rgba(255, 101, 120, 0.12);
-    color: #c43b5b;
+    background: rgba(2, 26, 84, 0.12);
+    color: #021A54;
     font-weight: 700;
     font-size: 0.95rem;
 }
@@ -463,8 +463,8 @@ button {
     align-items: center;
     padding: 10px 16px;
     border-radius: 999px;
-    background: rgba(255,101,120,0.12);
-    color: #c43b5b;
+    background: rgba(2,26,84,0.12);
+    color: #021A54;
     font-weight: 600;
     font-size: 0.95rem;
 }
@@ -486,7 +486,7 @@ button {
     width: 100%;
     float: left;
     padding: 90px 0px 0px 0px;
-    background: #fff5f8;
+    background: #ffffff;
 }
 
 .about_section .about_img {
@@ -501,17 +501,17 @@ button {
     float: left;
     padding: 90px 0px 0px 0px;
     position: relative;
-    background: #fff4f7;
+    background: #ffffff;
 }
 
 .services_box {
     width: 100%;
     float: left;
-    border: 1px solid rgba(255,101,120,0.35);
-    background: #fff7f9;
+    border: 1px solid rgba(2,26,84,0.35);
+    background: #ffffff;
     padding: 24px 30px;
     border-radius: 28px;
-    box-shadow: 0 24px 60px rgba(255,101,120,0.1);
+    box-shadow: 0 24px 60px rgba(2,26,84,0.1);
 }
 
 .   padding: 18px;
@@ -542,11 +542,11 @@ button {
     float: left;
     padding: 12px 20px;
     color: #ffffff;
-    background: linear-gradient(135deg, #ff6578, #ff8aa7);
+    background: #021A54;
     text-align: center;
     font-size: 18px;
     border-radius: 999px;
-    box-shadow: 0 18px 36px rgba(255, 101, 120, 0.22);
+    box-shadow: 0 18px 36px rgba(2, 26, 84, 0.22);
 }
 
 .started_text a:hover {
@@ -594,7 +594,7 @@ button {
     width: 100%;
     float: left;
     padding: 90px 0px 0px 0px;
-    background: #fff7f9;
+    background: #ffffff;
 }
 
 .about_taital {
@@ -611,7 +611,7 @@ button {
     content: '';
     width: 80px;
     height: 6px;
-    background-color: #ffd6e1;
+    background-color: #FFCEE3;
     bottom: 20px;
     right: 0px;
     border-radius: 4px;
@@ -702,7 +702,7 @@ button {
     content: '';
     width: 80px;
     height: 6px;
-    background-color: #ffd6e1;
+    background-color: #FFCEE3;
     bottom: 20px;
     right: 160px;
     border-radius: 4px;
@@ -804,7 +804,7 @@ button {
     float: left;
     font-size: 16px;
     text-align: center;
-    background: linear-gradient(135deg, #ff6578, #ff8aa7);
+    background: #021A54;
     color: #ffffff;
     padding: 12px 0px;
     border-radius: 999px;
@@ -812,7 +812,7 @@ button {
 }
 
 .seemore_bt a:hover {
-    background: linear-gradient(135deg, #c43b5b, #ff6578);
+    background: #021A54;
     color: #ffffff;
 }
 
@@ -827,7 +827,7 @@ button {
     float: left;
     padding: 90px 0px 0px 0px;
     position: relative;
-    background: #fff5f8;
+    background: #ffffff;
 }
 
 .services_taital {
@@ -843,7 +843,7 @@ button {
     content: '';
     width: 80px;
     height: 6px;
-    background-color: #ffd6e1;
+    background-color: #FFCEE3;
     bottom: 25px;
     right: 160px;
     border-radius: 4px;
@@ -866,11 +866,11 @@ button {
 .services_box {
     width: 100%;
     float: left;
-    border: 1px solid rgba(255,101,120,0.35);
-    background: #fff2f5;
+    border: 1px solid rgba(2,26,84,0.35);
+    background: #ffffff;
     padding: 24px 30px;
     border-radius: 24px;
-    box-shadow: 0 20px 40px rgba(255,101,120,0.08);
+    box-shadow: 0 20px 40px rgba(2,26,84,0.08);
 }
 
 .tasty_text {
@@ -1082,7 +1082,7 @@ textarea#comment::placeholder {
     color: #ffffff;
     font-size: 16px;
     padding: 12px 0px;
-    background: linear-gradient(135deg, #ff6578, #ff8aa7);
+    background: #021A54;
     text-transform: uppercase;
     font-weight: 700;
     text-align: center;
@@ -1091,7 +1091,7 @@ textarea#comment::placeholder {
 
 .main_bt a:hover {
     color: #ffffff;
-    background: linear-gradient(135deg, #c43b5b, #ff6578);
+    background: #021A54;
 }
 
 .location_text {
@@ -1167,7 +1167,7 @@ textarea#comment::placeholder {
 }
 
 .footer_social_icon li a:hover {
-    background-color: #ff6578;
+    background-color: #021A54;
     color: #ffffff;
 }
 
@@ -1304,4 +1304,11 @@ textarea#comment.update_mail::placeholder {
 
 .fa-search:hover {
     color: #007bff;
+}
+
+@media (min-width: 768px) {
+    .col-sm-6 {
+        width: 45%;
+        max-width: 45%;
+    }
 }

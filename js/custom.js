@@ -335,3 +335,155 @@ $(function () {
 
 
 });
+
+
+
+/* My edits */
+const posts = [
+  {
+    title: "Birthday surprises designed with polish and personality",
+    excerpt:
+      "Explore styled birthday experiences that combine gifting, decor, and a memorable reveal in one clean, elegant setup.",
+    imageSrc: "images/lizz.jpg",
+    author: "Birthday Collection",
+    date: "Signature Setup",
+    readTime: "View packages",
+    url: "packages.html?filter=birthday"
+  },
+  {
+    title: "Romantic anniversary moments with refined decor styling",
+    excerpt:
+      "From candlelit rooms to premium presentation details, our anniversary packages are built to feel intimate and elevated.",
+    imageSrc: "images/img-4.png",
+    author: "Anniversary Collection",
+    date: "Elegant Reveal",
+    readTime: "Book now",
+    url: "packages.html?filter=anniversary"
+  },
+  {
+    title: "Festive gifting and decor for seasonal celebrations",
+    excerpt:
+      "Celebrate Christmas, New Year, Easter, and more with coordinated decor, curated packages, and warm finishing touches.",
+    imageSrc: "images/img-5.png",
+    author: "Festival Collection",
+    date: "Seasonal Styling",
+    readTime: "See options",
+    url: "packages.html?filter=festival"
+  },
+  {
+    title: "Custom surprise planning for beautiful one-of-a-kind moments",
+    excerpt:
+      "If you have a unique celebration in mind, BettyVerse can shape a custom concept that fits your mood, venue, and story.",
+    imageSrc: "images/img-1.png",
+    author: "Custom Requests",
+    date: "Tailored Planning",
+    readTime: "Contact us",
+    url: "contact.html"
+  }
+];
+
+let currentIndex = 0;
+let direction = 1;
+const carousel = document.getElementById("carousel");
+
+function createSlide(post, index) {
+  const slide = document.createElement("div");
+  slide.className = "slide";
+  if (index === currentIndex) slide.classList.add("active");
+  slide.style.backgroundImage = `url(${post.imageSrc})`;
+
+  slide.innerHTML = `
+      <div class="overlay"></div>
+      <div class="slide-content">
+        <h1><a href="${post.url}" style="color:white;text-decoration:none">${post.title}</a></h1>
+        <p>${post.excerpt}</p>
+        <div class="author">${post.author} | ${post.date} | ${post.readTime}</div>
+      </div>
+    `;
+
+  return slide;
+}
+
+function renderSlides() {
+  carousel.innerHTML = "";
+  posts.forEach((post, i) => {
+    const slide = createSlide(post, i);
+    carousel.appendChild(slide);
+  });
+
+  const controls = document.createElement("div");
+  controls.className = "controls";
+
+  const dots = document.createElement("div");
+  dots.className = "dots";
+  posts.forEach((_, i) => {
+    const dot = document.createElement("div");
+    dot.className = `dot ${i === currentIndex ? "active" : ""}`;
+    dot.addEventListener("click", () => {
+      direction = i > currentIndex ? 1 : -1;
+      currentIndex = i;
+      updateSlides();
+    });
+    dots.appendChild(dot);
+  });
+
+  const arrows = document.createElement("div");
+  arrows.className = "arrows";
+  const prevBtn = document.createElement("button");
+  prevBtn.className = "arrow-btn";
+  prevBtn.type = "button";
+  prevBtn.setAttribute("aria-label", "Previous banner slide");
+  prevBtn.textContent = "<";
+  prevBtn.onclick = () => {
+    direction = -1;
+    currentIndex = (currentIndex - 1 + posts.length) % posts.length;
+    updateSlides();
+  };
+
+  const nextBtn = document.createElement("button");
+  nextBtn.className = "arrow-btn";
+  nextBtn.type = "button";
+  nextBtn.setAttribute("aria-label", "Next banner slide");
+  nextBtn.textContent = ">";
+  nextBtn.onclick = () => {
+    direction = 1;
+    currentIndex = (currentIndex + 1) % posts.length;
+    updateSlides();
+  };
+
+  arrows.appendChild(prevBtn);
+  arrows.appendChild(nextBtn);
+  controls.appendChild(dots);
+  controls.appendChild(arrows);
+  carousel.appendChild(controls);
+}
+
+function updateSlides() {
+  const slides = document.querySelectorAll(".slide");
+  slides.forEach((slide, i) => {
+    slide.classList.remove("active", "exit-left", "exit-right");
+    if (i === currentIndex) {
+      slide.classList.add("active");
+    } else if (direction === 1) {
+      slide.classList.add("exit-left");
+    } else {
+      slide.classList.add("exit-right");
+    }
+  });
+
+  const dots = document.querySelectorAll(".dot");
+  dots.forEach((dot, i) => {
+    dot.classList.toggle("active", i === currentIndex);
+  });
+}
+
+if (carousel) {
+  setInterval(() => {
+    direction = 1;
+    currentIndex = (currentIndex + 1) % posts.length;
+    updateSlides();
+  }, 6000);
+
+  renderSlides();
+}
+
