@@ -344,7 +344,8 @@ const posts = [
     title: "Birthday surprises designed with polish and personality",
     excerpt:
       "Explore styled birthday experiences that combine gifting, decor, and a memorable reveal in one clean, elegant setup.",
-    imageSrc: "images/lizz.jpg",
+    theme: "birthday",
+    svgSrc: "https://cdn.jsdelivr.net/npm/openmoji@16.0.0/color/svg/1F382.svg",
     author: "Birthday Collection",
     date: "Signature Setup",
     readTime: "View packages",
@@ -354,7 +355,8 @@ const posts = [
     title: "Romantic anniversary moments with refined decor styling",
     excerpt:
       "From candlelit rooms to premium presentation details, our anniversary packages are built to feel intimate and elevated.",
-    imageSrc: "images/img-4.png",
+    theme: "anniversary",
+    svgSrc: "https://cdn.jsdelivr.net/npm/openmoji@16.0.0/color/svg/1F48D.svg",
     author: "Anniversary Collection",
     date: "Elegant Reveal",
     readTime: "Book now",
@@ -364,7 +366,8 @@ const posts = [
     title: "Festive gifting and decor for seasonal celebrations",
     excerpt:
       "Celebrate Christmas, New Year, Easter, and more with coordinated decor, curated packages, and warm finishing touches.",
-    imageSrc: "images/img-5.png",
+    theme: "festival",
+    svgSrc: "https://cdn.jsdelivr.net/npm/openmoji@16.0.0/color/svg/1F386.svg",
     author: "Festival Collection",
     date: "Seasonal Styling",
     readTime: "See options",
@@ -374,7 +377,8 @@ const posts = [
     title: "Custom surprise planning for beautiful one-of-a-kind moments",
     excerpt:
       "If you have a unique celebration in mind, BettyVerse can shape a custom concept that fits your mood, venue, and story.",
-    imageSrc: "images/img-1.png",
+    theme: "custom",
+    svgSrc: "https://cdn.jsdelivr.net/npm/openmoji@16.0.0/color/svg/1F381.svg",
     author: "Custom Requests",
     date: "Tailored Planning",
     readTime: "Contact us",
@@ -386,13 +390,29 @@ let currentIndex = 0;
 let direction = 1;
 const carousel = document.getElementById("carousel");
 
+function getSlideBackground(theme) {
+  if (theme === "birthday") {
+    return "radial-gradient(circle at 14% 18%, rgba(255,255,255,0.26), transparent 32%), linear-gradient(120deg, #2157cd 0%, #173f99 46%, #102f7d 100%)";
+  }
+  if (theme === "anniversary") {
+    return "radial-gradient(circle at 18% 20%, rgba(255,255,255,0.24), transparent 35%), linear-gradient(120deg, #2a53b8 0%, #1f459f 44%, #193881 100%)";
+  }
+  if (theme === "festival") {
+    return "radial-gradient(circle at 22% 26%, rgba(255,255,255,0.24), transparent 34%), linear-gradient(120deg, #2c64db 0%, #2250b3 45%, #1b3f91 100%)";
+  }
+  return "radial-gradient(circle at 18% 22%, rgba(255,255,255,0.24), transparent 35%), linear-gradient(120deg, #1f5cd0 0%, #1847a7 44%, #143987 100%)";
+}
+
 function createSlide(post, index) {
   const slide = document.createElement("div");
-  slide.className = "slide";
+  slide.className = `slide slide-${post.theme}`;
   if (index === currentIndex) slide.classList.add("active");
-  slide.style.backgroundImage = `url(${post.imageSrc})`;
+  slide.style.background = getSlideBackground(post.theme);
 
   slide.innerHTML = `
+      <div class="slide-art">
+        <img src="${post.svgSrc}" alt="${post.author} SVG illustration" loading="lazy" decoding="async">
+      </div>
       <div class="overlay"></div>
       <div class="slide-content">
         <h1><a href="${post.url}" style="color:white;text-decoration:none">${post.title}</a></h1>

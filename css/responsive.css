@@ -564,8 +564,9 @@
     }
 
     .navbar {
-        padding: 12px 0;
+        padding: 10px 12px;
         align-items: center;
+        border-radius: 16px;
     }
 
     .navbar-brand {
@@ -574,8 +575,19 @@
         padding: 0;
     }
 
-    .navbar-brand img {
+    .brand-mark__icon {
+        width: auto;
+        height: auto;
+        border-radius: 0;
+    }
+
+    .brand-mark__icon img {
         width: 64px;
+        height: auto;
+    }
+
+    .brand-mark__text {
+        font-size: 1rem;
     }
 
     .navbar-toggler {
