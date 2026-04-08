@@ -1821,6 +1821,484 @@ textarea#comment.update_mail::placeholder {
     padding-bottom: 36px;
 }
 
+.payment-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.payment-modal[hidden] {
+    display: none;
+}
+
+.payment-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(2, 26, 84, 0.42);
+    backdrop-filter: blur(8px);
+}
+
+.payment-sheet {
+    position: relative;
+    width: min(100%, 380px);
+    max-height: min(92vh, 760px);
+    overflow-y: auto;
+    border-radius: 34px;
+    background: linear-gradient(180deg, #fbfbff 0%, #f5f6fb 100%);
+    box-shadow: 0 30px 90px rgba(2, 26, 84, 0.22);
+    padding: 28px 22px 24px;
+}
+
+.payment-sheet-header {
+    display: grid;
+    grid-template-columns: 40px 1fr 40px;
+    align-items: center;
+    gap: 12px;
+}
+
+.payment-sheet-header h2 {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    color: #111111;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.payment-sheet-back,
+.payment-sheet-spacer {
+    width: 40px;
+    height: 40px;
+}
+
+.payment-sheet-back {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: #0d122b;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.payment-sheet-body {
+    margin-top: 22px;
+}
+
+.payment-sheet-section + .payment-sheet-section {
+    margin-top: 22px;
+}
+
+.payment-sheet-label {
+    display: inline-block;
+    color: #1c2133;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.payment-destination {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 14px;
+}
+
+.payment-destination-icon {
+    width: 58px;
+    height: 58px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 18px;
+    background: linear-gradient(180deg, #ffffff 0%, #eef2f8 100%);
+    color: #111111;
+    font-size: 24px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+}
+
+.payment-destination-copy strong {
+    display: block;
+    color: #111111;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.payment-destination-copy p {
+    margin: 6px 0 0;
+    color: #8e94a8;
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.payment-method-picker {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 14px;
+}
+
+.payment-method-tile {
+    min-height: 58px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(17, 18, 43, 0.08);
+    border-radius: 18px;
+    background: #ffffff;
+    color: #1b2440;
+    font-size: 30px;
+    box-shadow: 0 10px 22px rgba(2, 26, 84, 0.06);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.payment-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.payment-logo-card {
+    position: relative;
+    width: 34px;
+    height: 22px;
+}
+
+.payment-logo-card-circle {
+    position: absolute;
+    top: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+}
+
+.payment-logo-card-circle-left {
+    left: 0;
+    background: #ef6c3b;
+}
+
+.payment-logo-card-circle-right {
+    right: 0;
+    background: #f7b53c;
+    opacity: 0.92;
+}
+
+.payment-logo-paypal {
+    width: 28px;
+    height: 28px;
+    border-radius: 10px;
+    color: #1160ff;
+    font-size: 28px;
+    font-weight: 800;
+    font-style: italic;
+    line-height: 1;
+}
+
+.payment-logo-apple {
+    color: #111111;
+    font-size: 30px;
+}
+
+.payment-logo-google {
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1;
+    background: linear-gradient(90deg, #4285f4 0 24%, #ea4335 24% 49%, #fbbc05 49% 74%, #34a853 74% 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.payment-method-tile[data-payment-method="apple"] {
+    background: linear-gradient(180deg, #ffffff 0%, #f2f3f6 100%);
+}
+
+.payment-method-tile[data-payment-method="google"] {
+    background: linear-gradient(180deg, #ffffff 0%, #f7f8fc 100%);
+}
+
+.payment-method-tile:hover,
+.payment-method-tile:focus {
+    transform: translateY(-1px);
+    border-color: rgba(23, 73, 186, 0.2);
+    box-shadow: 0 16px 30px rgba(2, 26, 84, 0.1);
+}
+
+.payment-method-tile.is-active {
+    border-color: rgba(23, 73, 186, 0.26);
+    background: linear-gradient(180deg, #ffffff 0%, #eef4ff 100%);
+    color: #1749ba;
+}
+
+.payment-method-tile[data-payment-method="card"].is-active {
+    border-color: rgba(239, 108, 59, 0.26);
+    background: linear-gradient(180deg, #fff9f5 0%, #fff1e6 100%);
+    color: #cb5321;
+}
+
+.payment-method-tile[data-payment-method="paypal"].is-active {
+    border-color: rgba(17, 96, 255, 0.24);
+    background: linear-gradient(180deg, #f5f9ff 0%, #e9f1ff 100%);
+    color: #1160ff;
+}
+
+.payment-method-tile[data-payment-method="apple"].is-active {
+    border-color: rgba(17, 17, 17, 0.14);
+    background: linear-gradient(180deg, #fbfbfb 0%, #eceef2 100%);
+    color: #111111;
+}
+
+.payment-method-tile[data-payment-method="google"].is-active {
+    border-color: rgba(66, 133, 244, 0.18);
+    background: linear-gradient(180deg, #ffffff 0%, #f4f8ff 100%);
+}
+
+.payment-method-caption {
+    margin: 12px 0 0;
+    color: #8e94a8;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.payment-card-preview {
+    margin-top: 24px;
+    padding: 22px 18px 18px;
+    border-radius: 22px;
+    background:
+        radial-gradient(circle at top right, rgba(255,255,255,0.08), transparent 30%),
+        linear-gradient(180deg, #0e0e11 0%, #080809 100%);
+    color: #ffffff;
+    box-shadow: 0 24px 40px rgba(0, 0, 0, 0.2);
+}
+
+.payment-card-preview.is-paypal {
+    background:
+        radial-gradient(circle at top right, rgba(170, 214, 255, 0.18), transparent 34%),
+        linear-gradient(180deg, #0a2459 0%, #073d91 100%);
+}
+
+.payment-card-preview.is-apple {
+    background:
+        radial-gradient(circle at top right, rgba(255,255,255,0.18), transparent 32%),
+        linear-gradient(180deg, #2e3138 0%, #101216 100%);
+}
+
+.payment-card-preview.is-google {
+    background:
+        radial-gradient(circle at top right, rgba(255,255,255,0.18), transparent 32%),
+        linear-gradient(135deg, #4285f4 0%, #34a853 46%, #fbbc05 72%, #ea4335 100%);
+}
+
+.payment-card-preview.is-paypal .payment-card-chip,
+.payment-card-preview.is-google .payment-card-chip {
+    background: rgba(255,255,255,0.18);
+}
+
+.payment-card-top,
+.payment-card-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.payment-card-chip {
+    width: 42px;
+    height: 32px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #b6bcc8 0%, #8a90a3 100%);
+    position: relative;
+}
+
+.payment-card-chip::before,
+.payment-card-chip::after {
+    content: "";
+    position: absolute;
+    top: 7px;
+    width: 1px;
+    height: 18px;
+    background: rgba(255,255,255,0.38);
+}
+
+.payment-card-chip::before {
+    left: 14px;
+}
+
+.payment-card-chip::after {
+    left: 24px;
+}
+
+.payment-card-brand {
+    color: rgba(255,255,255,0.9);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+
+.payment-card-type {
+    display: block;
+    margin-top: 18px;
+    color: rgba(255,255,255,0.72);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.payment-card-number {
+    margin-top: 14px;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 1.15;
+}
+
+.payment-card-meta {
+    display: block;
+    color: rgba(255,255,255,0.6);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.payment-card-bottom {
+    margin-top: 18px;
+}
+
+.payment-card-bottom strong {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+}
+
+.payment-card-logo {
+    color: #ff9d2d;
+    font-size: 34px;
+}
+
+.fa-paypal.payment-card-logo {
+    color: #8fc1ff;
+}
+
+.fa-apple.payment-card-logo {
+    color: #f5f5f7;
+}
+
+.fa-google-wallet.payment-card-logo {
+    color: #9fd36c;
+}
+
+.payment-sheet-total {
+    margin-top: 24px;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+}
+
+.payment-sheet-total span {
+    color: #191d31;
+}
+
+.payment-sheet-total strong {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    color: #111111;
+    font-size: 30px;
+}
+
+.payment-sheet-total strong small {
+    color: #8e94a8;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+
+.payment-confirm-btn {
+    width: 100%;
+    min-height: 58px;
+    margin-top: 28px;
+    border: 0;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #161616 0%, #0d0d0d 100%);
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    box-shadow: 0 18px 30px rgba(0, 0, 0, 0.16);
+    cursor: pointer;
+}
+
+.payment-confirm-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.payment-live-area {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(17, 18, 43, 0.08);
+}
+
+.payment-checkout-slot + .payment-checkout-slot {
+    margin-top: 14px;
+}
+
+.payment-checkout-slot[hidden] {
+    display: none;
+}
+
+.payment-live-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.payment-live-head strong {
+    color: #111111;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.payment-live-head span {
+    color: #8e94a8;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.payment-secondary-link {
+    display: inline-flex;
+    margin-top: 16px;
+    color: #1749ba;
+    font-weight: 700;
+}
+
+.payment-unavailable-btn {
+    width: 100%;
+    min-height: 50px;
+    margin-top: 16px;
+    border: 1px solid rgba(17, 18, 43, 0.08);
+    border-radius: 16px;
+    background: linear-gradient(180deg, #f2f4f8 0%, #e7ebf4 100%);
+    color: #61697f;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.payment-modal-open {
+    overflow: hidden;
+}
+
 .payment-surface,
 .payment-option-card,
 .payment-method-panel {
@@ -2040,6 +2518,24 @@ textarea#comment.update_mail::placeholder {
     min-height: 46px;
     border-radius: 12px;
     overflow: hidden;
+}
+
+@media (max-width: 575px) {
+    .payment-modal {
+        padding: 10px;
+        align-items: flex-end;
+    }
+
+    .payment-sheet {
+        width: 100%;
+        max-height: 94vh;
+        border-radius: 30px 30px 24px 24px;
+        padding: 24px 18px 20px;
+    }
+
+    .payment-card-number {
+        font-size: 24px;
+    }
 }
 
 .home-shell {

@@ -92,7 +92,7 @@
                      <p class="cart-summary-note">Use this list as your shortlist, then send it straight into the contact form for scheduling and customization.</p>
                      <div class="cart-summary-actions">
                         <a class="hero-btn primary" data-cart-contact-link href="contact.html?cart=1">Continue to Booking</a>
-                        <a class="hero-btn secondary" href="#payment-options">Pay From Cart</a>
+                        <button class="hero-btn secondary" type="button" data-open-payment-modal>Pay From Cart</button>
                         <a class="hero-btn secondary" href="packages.html">Add More Packages</a>
                         <button class="cart-clear-btn" type="button" data-clear-cart>Clear Cart</button>
                      </div>
@@ -101,66 +101,101 @@
             </div>
          </div>
       </section>
-      <section class="content_section payment_section" id="payment-options">
-         <div class="container">
-            <div class="payment-surface">
-               <div class="section_heading center_heading">
-                  <span class="content_eyebrow"><i class="fa fa-lock icon-inline" aria-hidden="true"></i>Checkout Options</span>
-                  <h2 class="content_title">Let clients book manually or pay securely from the cart.</h2>
-                  <p class="page_intro payment-intro">Choose the path that fits the moment best. Booking sends the cart into your booking form, while payment supports PayPal, eligible card checkout, and Apple Pay readiness on supported devices.</p>
+      <div class="payment-modal" data-payment-modal hidden aria-hidden="true">
+         <div class="payment-modal-backdrop" data-payment-close></div>
+         <div class="payment-sheet" role="dialog" aria-modal="true" aria-labelledby="payment-sheet-title">
+            <div class="payment-sheet-header">
+               <button class="payment-sheet-back" type="button" data-payment-close aria-label="Close payment modal">
+                  <i class="fa fa-angle-left" aria-hidden="true"></i>
+               </button>
+               <h2 id="payment-sheet-title">Payment Method</h2>
+               <span class="payment-sheet-spacer" aria-hidden="true"></span>
+            </div>
+            <div class="payment-sheet-body">
+               <div class="payment-sheet-section">
+                  <span class="payment-sheet-label">Shipping to</span>
+                  <div class="payment-destination">
+                     <div class="payment-destination-icon">
+                        <i class="fa fa-map-marker" aria-hidden="true"></i>
+                     </div>
+                     <div class="payment-destination-copy">
+                        <strong>Home</strong>
+                        <p>59 Don Road, Dunfermline, Scotland, UK</p>
+                     </div>
+                  </div>
                </div>
-               <div class="row">
-                  <div class="col-lg-4 mb-4">
-                     <div class="payment-option-card">
-                        <span class="blog_meta">Book Instead</span>
-                        <h3>Send a tailored booking request.</h3>
-                        <p>Best when the client wants to confirm date, venue, color direction, or custom add-ons before paying.</p>
-                        <ul class="payment-list">
-                           <li>Cart selections are added to the contact form</li>
-                           <li>Ideal for custom requests and date checks</li>
-                           <li>Keeps the process personal and flexible</li>
-                        </ul>
-                        <a class="hero-btn secondary" data-payment-book-link href="contact.html?cart=1">Continue to Booking</a>
-                     </div>
+               <div class="payment-sheet-section">
+                  <span class="payment-sheet-label">Add Payment Method</span>
+                  <div class="payment-method-picker" role="list">
+                     <button class="payment-method-tile is-active" type="button" data-payment-method="card" aria-pressed="true">
+                        <span class="payment-logo payment-logo-card" aria-hidden="true">
+                           <span class="payment-logo-card-circle payment-logo-card-circle-left"></span>
+                           <span class="payment-logo-card-circle payment-logo-card-circle-right"></span>
+                        </span>
+                        <span class="sr-only">Card</span>
+                     </button>
+                     <button class="payment-method-tile" type="button" data-payment-method="paypal" aria-pressed="false">
+                        <span class="payment-logo payment-logo-paypal" aria-hidden="true">P</span>
+                        <span class="sr-only">PayPal</span>
+                     </button>
+                     <button class="payment-method-tile" type="button" data-payment-method="apple" aria-pressed="false">
+                        <span class="payment-logo payment-logo-apple" aria-hidden="true"><i class="fa fa-apple" aria-hidden="true"></i></span>
+                        <span class="sr-only">Apple Pay</span>
+                     </button>
+                     <button class="payment-method-tile" type="button" data-payment-method="google" aria-pressed="false">
+                        <span class="payment-logo payment-logo-google" aria-hidden="true">G</span>
+                        <span class="sr-only">Google Pay</span>
+                     </button>
                   </div>
-                  <div class="col-lg-8 mb-4">
-                     <div class="payment-option-card payment-card">
-                        <div class="payment-method-badges">
-                           <span>PayPal</span>
-                           <span>Card</span>
-                           <span>Apple Pay</span>
-                        </div>
-                        <h3>Secure checkout from the saved cart.</h3>
-                        <p>PayPal and eligible card checkout can run directly here once your merchant credentials are added. Apple Pay appears on compatible Apple devices after merchant onboarding and domain verification.</p>
-                        <div class="payment-total-row">
-                           <span>Total due</span>
-                           <strong data-payment-total>$0.00</strong>
-                        </div>
-                        <div class="payment-status" data-payment-status></div>
-                        <div class="payment-grid">
-                           <div class="payment-method-panel">
-                              <div class="payment-method-head">
-                                 <h4>PayPal or Card</h4>
-                                 <span>Fast checkout for supported buyers</span>
-                              </div>
-                              <div class="payment-method-note">Card checkout may appear as a dedicated card button or inside PayPal secure checkout depending on buyer eligibility.</div>
-                              <div class="payment-buttons-stack" data-paypal-buttons></div>
-                           </div>
-                           <div class="payment-method-panel">
-                              <div class="payment-method-head">
-                                 <h4>Apple Pay</h4>
-                                 <span>Apple devices and verified domain required</span>
-                              </div>
-                              <div class="payment-method-note" data-applepay-note>Apple Pay will show here on supported Apple devices after PayPal Apple Pay onboarding is completed.</div>
-                              <div class="applepay-container" data-applepay-container></div>
-                           </div>
-                        </div>
-                     </div>
+                  <p class="payment-method-caption" data-payment-method-caption>Card checkout can be completed with supported providers once your live payment credentials are connected.</p>
+               </div>
+               <div class="payment-card-preview" data-payment-card-preview>
+                  <div class="payment-card-top">
+                     <span class="payment-card-chip"></span>
+                     <span class="payment-card-brand" data-payment-card-brand>VISA</span>
                   </div>
+                  <span class="payment-card-type" data-payment-card-type>Credit Card</span>
+                  <div class="payment-card-number">4315&nbsp;&nbsp;0245448&nbsp;&nbsp;00345</div>
+                  <div class="payment-card-bottom">
+                     <div>
+                        <span class="payment-card-meta">Card Holder</span>
+                        <strong>BETTYVERSE CLIENT</strong>
+                     </div>
+                     <i class="fa fa-cc-mastercard payment-card-logo" aria-hidden="true"></i>
+                  </div>
+               </div>
+               <div class="payment-total-row payment-sheet-total">
+                  <span>Total Payment</span>
+                  <strong><span data-payment-total>$0.00</span> <small>USD</small></strong>
+               </div>
+               <div class="payment-status" data-payment-status></div>
+               <button class="payment-confirm-btn" type="button" data-payment-confirm>Confirm Order</button>
+               <div class="payment-live-area" data-payment-live-area hidden>
+                  <div class="payment-live-head">
+                     <strong data-payment-method-name>Card</strong>
+                     <span>Secure checkout</span>
+                  </div>
+                  <div class="payment-checkout-slot" data-payment-card-slot>
+                     <div class="payment-method-note" data-payment-card-note>Card checkout may appear as a dedicated card button or inside PayPal secure checkout depending on buyer eligibility.</div>
+                     <div class="payment-buttons-stack" data-card-buttons></div>
+                  </div>
+                  <div class="payment-checkout-slot" data-payment-paypal-slot hidden>
+                     <div class="payment-method-note" data-payment-paypal-note>Use the PayPal button below to continue with secure wallet checkout for the current cart total.</div>
+                     <div class="payment-buttons-stack" data-paypal-buttons></div>
+                  </div>
+                  <div class="payment-checkout-slot" data-payment-apple-slot hidden>
+                     <div class="payment-method-note" data-applepay-note>Apple Pay will show here on supported Apple devices after PayPal Apple Pay onboarding is completed.</div>
+                     <div class="applepay-container" data-applepay-container></div>
+                  </div>
+                  <div class="payment-checkout-slot" data-payment-google-slot hidden>
+                     <div class="payment-method-note" data-payment-google-note>Google Pay is styled into this payment sheet and reserved for a future live gateway connection.</div>
+                     <button class="payment-unavailable-btn" type="button" disabled>Google Pay Coming Soon</button>
+                  </div>
+                  <a class="payment-secondary-link" data-payment-book-link href="contact.html?cart=1">Prefer booking instead</a>
                </div>
             </div>
          </div>
-      </section>
+      </div>
       <footer class="site_footer">
          <div class="container">
             <div class="footer_top">
