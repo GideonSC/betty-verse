@@ -11,6 +11,35 @@
     applePayNote: null
   };
 
+  function normalizeCartItems(items) {
+    if (!Array.isArray(items)) {
+      return [];
+    }
+
+    return items.reduce(function (result, item) {
+      if (!item || !item.id) {
+        return result;
+      }
+
+      var exists = result.some(function (entry) {
+        return entry.id === item.id;
+      });
+
+      if (exists) {
+        return result;
+      }
+
+      result.push({
+        id: item.id,
+        name: item.name || "",
+        price: Number(item.price || 0),
+        quantity: 1
+      });
+
+      return result;
+    }, []);
+  }
+
   function readCart() {
     try {
       var stored = window.localStorage.getItem(CART_KEY);
@@ -19,35 +48,35 @@
       }
 
       var parsed = JSON.parse(stored);
-      return Array.isArray(parsed) ? parsed : [];
+      return normalizeCartItems(parsed);
     } catch (error) {
       return [];
     }
   }
 
   function saveCart(items) {
+    var normalizedItems = normalizeCartItems(items);
+
     try {
-      window.localStorage.setItem(CART_KEY, JSON.stringify(items));
+      window.localStorage.setItem(CART_KEY, JSON.stringify(normalizedItems));
     } catch (error) {
       return;
     }
 
     document.dispatchEvent(
       new CustomEvent("bettyverse:cart-updated", {
-        detail: { items: items }
+        detail: { items: normalizedItems }
       })
     );
   }
 
   function getCount(items) {
-    return items.reduce(function (total, item) {
-      return total + (Number(item.quantity) || 0);
-    }, 0);
+    return normalizeCartItems(items).length;
   }
 
   function getTotal(items) {
     return items.reduce(function (total, item) {
-      return total + ((Number(item.price) || 0) * (Number(item.quantity) || 0));
+      return total + (Number(item.price) || 0);
     }, 0);
   }
 
@@ -73,7 +102,7 @@
     }
 
     var names = items.map(function (item) {
-      return item.name + " x" + item.quantity;
+      return item.name;
     });
 
     return "BettyVerse packages: " + names.join(", ");

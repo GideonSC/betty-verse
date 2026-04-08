@@ -3,6 +3,38 @@
 
   var CART_KEY = "bettyverse-cart";
 
+  function normalizeCartItems(items) {
+    if (!Array.isArray(items)) {
+      return [];
+    }
+
+    return items.reduce(function (result, item) {
+      if (!item || !item.id) {
+        return result;
+      }
+
+      var exists = result.some(function (entry) {
+        return entry.id === item.id;
+      });
+
+      if (exists) {
+        return result;
+      }
+
+      result.push({
+        id: item.id,
+        name: item.name || "",
+        category: item.category || "",
+        price: Number(item.price || 0),
+        image: item.image || "",
+        summary: item.summary || "",
+        quantity: 1
+      });
+
+      return result;
+    }, []);
+  }
+
   function readCart() {
     try {
       var stored = window.localStorage.getItem(CART_KEY);
@@ -10,35 +42,35 @@
         return [];
       }
       var parsed = JSON.parse(stored);
-      return Array.isArray(parsed) ? parsed : [];
+      return normalizeCartItems(parsed);
     } catch (error) {
       return [];
     }
   }
 
   function saveCart(items) {
+    var normalizedItems = normalizeCartItems(items);
+
     try {
-      window.localStorage.setItem(CART_KEY, JSON.stringify(items));
+      window.localStorage.setItem(CART_KEY, JSON.stringify(normalizedItems));
     } catch (error) {
       return;
     }
 
     document.dispatchEvent(
       new CustomEvent("bettyverse:cart-updated", {
-        detail: { items: items }
+        detail: { items: normalizedItems }
       })
     );
   }
 
   function getItemCount(items) {
-    return items.reduce(function (total, item) {
-      return total + (Number(item.quantity) || 0);
-    }, 0);
+    return normalizeCartItems(items).length;
   }
 
   function getSubtotal(items) {
     return items.reduce(function (total, item) {
-      return total + (Number(item.price) || 0) * (Number(item.quantity) || 0);
+      return total + (Number(item.price) || 0);
     }, 0);
   }
 
@@ -83,10 +115,10 @@
     });
 
     if (existing) {
-      existing.quantity = (Number(existing.quantity) || 0) + 1;
-    } else {
-      items.push(item);
+      return items;
     }
+
+    items.push(item);
 
     saveCart(items);
     return items;
@@ -97,25 +129,6 @@
       return item.id !== itemId;
     });
 
-    saveCart(items);
-    return items;
-  }
-
-  function updateQuantity(itemId, nextQuantity) {
-    var items = readCart();
-    var match = items.find(function (item) {
-      return item.id === itemId;
-    });
-
-    if (!match) {
-      return items;
-    }
-
-    if (nextQuantity <= 0) {
-      return removeItem(itemId);
-    }
-
-    match.quantity = nextQuantity;
     saveCart(items);
     return items;
   }
@@ -186,38 +199,8 @@
     var footer = document.createElement("div");
     footer.className = "cart-item-footer";
 
-    var quantityBox = document.createElement("div");
-    quantityBox.className = "cart-quantity";
-
-    var decrease = document.createElement("button");
-    decrease.type = "button";
-    decrease.setAttribute("aria-label", "Decrease quantity");
-    decrease.textContent = "-";
-    decrease.addEventListener("click", function () {
-      renderCart(updateQuantity(item.id, (Number(item.quantity) || 0) - 1));
-    });
-
-    var quantity = document.createElement("span");
-    quantity.textContent = item.quantity;
-
-    var increase = document.createElement("button");
-    increase.type = "button";
-    increase.setAttribute("aria-label", "Increase quantity");
-    increase.textContent = "+";
-    increase.addEventListener("click", function () {
-      renderCart(updateQuantity(item.id, (Number(item.quantity) || 0) + 1));
-    });
-
-    quantityBox.appendChild(decrease);
-    quantityBox.appendChild(quantity);
-    quantityBox.appendChild(increase);
-
     var footerActions = document.createElement("div");
     footerActions.className = "cart-item-actions";
-
-    var lineTotal = document.createElement("strong");
-    lineTotal.className = "cart-line-total";
-    lineTotal.textContent = formatPrice((Number(item.price) || 0) * (Number(item.quantity) || 0));
 
     var remove = document.createElement("button");
     remove.type = "button";
@@ -227,10 +210,8 @@
       renderCart(removeItem(item.id));
     });
 
-    footerActions.appendChild(lineTotal);
     footerActions.appendChild(remove);
 
-    footer.appendChild(quantityBox);
     footer.appendChild(footerActions);
 
     main.appendChild(head);
@@ -306,7 +287,7 @@
 
   function buildContactMessage(items) {
     var lines = items.map(function (item) {
-      return "- " + item.name + " x" + item.quantity + " (" + formatPrice(item.price) + " each)";
+      return "- " + item.name + " (" + formatPrice(item.price) + ")";
     });
 
     return [
