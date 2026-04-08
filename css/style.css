@@ -2313,3 +2313,175 @@ textarea#comment.update_mail::placeholder {
     animation: floatSoft 4s ease-in-out infinite;
 }
 
+/* ── hero buttons ── */
+
+.hero-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 52px;
+    padding: 13px 30px;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    transition: all 0.28s ease;
+    text-decoration: none !important;
+    white-space: nowrap;
+}
+
+.hero-btn.primary {
+    background: linear-gradient(135deg, #021A54, #1749ba);
+    color: #ffffff;
+    box-shadow: 0 16px 32px rgba(2, 26, 84, 0.22);
+}
+
+.hero-btn.primary:hover {
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 20px 38px rgba(2, 26, 84, 0.30);
+}
+
+.hero-btn.secondary {
+    background: rgba(255, 255, 255, 0.96);
+    color: #021A54;
+    border: 1.5px solid rgba(2, 26, 84, 0.14);
+    box-shadow: 0 8px 24px rgba(2, 26, 84, 0.08);
+}
+
+.hero-btn.secondary:hover {
+    color: #021A54;
+    background: #eef4ff;
+    border-color: rgba(23, 73, 186, 0.20);
+    transform: translateY(-2px);
+}
+
+/* ── home overview section ── */
+
+.home-overview {
+    padding: 54px 0 0;
+}
+
+/* ── feature band / process band ── */
+
+.feature_band {
+    padding: 54px 0 0;
+    background:
+        radial-gradient(circle at bottom left, rgba(2, 26, 84, 0.06), transparent 40%),
+        linear-gradient(180deg, #f7fbff 0%, #edf5ff 100%);
+}
+
+.home-process-band {
+    border-radius: 0;
+}
+
+.process_card_home {
+    animation: fadeUpSoft 0.8s ease both;
+}
+
+/* ── home contact CTA band ── */
+
+.home-contact-cta {
+    margin-top: 54px;
+    padding: 0 0 54px;
+}
+
+.cta-panel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    flex-wrap: wrap;
+    padding: 48px 52px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #021A54 0%, #1749ba 100%);
+    box-shadow: 0 28px 80px rgba(2, 26, 84, 0.24);
+    animation: fadeUpSoft 0.8s ease both;
+}
+
+.cta-panel .section-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px;
+    margin-bottom: 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+}
+
+.cta-panel h2 {
+    max-width: 640px;
+    padding-bottom: 0;
+    font-size: 36px;
+    line-height: 1.14;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.cta-panel p {
+    margin: 14px 0 0;
+    color: rgba(255, 255, 255, 0.80);
+    font-size: 16px;
+    line-height: 1.8;
+    max-width: 580px;
+}
+
+.cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    flex-shrink: 0;
+}
+
+.cta-panel .hero-btn.primary {
+    background: #ffffff;
+    color: #021A54;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+
+.cta-panel .hero-btn.primary:hover {
+    background: #eef4ff;
+    color: #021A54;
+}
+
+.cta-panel .hero-btn.secondary {
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.28);
+    box-shadow: none;
+}
+
+.cta-panel .hero-btn.secondary:hover {
+    background: rgba(255, 255, 255, 0.22);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.40);
+}
+
+@media (max-width: 768px) {
+    .cta-panel {
+        padding: 36px 28px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .cta-panel h2 {
+        font-size: 28px;
+    }
+
+    .cta-actions {
+        width: 100%;
+    }
+
+    .hero-btn {
+        min-height: 48px;
+        padding: 11px 24px;
+        font-size: 14px;
+    }
+}
+
