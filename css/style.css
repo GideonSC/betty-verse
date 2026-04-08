@@ -2916,6 +2916,260 @@ textarea#comment.update_mail::placeholder {
     color: #ffffff;
 }
 
+.home-shell .fa {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-style: normal;
+    line-height: 1;
+}
+
+.home-shell .fa::before {
+    font-family: inherit !important;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.home-shell .fa-search::before {
+    content: "⌕";
+}
+
+.home-shell .fa-shopping-bag::before {
+    content: "▣";
+}
+
+.home-shell .fa-user::before {
+    content: "◎";
+}
+
+.home-shell .fa-diamond::before {
+    content: "◆";
+}
+
+.home-shell .fa-gift::before {
+    content: "✦";
+}
+
+.home-shell .fa-map-marker::before {
+    content: "⌖";
+}
+
+.home-shell .fa-check-circle::before,
+.home-shell .fa-calendar-check-o::before {
+    content: "✓";
+}
+
+.home-shell .fa-star::before {
+    content: "★";
+}
+
+.home-shell .fa-magic::before {
+    content: "✧";
+}
+
+.home-shell .fa-heart-o::before {
+    content: "♡";
+}
+
+.home-shell .fa-archive::before {
+    content: "▤";
+}
+
+.home-shell .fa-paint-brush::before {
+    content: "✎";
+}
+
+.home-shell .fa-building-o::before {
+    content: "▥";
+}
+
+.home-shell .fa-comments-o::before {
+    content: "✉";
+}
+
+.home-shell .fa-th-large::before {
+    content: "▦";
+}
+
+.home-shell .fa-compass::before {
+    content: "⌖";
+}
+
+.home-shell .fa-user-circle-o::before {
+    content: "◉";
+}
+
+.home-shell .fa-smile-o::before {
+    content: "☺";
+}
+
+.home-shell .fa-angle-left::before {
+    content: "‹";
+}
+
+.home-shell .fa-angle-right::before {
+    content: "›";
+}
+
+.home-shell .cart_link_icon .fa,
+.home-shell .login_bt .fa,
+.home-shell .search-container .fa.fa-search.form-control-feedback {
+    width: 1em;
+    height: 1em;
+}
+
+.home-shell .testimonial_section {
+    padding: 64px 0 84px;
+    background:
+        radial-gradient(circle at top left, rgba(23, 73, 186, 0.08), transparent 28%),
+        linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%);
+    overflow: hidden;
+}
+
+.home-shell .testimonial_section::before,
+.home-shell .testimonial_section::after {
+    display: none;
+}
+
+.home-shell .testimonial_section_2 {
+    padding: 28px 0 0;
+}
+
+.home-shell .testimonial_box {
+    width: min(100%, 820px);
+    margin: 0 auto;
+    min-height: 360px;
+    height: auto;
+    padding: 42px 56px 110px;
+    border-radius: 28px;
+    border: 1px solid rgba(2, 26, 84, 0.10);
+    background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, #f7fbff 100%);
+    box-shadow: 0 28px 80px rgba(2, 26, 84, 0.10);
+    position: relative;
+}
+
+.home-shell .testimonial_box::before {
+    content: "\201C";
+    position: absolute;
+    top: 26px;
+    left: 34px;
+    color: rgba(23, 73, 186, 0.14);
+    font-size: 96px;
+    line-height: 1;
+    font-weight: 800;
+}
+
+.home-shell #main_slider .carousel-inner {
+    min-height: 200px;
+}
+
+.home-shell #main_slider .carousel-item {
+    text-align: center;
+}
+
+.home-shell .testimonial_text {
+    max-width: 620px;
+    margin: 0 auto;
+    font-size: 19px;
+    line-height: 1.9;
+    color: #486182;
+}
+
+.home-shell .client_name {
+    margin: 26px 0 0;
+    padding-top: 0;
+    font-size: 22px;
+    font-weight: 800;
+    color: #021A54;
+}
+
+.home-shell .client_img {
+    margin-top: 16px;
+}
+
+.home-shell .client_img img {
+    width: 72px;
+    height: 72px;
+    border-radius: 999px;
+    object-fit: cover;
+    border: 4px solid rgba(255,255,255,0.96);
+    box-shadow: 0 18px 36px rgba(2, 26, 84, 0.12);
+}
+
+.home-shell #main_slider a.carousel-control-prev,
+.home-shell #main_slider a.carousel-control-next {
+    top: auto;
+    bottom: 36px;
+    width: 46px;
+    height: 46px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #021A54, #1749ba);
+    color: #ffffff;
+    opacity: 1;
+    font-size: 28px;
+}
+
+.home-shell #main_slider a.carousel-control-prev {
+    left: calc(50% - 56px);
+}
+
+.home-shell #main_slider a.carousel-control-next {
+    right: calc(50% - 56px);
+}
+
+.home-shell #main_slider .carousel-control-prev:hover,
+.home-shell #main_slider .carousel-control-next:hover,
+.home-shell #main_slider .carousel-control-prev:focus,
+.home-shell #main_slider .carousel-control-next:focus {
+    background: #1749ba;
+    color: #ffffff;
+}
+
+@media (max-width: 991px) {
+    .home-shell .testimonial_box {
+        padding: 34px 30px 100px;
+        min-height: 380px;
+    }
+}
+
+@media (max-width: 767px) {
+    .home-shell .testimonial_section {
+        padding: 52px 0 72px;
+    }
+
+    .home-shell .testimonial_box {
+        padding: 30px 20px 92px;
+        min-height: 0;
+        border-radius: 22px;
+    }
+
+    .home-shell .testimonial_box::before {
+        top: 18px;
+        left: 20px;
+        font-size: 70px;
+    }
+
+    .home-shell .testimonial_text {
+        font-size: 17px;
+        line-height: 1.75;
+    }
+}
+
+@media (max-width: 575px) {
+    .home-shell #main_slider a.carousel-control-prev,
+    .home-shell #main_slider a.carousel-control-next {
+        bottom: 24px;
+    }
+
+    .home-shell #main_slider a.carousel-control-prev {
+        left: calc(50% - 52px);
+    }
+
+    .home-shell #main_slider a.carousel-control-next {
+        right: calc(50% - 52px);
+    }
+}
+
 .cta-panel p {
     margin: 14px 0 0;
     color: rgba(255, 255, 255, 0.80);
