@@ -2,7 +2,15 @@
   "use strict";
 
   var CART_KEY = "bettyverse-cart";
-  var paypalSdkPromise;
+  var ADDRESS_KEY = "bettyverse-payment-address";
+  var DEFAULT_ADDRESS = {
+    label: "Home",
+    line1: "59 Don Road",
+    line2: "",
+    city: "Dunfermline",
+    postcode: "KY11 4NH",
+    country: "Scotland, UK"
+  };
   var paymentElements = {
     modal: null,
     liveArea: null,
@@ -27,9 +35,16 @@
     paypalButtons: null,
     applePayContainer: null,
     applePayNote: null,
+    addressLabel: null,
+    addressLines: null,
+    addressModal: null,
+    addressForm: null,
+    addressStatus: null,
     openButtons: [],
     closeButtons: [],
-    methodButtons: []
+    methodButtons: [],
+    addressOpenButtons: [],
+    addressCloseButtons: []
   };
   var activeMethod = "card";
   var paymentMethodContent = {
@@ -38,9 +53,9 @@
       confirmLabel: "Continue with Card",
       previewClass: "is-card",
       caption:
-        "Card checkout can be completed with supported providers once your live payment credentials are connected.",
+        "Card checkout preview for frontend mode. Backend gateway wiring can be added later.",
       note:
-        "Card checkout may appear as a dedicated card button or inside PayPal secure checkout depending on buyer eligibility.",
+        "Card payments are currently in preview mode only. No live card charge will be made.",
       brand: "VISA",
       type: "Credit Card",
       number: "4315  0245448  00345",
@@ -51,9 +66,9 @@
       confirmLabel: "Continue with PayPal",
       previewClass: "is-paypal",
       caption:
-        "PayPal gives customers a familiar one-tap wallet option with buyer protection and fast approval.",
+        "PayPal is currently displayed as a frontend UI preview while backend integration is pending.",
       note:
-        "Use the PayPal button below to continue with secure wallet checkout for the current cart total.",
+        "PayPal checkout is disabled in frontend-only mode. Connect backend and credentials later.",
       brand: "PAYPAL",
       type: "Digital Wallet",
       number: "FAST  .  SAFE  .  ONLINE",
@@ -64,9 +79,9 @@
       confirmLabel: "Continue with Apple Pay",
       previewClass: "is-apple",
       caption:
-        "Apple Pay keeps the same clean mobile feel as the reference and appears for supported Apple devices.",
+        "Apple Pay is shown here for layout and interaction preview in frontend-only mode.",
       note:
-        "Apple Pay is shown below when the browser, device, and merchant setup all support it.",
+        "Apple Pay is disabled in frontend-only mode. Merchant validation can be connected later.",
       brand: "APPLE",
       type: "Wallet Checkout",
       number: "APPLE  PAY  READY",
@@ -77,15 +92,39 @@
       confirmLabel: "Google Pay Soon",
       previewClass: "is-google",
       caption:
-        "Google Pay is included in the method row to match the mobile-inspired layout and can be connected next.",
+        "Google Pay is included as a UI placeholder and can be connected when backend is ready.",
       note:
-        "Google Pay is not wired into the current checkout flow yet, but this slot is ready for that integration.",
+        "Google Pay is disabled in frontend-only mode. Enable gateway integration later.",
       brand: "G PAY",
       type: "Wallet Checkout",
       number: "GOOGLE  PAY  READY",
       logoClass: "fa fa-google-wallet payment-card-logo"
     }
   };
+
+  function normalizeAddons(addons) {
+    if (!Array.isArray(addons)) {
+      return [];
+    }
+
+    return addons.reduce(function (result, addon) {
+      if (!addon || !addon.name) {
+        return result;
+      }
+
+      var addonName = String(addon.name).trim();
+      if (!addonName) {
+        return result;
+      }
+
+      result.push({
+        name: addonName,
+        price: Number(addon.price || 0)
+      });
+
+      return result;
+    }, []);
+  }
 
   function normalizeCartItems(items) {
     if (!Array.isArray(items)) {
@@ -97,20 +136,33 @@
         return result;
       }
 
-      var exists = result.some(function (entry) {
+      var normalizedAddons = normalizeAddons(item.addons);
+      var addonTotal =
+        Number(item.addonTotal || 0) ||
+        normalizedAddons.reduce(function (total, addon) {
+          return total + (Number(addon.price) || 0);
+        }, 0);
+      var basePrice =
+        Number(item.basePrice || 0) ||
+        (Number(item.price || 0) > 0 ? Number(item.price || 0) - addonTotal : 0);
+      var normalizedItem = {
+        id: item.id,
+        name: item.name || "",
+        price: Number(item.price || basePrice + addonTotal || 0),
+        basePrice: basePrice,
+        addonTotal: addonTotal,
+        addons: normalizedAddons,
+        quantity: 1
+      };
+      var existingIndex = result.findIndex(function (entry) {
         return entry.id === item.id;
       });
 
-      if (exists) {
-        return result;
+      if (existingIndex >= 0) {
+        result[existingIndex] = normalizedItem;
+      } else {
+        result.push(normalizedItem);
       }
-
-      result.push({
-        id: item.id,
-        name: item.name || "",
-        price: Number(item.price || 0),
-        quantity: 1
-      });
 
       return result;
     }, []);
@@ -130,24 +182,121 @@
     }
   }
 
-  function saveCart(items) {
-    var normalizedItems = normalizeCartItems(items);
+  function normalizeAddress(address) {
+    if (!address || typeof address !== "object") {
+      return {
+        label: DEFAULT_ADDRESS.label,
+        line1: DEFAULT_ADDRESS.line1,
+        line2: DEFAULT_ADDRESS.line2,
+        city: DEFAULT_ADDRESS.city,
+        postcode: DEFAULT_ADDRESS.postcode,
+        country: DEFAULT_ADDRESS.country
+      };
+    }
 
+    return {
+      label: String(address.label || DEFAULT_ADDRESS.label).trim() || DEFAULT_ADDRESS.label,
+      line1: String(address.line1 || DEFAULT_ADDRESS.line1).trim() || DEFAULT_ADDRESS.line1,
+      line2: String(address.line2 || "").trim(),
+      city: String(address.city || DEFAULT_ADDRESS.city).trim() || DEFAULT_ADDRESS.city,
+      postcode:
+        String(address.postcode || DEFAULT_ADDRESS.postcode).trim() || DEFAULT_ADDRESS.postcode,
+      country: String(address.country || DEFAULT_ADDRESS.country).trim() || DEFAULT_ADDRESS.country
+    };
+  }
+
+  function readAddress() {
     try {
-      window.localStorage.setItem(CART_KEY, JSON.stringify(normalizedItems));
+      var stored = window.localStorage.getItem(ADDRESS_KEY);
+      if (!stored) {
+        return normalizeAddress(DEFAULT_ADDRESS);
+      }
+      return normalizeAddress(JSON.parse(stored));
     } catch (error) {
+      return normalizeAddress(DEFAULT_ADDRESS);
+    }
+  }
+
+  function saveAddress(address) {
+    var normalized = normalizeAddress(address);
+    try {
+      window.localStorage.setItem(ADDRESS_KEY, JSON.stringify(normalized));
+    } catch (error) {
+      return normalized;
+    }
+    return normalized;
+  }
+
+  function buildAddressLine(address) {
+    return [address.line1, address.line2, address.city, address.postcode, address.country]
+      .filter(function (part) {
+        return !!part;
+      })
+      .join(", ");
+  }
+
+  function renderAddress(address) {
+    var normalized = normalizeAddress(address);
+    if (paymentElements.addressLabel) {
+      paymentElements.addressLabel.textContent = normalized.label;
+    }
+    if (paymentElements.addressLines) {
+      paymentElements.addressLines.textContent = buildAddressLine(normalized);
+    }
+  }
+
+  function openAddressModal() {
+    if (!paymentElements.addressModal || !paymentElements.addressForm) {
       return;
     }
 
-    document.dispatchEvent(
-      new CustomEvent("bettyverse:cart-updated", {
-        detail: { items: normalizedItems }
-      })
-    );
+    var current = readAddress();
+    paymentElements.addressForm.elements.label.value = current.label;
+    paymentElements.addressForm.elements.line1.value = current.line1;
+    paymentElements.addressForm.elements.line2.value = current.line2;
+    paymentElements.addressForm.elements.city.value = current.city;
+    paymentElements.addressForm.elements.postcode.value = current.postcode;
+    paymentElements.addressForm.elements.country.value = current.country;
+
+    if (paymentElements.addressStatus) {
+      paymentElements.addressStatus.textContent = "";
+    }
+
+    paymentElements.addressModal.hidden = false;
+    paymentElements.addressModal.setAttribute("aria-hidden", "false");
   }
 
-  function getCount(items) {
-    return normalizeCartItems(items).length;
+  function closeAddressModal() {
+    if (!paymentElements.addressModal) {
+      return;
+    }
+
+    paymentElements.addressModal.hidden = true;
+    paymentElements.addressModal.setAttribute("aria-hidden", "true");
+  }
+
+  function getAddressFromForm(form) {
+    return {
+      label: form.elements.label.value,
+      line1: form.elements.line1.value,
+      line2: form.elements.line2.value,
+      city: form.elements.city.value,
+      postcode: form.elements.postcode.value,
+      country: form.elements.country.value
+    };
+  }
+
+  function validateAddress(address) {
+    if (
+      !String(address.label || "").trim() ||
+      !String(address.line1 || "").trim() ||
+      !String(address.city || "").trim() ||
+      !String(address.postcode || "").trim() ||
+      !String(address.country || "").trim()
+    ) {
+      return "Please complete all required address fields.";
+    }
+    return "";
   }
 
   function getTotal(items) {
@@ -157,31 +306,7 @@
   }
 
   function formatMoney(value) {
-    return "$" + Number(value || 0).toFixed(2);
-  }
-
-  function getConfig() {
-    return window.BETTYVERSE_PAYMENT_CONFIG || {};
-  }
-
-  function isLocalHost() {
-    return (
-      window.location.hostname === "localhost" ||
-      window.location.hostname === "127.0.0.1" ||
-      window.location.hostname === ""
-    );
-  }
-
-  function buildDescription(items) {
-    if (!items.length) {
-      return "BettyVerse package order";
-    }
-
-    var names = items.map(function (item) {
-      return item.name;
-    });
-
-    return "BettyVerse packages: " + names.join(", ");
+    return "\u00A3" + Number(value || 0).toFixed(2);
   }
 
   function showStatus(type, message) {
@@ -221,20 +346,6 @@
     paymentElements.confirmButton.disabled = !items.length;
   }
 
-  function clearDynamicPaymentAreas() {
-    if (paymentElements.cardButtons) {
-      paymentElements.cardButtons.innerHTML = "";
-    }
-
-    if (paymentElements.paypalButtons) {
-      paymentElements.paypalButtons.innerHTML = "";
-    }
-
-    if (paymentElements.applePayContainer) {
-      paymentElements.applePayContainer.innerHTML = "";
-    }
-  }
-
   function setApplePayNote(message, tone) {
     if (!paymentElements.applePayNote) {
       return;
@@ -250,6 +361,20 @@
     }
 
     element.textContent = message || "";
+  }
+
+  function setDisabledPreviewButton(container, label) {
+    if (!container) {
+      return;
+    }
+
+    container.innerHTML = "";
+    var button = document.createElement("button");
+    button.type = "button";
+    button.className = "payment-unavailable-btn";
+    button.disabled = true;
+    button.textContent = label;
+    container.appendChild(button);
   }
 
   function syncMethodPreview(method) {
@@ -307,6 +432,7 @@
     setSlotNote(paymentElements.cardNote, paymentMethodContent.card.note);
     setSlotNote(paymentElements.paypalNote, paymentMethodContent.paypal.note);
     setSlotNote(paymentElements.googleNote, paymentMethodContent.google.note);
+    setApplePayNote(paymentMethodContent.apple.note, "");
   }
 
   function setActiveMethod(method) {
@@ -319,6 +445,25 @@
     });
 
     syncMethodPreview(activeMethod);
+  }
+
+  function renderFrontendMethodPanels(items) {
+    setDisabledPreviewButton(paymentElements.cardButtons, "Card Checkout (Backend Pending)");
+    setDisabledPreviewButton(paymentElements.paypalButtons, "PayPal Checkout (Backend Pending)");
+    setDisabledPreviewButton(paymentElements.applePayContainer, "Apple Pay (Backend Pending)");
+
+    if (!items.length) {
+      setSlotNote(paymentElements.cardNote, "Add at least one package to continue.");
+      setSlotNote(paymentElements.paypalNote, "Add at least one package to continue.");
+      setSlotNote(paymentElements.googleNote, "Add at least one package to continue.");
+      setApplePayNote("Add at least one package to continue.", "info");
+      return;
+    }
+
+    setSlotNote(paymentElements.cardNote, paymentMethodContent.card.note);
+    setSlotNote(paymentElements.paypalNote, paymentMethodContent.paypal.note);
+    setSlotNote(paymentElements.googleNote, paymentMethodContent.google.note);
+    setApplePayNote(paymentMethodContent.apple.note, "info");
   }
 
   function openPaymentModal() {
@@ -337,6 +482,7 @@
       return;
     }
 
+    closeAddressModal();
     paymentElements.modal.hidden = true;
     paymentElements.modal.setAttribute("aria-hidden", "true");
     if (paymentElements.liveArea) {
@@ -348,6 +494,7 @@
 
   function handleConfirmAction() {
     var items = readCart();
+    var selected = paymentMethodContent[activeMethod] || paymentMethodContent.card;
 
     if (!items.length) {
       showStatus("info", "Add at least one package to the cart before starting payment.");
@@ -359,28 +506,11 @@
       paymentElements.liveArea.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
 
-    if (activeMethod === "google") {
-      showStatus(
-        "info",
-        "Google Pay matches the design in this popup, but it still needs live gateway wiring on this project."
-      );
-      return;
-    }
-
-    if (activeMethod === "apple") {
-      showStatus(
-        "info",
-        "Use the Apple Pay area below on supported Apple devices once merchant setup is complete."
-      );
-      return;
-    }
-
-    if (activeMethod === "paypal") {
-      showStatus("", "");
-      return;
-    }
-
-    showStatus("", "");
+    showStatus(
+      "info",
+      selected.name +
+        " is in frontend preview mode. No real transaction is processed until backend integration is added."
+    );
   }
 
   function bindPaymentModal() {
@@ -409,418 +539,63 @@
     }
 
     document.addEventListener("keydown", function (event) {
+      if (
+        event.key === "Escape" &&
+        paymentElements.addressModal &&
+        !paymentElements.addressModal.hidden
+      ) {
+        closeAddressModal();
+        return;
+      }
+
       if (event.key === "Escape" && paymentElements.modal && !paymentElements.modal.hidden) {
         closePaymentModal();
       }
     });
   }
 
-  function loadScriptOnce(src, attributeName) {
-    if (attributeName && document.querySelector("script[" + attributeName + "]")) {
-      return Promise.resolve();
-    }
-
-    return new Promise(function (resolve, reject) {
-      var script = document.createElement("script");
-      script.src = src;
-      script.async = true;
-      if (attributeName) {
-        script.setAttribute(attributeName, "true");
-      }
-      script.onload = resolve;
-      script.onerror = reject;
-      document.head.appendChild(script);
-    });
-  }
-
-  function loadPayPalSdk(config) {
-    if (window.paypal && window.paypal.Buttons) {
-      return Promise.resolve(window.paypal);
-    }
-
-    if (paypalSdkPromise) {
-      return paypalSdkPromise;
-    }
-
-    var params = new URLSearchParams({
-      "client-id": config.paypalClientId,
-      currency: config.currency || "USD",
-      intent: "capture",
-      components: "buttons,funding-eligibility,applepay",
-      locale: config.locale || "en_US"
+  function bindAddressModal() {
+    paymentElements.addressOpenButtons.forEach(function (button) {
+      button.addEventListener("click", openAddressModal);
     });
 
-    if (config.buyerCountry) {
-      params.set("buyer-country", config.buyerCountry);
-    }
-
-    paypalSdkPromise = loadScriptOnce(
-      "https://www.paypal.com/sdk/js?" + params.toString(),
-      "data-bettyverse-paypal-sdk"
-    ).then(function () {
-      return window.paypal;
+    paymentElements.addressCloseButtons.forEach(function (button) {
+      button.addEventListener("click", closeAddressModal);
     });
 
-    return paypalSdkPromise;
-  }
-
-  function renderPayPalFundingButton(fundingSource, mountPoint, items, config) {
-    if (!window.paypal || !window.paypal.Buttons || !mountPoint) {
+    if (!paymentElements.addressForm) {
       return;
     }
 
-    var wrapper = document.createElement("div");
-    wrapper.className = "paypal-button-block";
-
-    var container = document.createElement("div");
-    wrapper.appendChild(container);
-    mountPoint.appendChild(wrapper);
-
-    var button = paypal.Buttons({
-      fundingSource: fundingSource,
-      style: {
-        layout: "vertical",
-        shape: "rect",
-        height: 46,
-        tagline: false
-      },
-      createOrder: function (data, actions) {
-        return actions.order.create({
-          purchase_units: [
-            {
-              description: buildDescription(items),
-              amount: {
-                currency_code: config.currency || "USD",
-                value: getTotal(items).toFixed(2)
-              }
-            }
-          ]
-        });
-      },
-      onApprove: function (data, actions) {
-        showStatus("info", "Payment approved. Finalizing your order now.");
-        return actions.order.capture().then(function (details) {
-          saveCart([]);
-          clearDynamicPaymentAreas();
-          showStatus(
-            "success",
-            "Payment completed successfully. Transaction reference: " + data.orderID + "."
-          );
-          setApplePayNote(
-            "Your cart has been paid successfully. You can still use booking for follow-up details.",
-            "success"
-          );
-        });
-      },
-      onCancel: function () {
-        showStatus("info", "Payment was cancelled. Your cart is still saved.");
-      },
-      onError: function () {
-        showStatus(
-          "error",
-          "We could not start secure checkout. Please try again or continue with booking."
-        );
+    paymentElements.addressForm.addEventListener("input", function () {
+      if (paymentElements.addressStatus) {
+        paymentElements.addressStatus.textContent = "";
       }
     });
 
-    if (button.isEligible()) {
-      button.render(container);
-    } else {
-      mountPoint.removeChild(wrapper);
-    }
-  }
+    paymentElements.addressForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      var addressInput = getAddressFromForm(paymentElements.addressForm);
+      var errorMessage = validateAddress(addressInput);
 
-  function renderPayPalCheckout(items, config) {
-    if (!paymentElements.cardButtons && !paymentElements.paypalButtons) {
-      return;
-    }
-
-    if (paymentElements.cardButtons) {
-      paymentElements.cardButtons.innerHTML = "";
-    }
-
-    if (paymentElements.paypalButtons) {
-      paymentElements.paypalButtons.innerHTML = "";
-    }
-
-    if (!items.length) {
-      return;
-    }
-
-    if (!config.paypalClientId) {
-      setSlotNote(
-        paymentElements.cardNote,
-        isLocalHost()
-          ? "Add your PayPal client ID in js/payment-config.js to enable live card checkout on this cart page."
-          : "Secure card checkout is being prepared. You can still continue with booking from this page."
-      );
-      setSlotNote(
-        paymentElements.paypalNote,
-        isLocalHost()
-          ? "Add your PayPal client ID in js/payment-config.js to enable the live PayPal wallet button."
-          : "PayPal checkout is being prepared. You can still continue with booking from this page."
-      );
-      return;
-    }
-
-    loadPayPalSdk(config)
-      .then(function () {
-        renderPayPalFundingButton(paypal.FUNDING.PAYPAL, paymentElements.paypalButtons, items, config);
-
-        if (
-          config.enableStandaloneCardButton &&
-          paypal.FUNDING &&
-          paypal.FUNDING.CARD &&
-          paymentElements.cardButtons
-        ) {
-          renderPayPalFundingButton(paypal.FUNDING.CARD, paymentElements.cardButtons, items, config);
+      if (errorMessage) {
+        if (paymentElements.addressStatus) {
+          paymentElements.addressStatus.textContent = errorMessage;
         }
-
-        if (paymentElements.paypalButtons && !paymentElements.paypalButtons.children.length) {
-          setSlotNote(
-            paymentElements.paypalNote,
-            "PayPal checkout is loaded, but no eligible PayPal button is available for this buyer right now."
-          );
-        }
-
-        if (paymentElements.cardButtons && !paymentElements.cardButtons.children.length) {
-          setSlotNote(
-            paymentElements.cardNote,
-            "Card checkout is not eligible for this buyer right now, but PayPal wallet checkout may still be available."
-          );
-        }
-      })
-      .catch(function () {
-        setSlotNote(
-          paymentElements.cardNote,
-          "The secure card checkout library could not be loaded. Please try again later or continue with booking."
-        );
-        setSlotNote(
-          paymentElements.paypalNote,
-          "The PayPal checkout library could not be loaded. Please try again later or continue with booking."
-        );
-      });
-  }
-
-  function loadApplePaySdk() {
-    if (window.ApplePaySession) {
-      return Promise.resolve();
-    }
-
-    return loadScriptOnce(
-      "https://applepay.cdn-apple.com/jsapi/1.latest/apple-pay-sdk.js",
-      "data-bettyverse-applepay-sdk"
-    );
-  }
-
-  function startApplePaySession(items, config, applepay, applepayConfig) {
-    if (!window.ApplePaySession || !ApplePaySession.canMakePayments()) {
-      setApplePayNote(
-        "Apple Pay is not available on this device or browser. Customers need a supported Apple device.",
-        "info"
-      );
-      return;
-    }
-
-    if (!config.applePayCreateOrderUrl || !config.applePayCaptureUrlBase) {
-      setApplePayNote(
-        "Apple Pay is enabled in the layout, but merchant order endpoints still need to be connected.",
-        "info"
-      );
-      return;
-    }
-
-    var total = getTotal(items).toFixed(2);
-    var paymentRequest = {
-      countryCode: applepayConfig.countryCode,
-      merchantCapabilities: applepayConfig.merchantCapabilities,
-      supportedNetworks: applepayConfig.supportedNetworks,
-      currencyCode: config.currency || "USD",
-      requiredShippingContactFields: ["name", "phone", "email", "postalAddress"],
-      requiredBillingContactFields: ["postalAddress"],
-      total: {
-        label: config.appleMerchantDisplayName || "BettyVerse",
-        type: "final",
-        amount: total
+        return;
       }
-    };
 
-    var session = new ApplePaySession(4, paymentRequest);
-
-    session.onvalidatemerchant = function (event) {
-      applepay
-        .validateMerchant({
-          validationUrl: event.validationURL,
-          displayName: config.appleMerchantDisplayName || "BettyVerse"
-        })
-        .then(function (validateResult) {
-          session.completeMerchantValidation(validateResult.merchantSession);
-        })
-        .catch(function () {
-          session.abort();
-          showStatus("error", "Apple Pay merchant validation failed.");
-        });
-    };
-
-    session.onpaymentauthorized = function (event) {
-      fetch(config.applePayCreateOrderUrl, {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          items: items,
-          total: total,
-          currency: config.currency || "USD"
-        })
-      })
-        .then(function (response) {
-          return response.json();
-        })
-        .then(function (orderData) {
-          var orderId = orderData.id || orderData.orderID;
-          if (!orderId) {
-            throw new Error("Missing Apple Pay order ID.");
-          }
-
-          return applepay
-            .confirmOrder({
-              orderId: orderId,
-              token: event.payment.token,
-              billingContact: event.payment.billingContact,
-              shippingContact: event.payment.shippingContact
-            })
-            .then(function () {
-              return fetch(config.applePayCaptureUrlBase + "/" + orderId + "/capture", {
-                method: "post"
-              }).then(function (captureResponse) {
-                return captureResponse.json();
-              });
-            });
-        })
-        .then(function () {
-          session.completePayment(ApplePaySession.STATUS_SUCCESS);
-          saveCart([]);
-          clearDynamicPaymentAreas();
-          showStatus("success", "Apple Pay payment completed successfully.");
-          setApplePayNote(
-            "Apple Pay checkout completed successfully for this order.",
-            "success"
-          );
-        })
-        .catch(function () {
-          session.completePayment(ApplePaySession.STATUS_FAILURE);
-          showStatus(
-            "error",
-            "Apple Pay could not complete the transaction. Please try again or continue with booking."
-          );
-        });
-    };
-
-    session.begin();
-  }
-
-  function renderApplePay(items, config) {
-    if (!paymentElements.applePayContainer || !paymentElements.applePayNote) {
-      return;
-    }
-
-    paymentElements.applePayContainer.innerHTML = "";
-
-    if (!items.length) {
-      setApplePayNote(
-        "Add at least one package to the cart before starting Apple Pay.",
-        "info"
-      );
-      return;
-    }
-
-    if (!config.paypalClientId) {
-      setApplePayNote(
-        "Apple Pay depends on the PayPal merchant setup on this project. Add the PayPal client ID first.",
-        "info"
-      );
-      return;
-    }
-
-    if (!config.applePayEnabled) {
-      setApplePayNote(
-        "Apple Pay will appear here after merchant onboarding and verified domain setup are completed.",
-        "info"
-      );
-      return;
-    }
-
-    Promise.all([loadPayPalSdk(config), loadApplePaySdk()])
-      .then(function () {
-        if (!window.paypal || !paypal.Applepay || !window.ApplePaySession) {
-          setApplePayNote(
-            "Apple Pay is not available in this browser session. Use PayPal or booking instead.",
-            "info"
-          );
-          return;
-        }
-
-        if (!ApplePaySession.canMakePayments()) {
-          setApplePayNote(
-            "Apple Pay is only available on supported Apple devices and browsers.",
-            "info"
-          );
-          return;
-        }
-
-        var applepay = paypal.Applepay();
-        applepay
-          .config()
-          .then(function (applepayConfig) {
-            if (!applepayConfig.isEligible) {
-              setApplePayNote(
-                "Apple Pay is not eligible for this device or merchant configuration yet.",
-                "info"
-              );
-              return;
-            }
-
-            setApplePayNote(
-              "Apple Pay is available on this device. Tap to continue with secure checkout.",
-              "success"
-            );
-
-            var button = document.createElement("apple-pay-button");
-            button.setAttribute("buttonstyle", "black");
-            button.setAttribute("type", "buy");
-            button.setAttribute("locale", "en");
-            button.className = "apple-pay-button";
-            button.addEventListener("click", function () {
-              startApplePaySession(items, config, applepay, applepayConfig);
-            });
-
-            paymentElements.applePayContainer.innerHTML = "";
-            paymentElements.applePayContainer.appendChild(button);
-          })
-          .catch(function () {
-            setApplePayNote(
-              "Apple Pay configuration could not be loaded yet. Finish merchant setup and try again.",
-              "info"
-            );
-          });
-      })
-      .catch(function () {
-        setApplePayNote(
-          "Apple Pay libraries could not be loaded right now. Please try again later.",
-          "info"
-        );
-      });
+      var saved = saveAddress(addressInput);
+      renderAddress(saved);
+      closeAddressModal();
+    });
   }
 
   function renderPaymentOptions(items) {
-    var config = getConfig();
     updateLauncherState(items);
     updateConfirmState(items);
     updateDisplayedTotal(items);
-    clearDynamicPaymentAreas();
-    renderPayPalCheckout(items, config);
-    renderApplePay(items, config);
+    renderFrontendMethodPanels(items);
   }
 
   function cacheElements() {
@@ -847,6 +622,11 @@
     paymentElements.paypalButtons = document.querySelector("[data-paypal-buttons]");
     paymentElements.applePayContainer = document.querySelector("[data-applepay-container]");
     paymentElements.applePayNote = document.querySelector("[data-applepay-note]");
+    paymentElements.addressLabel = document.querySelector("[data-payment-address-label]");
+    paymentElements.addressLines = document.querySelector("[data-payment-address-lines]");
+    paymentElements.addressModal = document.querySelector("[data-address-modal]");
+    paymentElements.addressForm = document.querySelector("[data-address-form]");
+    paymentElements.addressStatus = document.querySelector("[data-address-status]");
     paymentElements.openButtons = Array.prototype.slice.call(
       document.querySelectorAll("[data-open-payment-modal]")
     );
@@ -856,11 +636,19 @@
     paymentElements.methodButtons = Array.prototype.slice.call(
       document.querySelectorAll("[data-payment-method]")
     );
+    paymentElements.addressOpenButtons = Array.prototype.slice.call(
+      document.querySelectorAll("[data-open-address-modal]")
+    );
+    paymentElements.addressCloseButtons = Array.prototype.slice.call(
+      document.querySelectorAll("[data-address-close]")
+    );
   }
 
   document.addEventListener("DOMContentLoaded", function () {
     cacheElements();
     bindPaymentModal();
+    bindAddressModal();
+    renderAddress(readAddress());
     setActiveMethod(activeMethod);
     if (!paymentElements.total) {
       return;

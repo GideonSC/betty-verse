@@ -3,6 +3,29 @@
 
   var CART_KEY = "bettyverse-cart";
 
+  function normalizeAddons(addons) {
+    if (!Array.isArray(addons)) {
+      return [];
+    }
+
+    return addons.reduce(function (result, addon) {
+      if (!addon || !addon.name) {
+        return result;
+      }
+      var addonName = String(addon.name).trim();
+      if (!addonName) {
+        return result;
+      }
+
+      result.push({
+        name: addonName,
+        price: Number(addon.price || 0)
+      });
+
+      return result;
+    }, []);
+  }
+
   function normalizeCartItems(items) {
     if (!Array.isArray(items)) {
       return [];
@@ -13,23 +36,37 @@
         return result;
       }
 
-      var exists = result.some(function (entry) {
-        return entry.id === item.id;
-      });
-
-      if (exists) {
-        return result;
-      }
-
-      result.push({
+      var normalizedAddons = normalizeAddons(item.addons);
+      var addonTotal =
+        Number(item.addonTotal || 0) ||
+        normalizedAddons.reduce(function (total, addon) {
+          return total + (Number(addon.price) || 0);
+        }, 0);
+      var basePrice =
+        Number(item.basePrice || 0) ||
+        (Number(item.price || 0) > 0 ? Number(item.price || 0) - addonTotal : 0);
+      var finalPrice = Number(item.price || basePrice + addonTotal || 0);
+      var normalizedItem = {
         id: item.id,
         name: item.name || "",
         category: item.category || "",
-        price: Number(item.price || 0),
+        price: finalPrice,
+        basePrice: basePrice,
+        addonTotal: addonTotal,
+        addons: normalizedAddons,
         image: item.image || "",
         summary: item.summary || "",
         quantity: 1
+      };
+      var existingIndex = result.findIndex(function (entry) {
+        return entry.id === item.id;
       });
+
+      if (existingIndex >= 0) {
+        result[existingIndex] = normalizedItem;
+      } else {
+        result.push(normalizedItem);
+      }
 
       return result;
     }, []);
@@ -75,7 +112,7 @@
   }
 
   function formatPrice(value) {
-    return "$" + Number(value || 0).toFixed(2);
+    return "\u00A3" + Number(value || 0).toFixed(2);
   }
 
   function updateCartBadges(items) {
@@ -87,17 +124,45 @@
     });
   }
 
+  function parseCardAddons(card) {
+    if (!card || !card.dataset.packageSelectedAddons) {
+      return [];
+    }
+
+    try {
+      var parsed = JSON.parse(card.dataset.packageSelectedAddons);
+      return normalizeAddons(parsed);
+    } catch (error) {
+      return [];
+    }
+  }
+
   function getCardData(button) {
     var card = button.closest(".package-card");
     if (!card) {
       return null;
     }
 
+    var addons = parseCardAddons(card);
+    var addonTotal =
+      Number(card.dataset.packageAddonTotal || 0) ||
+      addons.reduce(function (total, addon) {
+        return total + (Number(addon.price) || 0);
+      }, 0);
+    var basePrice = Number(card.dataset.packageBasePrice || 0);
+    var finalPrice =
+      Number(card.dataset.packageFinalPrice || 0) ||
+      Number(card.dataset.packagePrice || 0) ||
+      basePrice + addonTotal;
+
     return {
       id: card.dataset.packageId,
       name: card.dataset.packageName,
       category: card.dataset.packageCategory,
-      price: Number(card.dataset.packagePrice || 0),
+      price: finalPrice,
+      basePrice: basePrice,
+      addonTotal: addonTotal,
+      addons: addons,
       image: card.dataset.packageImage,
       summary: card.dataset.packageSummary,
       quantity: 1
@@ -110,15 +175,15 @@
     }
 
     var items = readCart();
-    var existing = items.find(function (entry) {
+    var existingIndex = items.findIndex(function (entry) {
       return entry.id === item.id;
     });
 
-    if (existing) {
-      return items;
+    if (existingIndex >= 0) {
+      items[existingIndex] = item;
+    } else {
+      items.push(item);
     }
-
-    items.push(item);
 
     saveCart(items);
     return items;
@@ -154,6 +219,47 @@
         updateAddButtonState(button);
       });
     });
+  }
+
+  function createAddonDetails(item) {
+    if (!item.addons || !item.addons.length) {
+      return null;
+    }
+
+    var wrapper = document.createElement("div");
+    wrapper.className = "cart-item-addons";
+
+    var heading = document.createElement("strong");
+    heading.className = "cart-item-addon-title";
+    heading.textContent = "Selected add-ons";
+    wrapper.appendChild(heading);
+
+    var list = document.createElement("ul");
+    list.className = "cart-item-addon-list";
+
+    item.addons.forEach(function (addon) {
+      var row = document.createElement("li");
+
+      var name = document.createElement("span");
+      name.textContent = addon.name;
+
+      var price = document.createElement("span");
+      price.textContent = formatPrice(addon.price);
+
+      row.appendChild(name);
+      row.appendChild(price);
+      list.appendChild(row);
+    });
+
+    wrapper.appendChild(list);
+
+    var total = document.createElement("p");
+    total.className = "cart-item-addon-total";
+    total.textContent =
+      "Base " + formatPrice(item.basePrice) + " + Add-ons " + formatPrice(item.addonTotal);
+    wrapper.appendChild(total);
+
+    return wrapper;
   }
 
   function createCartItem(item) {
@@ -195,6 +301,7 @@
     var summary = document.createElement("p");
     summary.className = "cart-item-copy";
     summary.textContent = item.summary;
+    var addonDetails = createAddonDetails(item);
 
     var footer = document.createElement("div");
     footer.className = "cart-item-footer";
@@ -216,6 +323,9 @@
 
     main.appendChild(head);
     main.appendChild(summary);
+    if (addonDetails) {
+      main.appendChild(addonDetails);
+    }
     main.appendChild(footer);
 
     article.appendChild(media);
@@ -287,7 +397,17 @@
 
   function buildContactMessage(items) {
     var lines = items.map(function (item) {
-      return "- " + item.name + " (" + formatPrice(item.price) + ")";
+      var addonText = "";
+      if (item.addons && item.addons.length) {
+        addonText =
+          " | Add-ons: " +
+          item.addons
+            .map(function (addon) {
+              return addon.name + " (" + formatPrice(addon.price) + ")";
+            })
+            .join(", ");
+      }
+      return "- " + item.name + " (" + formatPrice(item.price) + ")" + addonText;
     });
 
     return [

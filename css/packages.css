@@ -439,18 +439,93 @@
 }
 
 .package-card.expanded .package-details {
-   max-height: 220px;
+   max-height: 860px;
    opacity: 1;
    margin-top: 18px;
 }
 
-.package-details p {
+.package-details-title {
    margin: 0;
-   color: #56708f;
-   padding: 16px 18px;
-   background: #f7faff;
+   color: #3f5f87;
+   font-size: 12px;
+   font-weight: 800;
+   letter-spacing: 0.08em;
+   text-transform: uppercase;
+}
+
+.package-addon-list {
+   margin-top: 12px;
+   display: grid;
+   gap: 10px;
+}
+
+.package-addon-option {
+   margin: 0;
+   display: block;
+   cursor: pointer;
+}
+
+.package-addon-input {
+   position: absolute;
+   opacity: 0;
+   pointer-events: none;
+}
+
+.package-addon-copy {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   gap: 12px;
+   padding: 12px 14px;
    border-radius: 12px;
-   border: 1px solid rgba(2, 26, 84, 0.08);
+   border: 1px solid rgba(2, 26, 84, 0.10);
+   background: #f7faff;
+}
+
+.package-addon-option:hover .package-addon-copy {
+   border-color: rgba(23, 73, 186, 0.24);
+}
+
+.package-addon-input:checked + .package-addon-copy {
+   background: #eef4ff;
+   border-color: rgba(23, 73, 186, 0.45);
+   box-shadow: 0 10px 20px rgba(23, 73, 186, 0.12);
+}
+
+.package-addon-name {
+   color: #456483;
+   font-size: 14px;
+   font-weight: 600;
+   line-height: 1.4;
+}
+
+.package-addon-price {
+   color: #1749ba;
+   font-weight: 800;
+   font-size: 14px;
+   white-space: nowrap;
+}
+
+.package-addon-summary {
+   margin-top: 12px;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   padding: 12px 14px;
+   border-radius: 12px;
+   background: #f2f7ff;
+   border: 1px solid rgba(2, 26, 84, 0.10);
+}
+
+.package-addon-summary span {
+   color: #4a6688;
+   font-weight: 600;
+}
+
+.package-addon-summary strong {
+   color: #021a54;
+   font-size: 16px;
+   font-weight: 800;
 }
 
 .no-results {
@@ -640,6 +715,15 @@
    .package-card-top {
       flex-direction: column;
       align-items: flex-start;
+   }
+
+   .package-addon-copy {
+      padding: 12px;
+   }
+
+   .package-addon-name,
+   .package-addon-price {
+      font-size: 13px;
    }
 
    .cta-panel {
