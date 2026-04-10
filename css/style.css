@@ -298,6 +298,12 @@ button {
     background: rgba(23, 73, 186, 0.1);
 }
 
+.navbar-toggler-icon {
+    display: block;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
 .navbar-brand {
     margin: 0px;
     float: none;
