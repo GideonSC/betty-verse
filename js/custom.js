@@ -339,147 +339,84 @@ $(function () {
 
 
 /* My edits */
-const posts = [
+const simpleGiftSlides = [
   {
-    title: "Birthday surprises designed with polish and personality",
-    excerpt:
-      "Explore styled birthday experiences that combine gifting, decor, and a memorable reveal in one clean, elegant setup.",
     theme: "birthday",
-    svgSrc: "https://cdn.jsdelivr.net/npm/openmoji@16.0.0/color/svg/1F382.svg",
-    author: "Birthday Collection",
-    date: "Signature Setup",
-    readTime: "View packages",
+    badge: "Birthday Collection",
+    title: "Stylish Birthday Surprises",
+    excerpt: "Premium gift boxes and clean setup styling for unforgettable birthday moments.",
+    image: "images/gift-box-color.webp",
+    alt: "Color 3D gift box",
+    cta: "Explore Packages",
     url: "packages.html?filter=birthday"
   },
   {
-    title: "Romantic anniversary moments with refined decor styling",
-    excerpt:
-      "From candlelit rooms to premium presentation details, our anniversary packages are built to feel intimate and elevated.",
     theme: "anniversary",
-    svgSrc: "https://cdn.jsdelivr.net/npm/openmoji@16.0.0/color/svg/1F48D.svg",
-    author: "Anniversary Collection",
-    date: "Elegant Reveal",
-    readTime: "Book now",
+    badge: "Anniversary Collection",
+    title: "Elegant Anniversary Reveals",
+    excerpt: "Curated gift-box combinations with refined decor for meaningful celebrations.",
+    image: "images/gift-box-clay.webp",
+    alt: "Clay 3D gift box",
+    cta: "View Anniversary",
     url: "packages.html?filter=anniversary"
   },
   {
-    title: "Festive gifting and decor for seasonal celebrations",
-    excerpt:
-      "Celebrate Christmas, New Year, Easter, and more with coordinated decor, curated packages, and warm finishing touches.",
     theme: "festival",
-    svgSrc: "https://cdn.jsdelivr.net/npm/openmoji@16.0.0/color/svg/1F386.svg",
-    author: "Festival Collection",
-    date: "Seasonal Styling",
-    readTime: "See options",
+    badge: "Festival Collection",
+    title: "Festive Gift Styling",
+    excerpt: "Bright, modern gift presentation designed for seasonal and holiday experiences.",
+    image: "images/gift-box-gradient.webp",
+    alt: "Gradient 3D gift box",
+    cta: "See Festival Sets",
     url: "packages.html?filter=festival"
-  },
-  {
-    title: "Custom surprise planning for beautiful one-of-a-kind moments",
-    excerpt:
-      "If you have a unique celebration in mind, BettyVerse can shape a custom concept that fits your mood, venue, and story.",
-    theme: "custom",
-    svgSrc: "https://cdn.jsdelivr.net/npm/openmoji@16.0.0/color/svg/1F381.svg",
-    author: "Custom Requests",
-    date: "Tailored Planning",
-    readTime: "Contact us",
-    url: "contact.html"
   }
 ];
 
 let currentIndex = 0;
 let direction = 1;
+let autoRotateId = null;
+const autoRotateDelayMs = 6000;
 const carousel = document.getElementById("carousel");
 
-function getSlideBackground(theme) {
+function getSimpleBackground(theme) {
   if (theme === "birthday") {
-    return "radial-gradient(circle at 14% 18%, rgba(255,255,255,0.26), transparent 32%), linear-gradient(120deg, #2157cd 0%, #173f99 46%, #102f7d 100%)";
+    return "linear-gradient(130deg, rgba(248, 252, 255, 0.96) 0%, rgba(235, 244, 255, 0.92) 100%)";
   }
   if (theme === "anniversary") {
-    return "radial-gradient(circle at 18% 20%, rgba(255,255,255,0.24), transparent 35%), linear-gradient(120deg, #2a53b8 0%, #1f459f 44%, #193881 100%)";
+    return "linear-gradient(130deg, rgba(250, 253, 255, 0.96) 0%, rgba(238, 246, 255, 0.92) 100%)";
   }
-  if (theme === "festival") {
-    return "radial-gradient(circle at 22% 26%, rgba(255,255,255,0.24), transparent 34%), linear-gradient(120deg, #2c64db 0%, #2250b3 45%, #1b3f91 100%)";
-  }
-  return "radial-gradient(circle at 18% 22%, rgba(255,255,255,0.24), transparent 35%), linear-gradient(120deg, #1f5cd0 0%, #1847a7 44%, #143987 100%)";
+  return "linear-gradient(130deg, rgba(247, 252, 255, 0.96) 0%, rgba(232, 242, 255, 0.92) 100%)";
 }
 
 function createSlide(post, index) {
   const slide = document.createElement("div");
   slide.className = `slide slide-${post.theme}`;
-  if (index === currentIndex) slide.classList.add("active");
-  slide.style.background = getSlideBackground(post.theme);
+  if (index === currentIndex) {
+    slide.classList.add("active");
+  }
+  slide.style.background = getSimpleBackground(post.theme);
 
   slide.innerHTML = `
-      <div class="slide-art">
-        <img src="${post.svgSrc}" alt="${post.author} SVG illustration" loading="lazy" decoding="async">
-      </div>
-      <div class="overlay"></div>
-      <div class="slide-content">
-        <h1><a href="${post.url}" style="color:white;text-decoration:none">${post.title}</a></h1>
+    <div class="overlay"></div>
+    <div class="simple-banner">
+      <div class="simple-copy animate__animated animate__fadeInLeft">
+        <span class="simple-badge">${post.badge}</span>
+        <h1>${post.title}</h1>
         <p>${post.excerpt}</p>
-        <div class="author">${post.author} | ${post.date} | ${post.readTime}</div>
+        <a class="simple-link" href="${post.url}">${post.cta}</a>
       </div>
-    `;
+      <div class="simple-art animate__animated animate__fadeInRight">
+        <div class="simple-orb" aria-hidden="true"></div>
+        <img src="${post.image}" alt="${post.alt}" loading="lazy" decoding="async">
+      </div>
+    </div>
+  `;
 
   return slide;
 }
 
-function renderSlides() {
-  carousel.innerHTML = "";
-  posts.forEach((post, i) => {
-    const slide = createSlide(post, i);
-    carousel.appendChild(slide);
-  });
-
-  const controls = document.createElement("div");
-  controls.className = "controls";
-
-  const dots = document.createElement("div");
-  dots.className = "dots";
-  posts.forEach((_, i) => {
-    const dot = document.createElement("div");
-    dot.className = `dot ${i === currentIndex ? "active" : ""}`;
-    dot.addEventListener("click", () => {
-      direction = i > currentIndex ? 1 : -1;
-      currentIndex = i;
-      updateSlides();
-    });
-    dots.appendChild(dot);
-  });
-
-  const arrows = document.createElement("div");
-  arrows.className = "arrows";
-  const prevBtn = document.createElement("button");
-  prevBtn.className = "arrow-btn";
-  prevBtn.type = "button";
-  prevBtn.setAttribute("aria-label", "Previous banner slide");
-  prevBtn.textContent = "<";
-  prevBtn.onclick = () => {
-    direction = -1;
-    currentIndex = (currentIndex - 1 + posts.length) % posts.length;
-    updateSlides();
-  };
-
-  const nextBtn = document.createElement("button");
-  nextBtn.className = "arrow-btn";
-  nextBtn.type = "button";
-  nextBtn.setAttribute("aria-label", "Next banner slide");
-  nextBtn.textContent = ">";
-  nextBtn.onclick = () => {
-    direction = 1;
-    currentIndex = (currentIndex + 1) % posts.length;
-    updateSlides();
-  };
-
-  arrows.appendChild(prevBtn);
-  arrows.appendChild(nextBtn);
-  controls.appendChild(dots);
-  controls.appendChild(arrows);
-  carousel.appendChild(controls);
-}
-
 function updateSlides() {
-  const slides = document.querySelectorAll(".slide");
+  const slides = carousel.querySelectorAll(".slide");
   slides.forEach((slide, i) => {
     slide.classList.remove("active", "exit-left", "exit-right");
     if (i === currentIndex) {
@@ -491,19 +428,85 @@ function updateSlides() {
     }
   });
 
-  const dots = document.querySelectorAll(".dot");
+  const dots = carousel.querySelectorAll(".dot");
   dots.forEach((dot, i) => {
     dot.classList.toggle("active", i === currentIndex);
   });
 }
 
-if (carousel) {
-  setInterval(() => {
+function startAutoRotate() {
+  if (autoRotateId !== null) {
+    clearInterval(autoRotateId);
+  }
+  autoRotateId = setInterval(() => {
     direction = 1;
-    currentIndex = (currentIndex + 1) % posts.length;
+    currentIndex = (currentIndex + 1) % simpleGiftSlides.length;
     updateSlides();
-  }, 6000);
-
-  renderSlides();
+  }, autoRotateDelayMs);
 }
 
+function renderSlides() {
+  carousel.innerHTML = "";
+
+  simpleGiftSlides.forEach((post, i) => {
+    carousel.appendChild(createSlide(post, i));
+  });
+
+  const controls = document.createElement("div");
+  controls.className = "controls";
+
+  const dots = document.createElement("div");
+  dots.className = "dots";
+
+  simpleGiftSlides.forEach((_, i) => {
+    const dot = document.createElement("button");
+    dot.className = `dot ${i === currentIndex ? "active" : ""}`;
+    dot.type = "button";
+    dot.setAttribute("aria-label", `Go to banner slide ${i + 1}`);
+    dot.addEventListener("click", () => {
+      direction = i > currentIndex ? 1 : -1;
+      currentIndex = i;
+      updateSlides();
+      startAutoRotate();
+    });
+    dots.appendChild(dot);
+  });
+
+  const arrows = document.createElement("div");
+  arrows.className = "arrows";
+
+  const prevBtn = document.createElement("button");
+  prevBtn.className = "arrow-btn";
+  prevBtn.type = "button";
+  prevBtn.setAttribute("aria-label", "Previous banner slide");
+  prevBtn.textContent = "<";
+  prevBtn.addEventListener("click", () => {
+    direction = -1;
+    currentIndex = (currentIndex - 1 + simpleGiftSlides.length) % simpleGiftSlides.length;
+    updateSlides();
+    startAutoRotate();
+  });
+
+  const nextBtn = document.createElement("button");
+  nextBtn.className = "arrow-btn";
+  nextBtn.type = "button";
+  nextBtn.setAttribute("aria-label", "Next banner slide");
+  nextBtn.textContent = ">";
+  nextBtn.addEventListener("click", () => {
+    direction = 1;
+    currentIndex = (currentIndex + 1) % simpleGiftSlides.length;
+    updateSlides();
+    startAutoRotate();
+  });
+
+  arrows.appendChild(prevBtn);
+  arrows.appendChild(nextBtn);
+  controls.appendChild(dots);
+  controls.appendChild(arrows);
+  carousel.appendChild(controls);
+}
+
+if (carousel) {
+  renderSlides();
+  startAutoRotate();
+}

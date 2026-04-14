@@ -125,7 +125,7 @@
                   <p class="hero-copy">Explore curated birthday, anniversary, festival, and custom surprise experiences designed to feel polished, thoughtful, and unforgettable.</p>
                   <div class="hero-actions">
                      <a class="hero-btn primary" href="#packages-grid">Browse Packages</a>
-                     <a class="hero-btn secondary" href="contact.html">Start Booking</a>
+                     <a class="hero-btn secondary" href="booking.html">Start Booking</a>
                   </div>
                </div>
                <div class="col-lg-5">
@@ -187,7 +187,7 @@
                <button class="filter-pill" data-filter="surprise">Surprise</button>
             </div>
             <div class="row package-cards-row">
-               <div class="col-lg-6 col-xl-4 mb-4 package-card-item" data-category="birthday">
+               <div class="col-lg-6 col-xl-4 mb-4 package-card-item" data-category="birthday" data-audience="kids">
                   <article class="package-card" data-package-id="finding-nemo-inspired-package" data-package-name="Finding Nemo Inspired Package" data-package-category="Birthday" data-package-price="110" data-package-base-price="110" data-package-image="images/Nemo_inspired.jpg" data-package-summary="An underwater-themed birthday setup with Nemo character visuals, ocean-tone balloons, and a polished photo-ready stage.">
                      <div class="package-media">
                         <img src="images/Nemo_inspired.jpg" alt="Finding Nemo Inspired Package">
@@ -244,7 +244,7 @@
                      </div>
                   </article>
                </div>
-               <div class="col-lg-6 col-xl-4 mb-4 package-card-item" data-category="birthday">
+               <div class="col-lg-6 col-xl-4 mb-4 package-card-item" data-category="birthday" data-audience="kids">
                   <article class="package-card" data-package-id="sofia-the-first-inspired" data-package-name="Sofia The First Inspired" data-package-category="Birthday" data-package-price="140" data-package-base-price="140" data-package-image="images/Sofia_themed_inspiration.jpeg" data-package-summary="A royal Sofia the First birthday setup with pastel luxury balloons, floral accents, and princess styling for a premium photo-ready celebration.">
                      <div class="package-media">
                         <img src="images/Sofia_themed_inspiration.jpeg" alt="Sofia The First Inspired package">
@@ -292,7 +292,7 @@
                      </div>
                   </article>
                </div>
-               <div class="col-lg-6 col-xl-4 mb-4 package-card-item" data-category="birthday">
+               <div class="col-lg-6 col-xl-4 mb-4 package-card-item" data-category="birthday" data-audience="kids">
                   <article class="package-card" data-package-id="mickey-mouse-themed-package" data-package-name="Mickey Mouse Themed" data-package-category="Birthday" data-package-price="170" data-package-base-price="170" data-package-image="images/Mickey_Themed.jpeg" data-package-summary="A bold Mickey Mouse birthday setup with layered backdrop panels, multi-colour balloon styling, and character props designed for high-impact party photos.">
                      <div class="package-media">
                         <img src="images/Mickey_Themed.jpeg" alt="Mickey Mouse themed package">
@@ -344,7 +344,7 @@
                      </div>
                   </article>
                </div>
-               <div class="col-lg-6 col-xl-4 mb-4 package-card-item" data-category="birthday">
+               <div class="col-lg-6 col-xl-4 mb-4 package-card-item" data-category="birthday" data-audience="kids">
                   <article class="package-card" data-package-id="spider-man-themed-package" data-package-name="Spider-Man Themed" data-package-category="Birthday" data-package-price="120" data-package-base-price="120" data-package-image="images/spider-Man themed.jpeg" data-package-summary="An action-packed Spider-Man birthday setup with red and blue luxury balloons, themed props, LED numbers, and a glossy photo-ready finish.">
                      <div class="package-media">
                         <img src="images/spider-Man themed.jpeg" alt="Spider-Man themed package">
@@ -539,7 +539,7 @@
                   <p>Reach out for custom requests, date availability, and tailored celebration planning.</p>
                </div>
                <div class="cta-actions">
-                  <a class="hero-btn primary" href="contact.html">Start Booking</a>
+                  <a class="hero-btn primary" href="booking.html">Start Booking</a>
                   <a class="hero-btn secondary" href="services.html">View Services</a>
                </div>
             </div>
@@ -635,7 +635,7 @@
          document.addEventListener('DOMContentLoaded', function () {
             var filterMap = {
                'custom-request': 'birthday',
-               'kids-birthday': 'birthday',
+               'kids-birthday': 'kids',
                'betty-confetti': 'birthday',
                'car-boot': 'birthday',
                'home': 'surprise',
@@ -693,8 +693,9 @@
                return filterMap[value] || value || 'all';
             }
             function setActiveFilter(filter) {
+               var activeFilter = filter === 'kids' ? 'birthday' : filter;
                document.querySelectorAll('.filter-pill').forEach(function (pill) {
-                  pill.classList.toggle('active', pill.dataset.filter === filter);
+                  pill.classList.toggle('active', pill.dataset.filter === activeFilter);
                });
             }
             function showPackages(filter) {
@@ -702,7 +703,11 @@
                var visibleCount = 0;
                cards.forEach(function (card) {
                   var category = card.dataset.category;
-                  var visible = filter === 'all' || category === filter;
+                  var audience = (card.dataset.audience || '').split(',').map(function (value) {
+                     return value.trim().toLowerCase();
+                  }).filter(Boolean);
+                  var isKidsCard = audience.indexOf('kids') !== -1;
+                  var visible = filter === 'all' || category === filter || (filter === 'kids' && isKidsCard);
                   card.style.display = visible ? 'block' : 'none';
                   if (visible) {
                      visibleCount += 1;

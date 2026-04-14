@@ -501,11 +501,18 @@
         margin-top: 28px;
     }
     .home-banner .carousel {
-        height: 52vh;
-        min-height: 380px;
+        height: auto;
+        min-height: 500px;
+        border-radius: 24px;
     }
-    .home-banner .slide-content h1 {
-        font-size: 2.3rem;
+    .home-banner .home-carousel-shell {
+        border-radius: 24px;
+    }
+    .home-banner .controls {
+        left: 14px;
+        right: 14px;
+        bottom: 14px;
+        top: auto;
     }
 }
 
@@ -535,22 +542,19 @@
         height: 220px;
     }
     .home-banner .carousel {
-        height: 46vh;
-        min-height: 320px;
+        height: auto;
+        min-height: 560px;
+        border-radius: 20px;
     }
-    .home-banner .slide-content {
-        padding: 1.4rem;
-        margin-bottom: 34px;
-    }
-    .home-banner .slide-content h1 {
-        font-size: 1.8rem;
-    }
-    .home-banner .slide-content p {
-        display: block;
-        font-size: 0.95rem;
+    .home-banner .home-carousel-shell {
+        border-radius: 20px;
     }
     .home-banner .controls {
-        padding: 0 1.4rem;
+        top: auto;
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        padding: 0;
     }
 }
 
