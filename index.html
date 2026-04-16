@@ -20,7 +20,7 @@
    <body class="home-shell">
       <div class="header_section header_bg">
          <div class="container">
-            <nav class="navbar navbar-expand-lg navbar-light">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
                <a class="navbar-brand brand-mark" href="index.html" aria-label="BettyVerse home"><span class="brand-mark__icon" aria-hidden="true"><img src="images/logo.png" alt=""></span><span class="brand-mark__text"><strong>Betty</strong> Verse</span></a>
                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                <span class="navbar-toggler-icon"></span>
@@ -30,14 +30,60 @@
                      <li class="nav-item active"><a class="nav-link" href="index.html">Home</a></li>
                      <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
                      <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Packages</a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                           <li><a class="dropdown-item" href="packages.html">All Packages</a></li>
-                           <li><a class="dropdown-item" href="packages.html?filter=birthday">Birthday</a></li>
-                           <li><a class="dropdown-item" href="packages.html?filter=anniversary">Anniversary</a></li>
-                           <li><a class="dropdown-item" href="packages.html?filter=festival">Festival</a></li>
-                           <li><a class="dropdown-item" href="packages.html?filter=surprise">Surprise</a></li>
-                        </ul>
+                        <a class="nav-link dropdown-toggle" href="#" id="packagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Packages</a>
+                        <div class="dropdown-menu" aria-labelledby="packagesDropdown">
+                           <div class="dropdown-submenu">
+                              <a class="dropdown-item dropdown-toggle" href="#">Birthday</a>
+                              <div class="dropdown-menu">
+                                 <a class="dropdown-item" href="packages.html?filter=custom-request">Custom Request</a>
+                                 <a class="dropdown-item" href="packages.html?filter=kids-birthday">Kids Birthday</a>
+                                 <a class="dropdown-item" href="packages.html?filter=betty-confetti">Betty And Confetti</a>
+                                 <a class="dropdown-item" href="packages.html?filter=car-boot">Car Boot</a>
+                                 <div class="dropdown-submenu">
+                                    <a class="dropdown-item dropdown-toggle" href="#">Surprise By Betty At</a>
+                                    <div class="dropdown-menu">
+                                       <a class="dropdown-item" href="packages.html?filter=home">Home</a>
+                                       <a class="dropdown-item" href="packages.html?filter=hotel">Hotel</a>
+                                       <a class="dropdown-item" href="packages.html?filter=university">University</a>
+                                       <a class="dropdown-item" href="packages.html?filter=workplace">Workplace</a>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="dropdown-submenu">
+                              <a class="dropdown-item dropdown-toggle" href="#">Anniversary</a>
+                              <div class="dropdown-menu">
+                                 <a class="dropdown-item" href="packages.html?filter=anniversary-choice">By Choice</a>
+                                 <div class="dropdown-submenu">
+                                    <a class="dropdown-item dropdown-toggle" href="#">Anniversary Decorations</a>
+                                    <div class="dropdown-menu">
+                                       <a class="dropdown-item" href="packages.html?filter=anniversary-room">Room Decoration</a>
+                                       <a class="dropdown-item" href="packages.html?filter=anniversary-home">Decoration At Home</a>
+                                       <a class="dropdown-item" href="packages.html?filter=anniversary-hotel">Decoration At Hotel</a>
+                                       <a class="dropdown-item" href="packages.html?filter=anniversary-car">Car Boot Decoration</a>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="dropdown-submenu">
+                              <a class="dropdown-item dropdown-toggle" href="#">Your Occasion</a>
+                              <div class="dropdown-menu">
+                                 <a class="dropdown-item" href="packages.html?filter=occasion-choice">By Choice</a>
+                                 <a class="dropdown-item" href="packages.html?filter=hall">Hall Occasion</a>
+                                 <a class="dropdown-item" href="packages.html?filter=valentine">Valentine's Day</a>
+                                 <a class="dropdown-item" href="packages.html?filter=baby-shower">Baby Shower</a>
+                                 <a class="dropdown-item" href="packages.html?filter=proposal">Proposal</a>
+                              </div>
+                           </div>
+                           <div class="dropdown-submenu">
+                              <a class="dropdown-item dropdown-toggle" href="#">Festival</a>
+                              <div class="dropdown-menu">
+                                 <a class="dropdown-item" href="packages.html?filter=christmas">Christmas Decorations</a>
+                                 <a class="dropdown-item" href="packages.html?filter=new-year">New Year</a>
+                                 <a class="dropdown-item" href="packages.html?filter=easter">Easter</a>
+                              </div>
+                           </div>
+                        </div>
                      </li>
                      <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
                      <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
@@ -77,7 +123,7 @@
                   <p class="home-copy">BettyVerse designs elegant gifts, decor setups, and reveal moments for birthdays, anniversaries, proposals, and custom celebrations with a polished blue-and-white presentation.</p>
                   <div class="home-actions">
                      <a class="hero-btn primary" href="packages.html">Explore Packages</a>
-                     <a class="hero-btn secondary" href="contact.html">Start Booking</a>
+                     <a class="hero-btn secondary" href="booking.html">Start Booking</a>
                   </div>
                   <div class="home-stats">
                      <div class="home-stat">

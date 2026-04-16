@@ -40,8 +40,19 @@
     addressModal: null,
     addressForm: null,
     addressStatus: null,
+    reviewModal: null,
+    reviewItems: null,
+    reviewEmpty: null,
+    reviewItemsCount: null,
+    reviewSubtotal: null,
+    reviewTotal: null,
+    reviewAddressLabel: null,
+    reviewAddressLines: null,
+    reviewStartPaymentButton: null,
     openButtons: [],
     closeButtons: [],
+    reviewOpenButtons: [],
+    reviewCloseButtons: [],
     methodButtons: [],
     addressOpenButtons: [],
     addressCloseButtons: []
@@ -101,7 +112,6 @@
       logoClass: "fa fa-google-wallet payment-card-logo"
     }
   };
-
   function normalizeAddons(addons) {
     if (!Array.isArray(addons)) {
       return [];
@@ -243,6 +253,12 @@
     if (paymentElements.addressLines) {
       paymentElements.addressLines.textContent = buildAddressLine(normalized);
     }
+    if (paymentElements.reviewAddressLabel) {
+      paymentElements.reviewAddressLabel.textContent = normalized.label;
+    }
+    if (paymentElements.reviewAddressLines) {
+      paymentElements.reviewAddressLines.textContent = buildAddressLine(normalized);
+    }
   }
 
   function openAddressModal() {
@@ -307,6 +323,127 @@
 
   function formatMoney(value) {
     return "\u00A3" + Number(value || 0).toFixed(2);
+  }
+
+  function createReviewAddonList(item) {
+    if (!item.addons || !item.addons.length) {
+      return null;
+    }
+
+    var list = document.createElement("ul");
+    list.className = "review-order-addon-list";
+
+    item.addons.forEach(function (addon) {
+      var row = document.createElement("li");
+      var name = document.createElement("span");
+      var price = document.createElement("span");
+
+      name.textContent = addon.name;
+      price.textContent = formatMoney(addon.price);
+
+      row.appendChild(name);
+      row.appendChild(price);
+      list.appendChild(row);
+    });
+
+    return list;
+  }
+
+  function createReviewOrderItem(item) {
+    var wrapper = document.createElement("article");
+    wrapper.className = "review-order-item";
+
+    var head = document.createElement("div");
+    head.className = "review-order-item-head";
+
+    var title = document.createElement("strong");
+    title.textContent = item.name || "Selected package";
+
+    var price = document.createElement("span");
+    price.textContent = formatMoney(item.price);
+
+    head.appendChild(title);
+    head.appendChild(price);
+    wrapper.appendChild(head);
+
+    if (Number(item.basePrice || 0) > 0) {
+      var meta = document.createElement("p");
+      meta.className = "review-order-item-meta";
+      meta.textContent =
+        "Base " +
+        formatMoney(item.basePrice) +
+        " + Add-ons " +
+        formatMoney(item.addonTotal || 0);
+      wrapper.appendChild(meta);
+    }
+
+    var addonList = createReviewAddonList(item);
+    if (addonList) {
+      wrapper.appendChild(addonList);
+    }
+
+    return wrapper;
+  }
+
+  function renderReviewOrder(items) {
+    if (!paymentElements.reviewItems) {
+      return;
+    }
+
+    var normalizedItems = normalizeCartItems(items);
+    paymentElements.reviewItems.innerHTML = "";
+
+    if (!normalizedItems.length) {
+      if (paymentElements.reviewEmpty) {
+        paymentElements.reviewEmpty.hidden = false;
+      }
+    } else {
+      if (paymentElements.reviewEmpty) {
+        paymentElements.reviewEmpty.hidden = true;
+      }
+
+      normalizedItems.forEach(function (item) {
+        paymentElements.reviewItems.appendChild(createReviewOrderItem(item));
+      });
+    }
+
+    var itemCount = normalizedItems.length;
+    var subtotal = getTotal(normalizedItems);
+
+    if (paymentElements.reviewItemsCount) {
+      paymentElements.reviewItemsCount.textContent = itemCount;
+    }
+    if (paymentElements.reviewSubtotal) {
+      paymentElements.reviewSubtotal.textContent = formatMoney(subtotal);
+    }
+    if (paymentElements.reviewTotal) {
+      paymentElements.reviewTotal.textContent = formatMoney(subtotal);
+    }
+    if (paymentElements.reviewStartPaymentButton) {
+      paymentElements.reviewStartPaymentButton.disabled = !itemCount;
+    }
+  }
+
+  function openReviewOrderModal() {
+    if (!paymentElements.reviewModal) {
+      return;
+    }
+
+    renderReviewOrder(readCart());
+    renderAddress(readAddress());
+    paymentElements.reviewModal.hidden = false;
+    paymentElements.reviewModal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("review-order-modal-open");
+  }
+
+  function closeReviewOrderModal() {
+    if (!paymentElements.reviewModal) {
+      return;
+    }
+
+    paymentElements.reviewModal.hidden = true;
+    paymentElements.reviewModal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("review-order-modal-open");
   }
 
   function showStatus(type, message) {
@@ -482,6 +619,7 @@
       return;
     }
 
+    closeReviewOrderModal();
     closeAddressModal();
     paymentElements.modal.hidden = true;
     paymentElements.modal.setAttribute("aria-hidden", "true");
@@ -511,6 +649,23 @@
       selected.name +
         " is in frontend preview mode. No real transaction is processed until backend integration is added."
     );
+  }
+
+  function bindReviewOrderModal() {
+    paymentElements.reviewOpenButtons.forEach(function (button) {
+      button.addEventListener("click", openReviewOrderModal);
+    });
+
+    paymentElements.reviewCloseButtons.forEach(function (button) {
+      button.addEventListener("click", closeReviewOrderModal);
+    });
+
+    if (paymentElements.reviewStartPaymentButton) {
+      paymentElements.reviewStartPaymentButton.addEventListener("click", function () {
+        closeReviewOrderModal();
+        openPaymentModal();
+      });
+    }
   }
 
   function bindPaymentModal() {
@@ -545,6 +700,15 @@
         !paymentElements.addressModal.hidden
       ) {
         closeAddressModal();
+        return;
+      }
+
+      if (
+        event.key === "Escape" &&
+        paymentElements.reviewModal &&
+        !paymentElements.reviewModal.hidden
+      ) {
+        closeReviewOrderModal();
         return;
       }
 
@@ -595,6 +759,7 @@
     updateLauncherState(items);
     updateConfirmState(items);
     updateDisplayedTotal(items);
+    renderReviewOrder(items);
     renderFrontendMethodPanels(items);
   }
 
@@ -627,11 +792,26 @@
     paymentElements.addressModal = document.querySelector("[data-address-modal]");
     paymentElements.addressForm = document.querySelector("[data-address-form]");
     paymentElements.addressStatus = document.querySelector("[data-address-status]");
+    paymentElements.reviewModal = document.querySelector("[data-review-order-modal]");
+    paymentElements.reviewItems = document.querySelector("[data-review-order-items]");
+    paymentElements.reviewEmpty = document.querySelector("[data-review-order-empty]");
+    paymentElements.reviewItemsCount = document.querySelector("[data-review-items-count]");
+    paymentElements.reviewSubtotal = document.querySelector("[data-review-subtotal]");
+    paymentElements.reviewTotal = document.querySelector("[data-review-total]");
+    paymentElements.reviewAddressLabel = document.querySelector("[data-review-address-label]");
+    paymentElements.reviewAddressLines = document.querySelector("[data-review-address-lines]");
+    paymentElements.reviewStartPaymentButton = document.querySelector("[data-review-start-payment]");
     paymentElements.openButtons = Array.prototype.slice.call(
       document.querySelectorAll("[data-open-payment-modal]")
     );
     paymentElements.closeButtons = Array.prototype.slice.call(
       document.querySelectorAll("[data-payment-close]")
+    );
+    paymentElements.reviewOpenButtons = Array.prototype.slice.call(
+      document.querySelectorAll("[data-open-review-order]")
+    );
+    paymentElements.reviewCloseButtons = Array.prototype.slice.call(
+      document.querySelectorAll("[data-review-order-close]")
     );
     paymentElements.methodButtons = Array.prototype.slice.call(
       document.querySelectorAll("[data-payment-method]")
@@ -646,6 +826,7 @@
 
   document.addEventListener("DOMContentLoaded", function () {
     cacheElements();
+    bindReviewOrderModal();
     bindPaymentModal();
     bindAddressModal();
     renderAddress(readAddress());

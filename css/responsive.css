@@ -496,6 +496,29 @@
     }
     .home-stats {
         grid-template-columns: 1fr;
+        max-width: 440px;
+        margin: 34px auto 0;
+    }
+    .home-stat + .home-stat {
+        border-left: 0;
+        border-top: 1px solid rgba(2, 26, 84, 0.10);
+    }
+    .home-stat {
+        padding: 16px 18px;
+        text-align: center;
+    }
+    .home-stat .card-icon {
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 10px;
+    }
+    .home-stat strong {
+        font-size: 18px;
+    }
+    .home-stat > span:not(.card-icon) {
+        margin-top: 6px;
+        font-size: 14px;
+        line-height: 1.5;
     }
     .home-hero-panel {
         margin-top: 28px;
@@ -537,6 +560,13 @@
     .home-stat {
         padding-left: 20px;
         padding-right: 20px;
+    }
+    .home-stats {
+        max-width: 360px;
+        margin-top: 28px;
+    }
+    .home-stats .home-stat {
+        padding: 12px 14px;
     }
     .home-package-media img {
         height: 220px;

@@ -510,3 +510,100 @@ if (carousel) {
   renderSlides();
   startAutoRotate();
 }
+
+function readAccountSession() {
+  try {
+    var raw = window.localStorage.getItem("bettyverse-auth-session");
+    if (!raw) {
+      return null;
+    }
+    return JSON.parse(raw);
+  } catch (error) {
+    return null;
+  }
+}
+
+function syncAccountNavLink() {
+  var link = document.querySelector(".login_bt a");
+  if (!link) {
+    return;
+  }
+
+  var session = readAccountSession();
+  var hasSession = !!(session && session.user && session.user.email);
+  var iconHtml = '<span style="color: #ffffff;"><i class="fa fa-user" aria-hidden="true"></i></span>';
+
+  if (hasSession) {
+    link.href = "user-dashboard.html";
+    link.innerHTML = "Account " + iconHtml;
+    return;
+  }
+
+  link.href = "login/login_index.html";
+  link.innerHTML = "Login " + iconHtml;
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", syncAccountNavLink);
+} else {
+  syncAccountNavLink();
+}
+
+function initGlobalNestedPackageMenu() {
+  if (document.body && document.body.classList.contains("packages-page")) {
+    return;
+  }
+
+  if (!document.querySelector(".navbar .dropdown-submenu")) {
+    return;
+  }
+
+  if (document.documentElement.dataset.bettyverseMenuInit === "1") {
+    return;
+  }
+  document.documentElement.dataset.bettyverseMenuInit = "1";
+
+  function closeAllDropdowns(except) {
+    document.querySelectorAll(".navbar .dropdown.show, .navbar .dropdown-submenu.show").forEach(function (openEl) {
+      if (except && (openEl === except || openEl.contains(except))) {
+        return;
+      }
+      openEl.classList.remove("show");
+    });
+  }
+
+  document.querySelectorAll(".navbar .dropdown-toggle").forEach(function (toggle) {
+    toggle.addEventListener("click", function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      var parentDropdown = this.closest(".dropdown, .dropdown-submenu");
+      if (!parentDropdown) {
+        return;
+      }
+
+      var isOpen = parentDropdown.classList.contains("show");
+      closeAllDropdowns(parentDropdown);
+      parentDropdown.classList.toggle("show", !isOpen);
+    });
+  });
+
+  document.addEventListener("click", function (event) {
+    if (event.target.closest(".navbar .dropdown, .navbar .dropdown-submenu")) {
+      return;
+    }
+    closeAllDropdowns();
+  });
+
+  document.querySelectorAll(".navbar .dropdown-menu .dropdown-item:not(.dropdown-toggle)").forEach(function (item) {
+    item.addEventListener("click", function () {
+      closeAllDropdowns();
+    });
+  });
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initGlobalNestedPackageMenu);
+} else {
+  initGlobalNestedPackageMenu();
+}

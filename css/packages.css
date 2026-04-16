@@ -57,12 +57,12 @@
 
 .packages-page {
    background:
-      linear-gradient(rgba(130, 155, 210, 0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(130, 155, 210, 0.06) 1px, transparent 1px),
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
       radial-gradient(circle at 12% 8%, rgba(163, 126, 255, 0.10), transparent 32%),
       radial-gradient(circle at 88% 16%, rgba(154, 206, 255, 0.14), transparent 28%),
       linear-gradient(180deg, #fbfcff 0%, #f5f8ff 42%, #ffffff 100%);
-   background-size: 28px 28px, 28px 28px, auto, auto, auto;
+   background-size: var(--grid-size) var(--grid-size), var(--grid-size) var(--grid-size), auto, auto, auto;
 }
 
 .packages-hero {
@@ -166,6 +166,7 @@
    border: 1px solid rgba(45, 75, 128, 0.18);
    backdrop-filter: blur(7px);
    -webkit-backdrop-filter: blur(7px);
+   color: #4f6786;
 }
 
 .why-panel-head {
@@ -234,7 +235,7 @@
 }
 
 .why-panel-text {
-   color: #1749ba;
+   color: #021A54;
    font-size: 14px;
    line-height: 1.35;
    font-weight: 700;
@@ -248,13 +249,29 @@
    font-size: 32px;
    line-height: 1.2;
    font-weight: 500;
-   color: #4f5f7b;
+   color: #021A54;
 }
 
 .why-panel-footer em {
    font-style: italic;
    font-weight: 600;
-   color: #1749ba;
+   color: #300016;
+   font-size: 0.85em;
+   letter-spacing: 0.02em;
+   display: inline-block;
+   border-right: 2px solid rgba(23, 73, 186, 0.45);
+   white-space: nowrap;
+   overflow: hidden;
+   transition: color 0.30s ease, opacity 0.25s ease;
+  
+}
+
+.why-panel-footer em.is-deleting {
+   opacity: 0.86;
+}
+
+.why-panel-footer em.is-paused {
+   border-right-color: rgba(23, 73, 186, 0.18);
 }
 
 .hero-panel-header {
@@ -889,6 +906,3 @@
       font-size: 24px;
    }
 }
-
-
-
