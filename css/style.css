@@ -1290,7 +1290,7 @@ textarea#comment.update_mail::placeholder {
 
 .footer_highlight_item {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 12px;
     padding: 14px 16px;
     border-radius: 14px;
@@ -1299,9 +1299,14 @@ textarea#comment.update_mail::placeholder {
 }
 
 .footer_highlight_item i {
+    width: 18px;
+    flex: 0 0 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     color: #9fc0ff;
     font-size: 16px;
-    margin-top: 2px;
+    line-height: 1;
 }
 
 .footer_highlight_item strong {
@@ -1513,6 +1518,46 @@ textarea#comment.update_mail::placeholder {
     margin-top: 90px;
 }
 
+.site-back-to-top {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    width: 50px;
+    height: 50px;
+    border: 2px solid rgba(23, 63, 153, 0.55);
+    border-radius: 50%;
+    background: transparent;
+    color: #021A54;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    z-index: 1200;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    pointer-events: none;
+    box-shadow: 0 14px 30px rgba(16, 45, 110, 0.16);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.site-back-to-top.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.site-back-to-top:hover {
+    color: #021A54;
+    background: rgba(2, 26, 84, 0.08);
+    border-color: rgba(23, 63, 153, 0.8);
+}
+
 @media (max-width: 991px) {
     .footer_highlight_bar,
     .footer_top {
@@ -1531,6 +1576,16 @@ textarea#comment.update_mail::placeholder {
 @media (max-width: 575px) {
     .footer_bottom {
         align-items: flex-start;
+    }
+}
+
+@media (max-width: 767px) {
+    .site-back-to-top {
+        right: 14px;
+        bottom: 14px;
+        width: 44px;
+        height: 44px;
+        font-size: 22px;
     }
 }
 
@@ -1892,6 +1947,7 @@ textarea#comment.update_mail::placeholder {
 .content_eyebrow {
     display: inline-flex;
     align-items: center;
+    line-height: 1.2;
     gap: 8px;
     padding: 8px 14px;
     border-radius: 999px;
@@ -1904,6 +1960,12 @@ textarea#comment.update_mail::placeholder {
     text-transform: uppercase;
 }
 
+.page-shell i.fa,
+.home-shell i.fa,
+.packages-page i.fa {
+    vertical-align: middle;
+}
+
 .icon-inline,
 .card-icon {
     display: inline-flex;
@@ -1913,12 +1975,47 @@ textarea#comment.update_mail::placeholder {
 }
 
 .icon-inline {
-    width: 24px;
-    height: 24px;
+    width: 1.85em;
+    height: 1.85em;
+    min-width: 1.85em;
+    min-height: 1.85em;
     border-radius: 999px;
     background: rgba(23,73,186,0.10);
     color: #1749ba;
-    font-size: 12px;
+    font-size: 0.92em;
+    line-height: 1;
+}
+
+.page_kicker .icon-inline,
+.content_eyebrow .icon-inline {
+    display: inline-grid;
+    place-items: center;
+    align-self: center;
+    margin: 0;
+    padding: 0;
+    vertical-align: middle;
+}
+
+.page_kicker .icon-inline::before,
+.content_eyebrow .icon-inline::before {
+    display: block;
+    width: 1em;
+    text-align: center;
+    line-height: 1;
+}
+
+.page_kicker .icon-inline > i,
+.content_eyebrow .icon-inline > i {
+    display: block;
+    line-height: 1;
+    font-size: 1em;
+}
+
+.page_kicker .eyebrow-copy,
+.content_eyebrow .eyebrow-copy {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1.2;
 }
 
 .card-icon {
@@ -2084,6 +2181,8 @@ textarea#comment.update_mail::placeholder {
 
 .blog_meta {
     display: inline-flex;
+    align-items: center;
+    gap: 6px;
     margin-bottom: 18px;
     padding: 8px 12px;
     border-radius: 999px;
@@ -2093,6 +2192,15 @@ textarea#comment.update_mail::placeholder {
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
+}
+
+.blog_meta i {
+    width: 1em;
+    flex: 0 0 1em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
 }
 
 .band_title {
@@ -2194,7 +2302,7 @@ textarea#comment.update_mail::placeholder {
 
 .cart-message-note {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 12px;
     margin-top: 18px;
     padding: 14px 16px;
@@ -2207,7 +2315,12 @@ textarea#comment.update_mail::placeholder {
 .cart-message-note i {
     color: #1749ba;
     font-size: 16px;
-    line-height: 1.4;
+    width: 16px;
+    flex: 0 0 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
 }
 
 .social_panel {
@@ -2228,6 +2341,10 @@ textarea#comment.update_mail::placeholder {
     border: 1px solid rgba(23, 63, 153, 0.30);
     color: #021A54;
     font-size: 18px;
+}
+
+.social_panel a i {
+    line-height: 1;
 }
 
 .cart-page {
@@ -4512,6 +4629,13 @@ textarea#comment.update_mail::placeholder {
     font-size: 14px;
     font-weight: 700;
     text-align: left;
+}
+
+.dashboard-nav-item i {
+    width: 18px;
+    flex: 0 0 18px;
+    text-align: center;
+    line-height: 1;
 }
 
 .dashboard-nav-item:last-child {

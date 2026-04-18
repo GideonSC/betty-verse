@@ -147,20 +147,37 @@ $(function () {
 		
 	/* Scroll to Top
 	-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */
-	
-	$(window).on('scroll', function (){
-        scroll = $(window).scrollTop();
-        if (scroll >= 100){
-          $("#back-to-top").addClass('b-show_scrollBut')
-        }else{
-          $("#back-to-top").removeClass('b-show_scrollBut')
-        }
-      });
-      $("#back-to-top").on("click", function(){
-        $('body,html').animate({
-          scrollTop: 0
-        }, 1000);
-    });
+	function initGlobalBackToTop() {
+		var button = document.getElementById("site-back-to-top");
+
+		if (!button) {
+			button = document.createElement("button");
+			button.id = "site-back-to-top";
+			button.className = "site-back-to-top";
+			button.type = "button";
+			button.setAttribute("aria-label", "Back to top");
+			button.setAttribute("title", "Back to top");
+			button.innerHTML = '<i class="fa fa-angle-up" aria-hidden="true"></i>';
+			document.body.appendChild(button);
+		}
+
+		function syncVisibility() {
+			var scrollTop = window.scrollY || window.pageYOffset || 0;
+			button.classList.toggle("is-visible", scrollTop > 260);
+		}
+
+		button.addEventListener("click", function () {
+			window.scrollTo({
+				top: 0,
+				behavior: "smooth"
+			});
+		});
+
+		window.addEventListener("scroll", syncVisibility, { passive: true });
+		syncVisibility();
+	}
+
+	initGlobalBackToTop();
 
 
 	
@@ -423,7 +440,7 @@ const simpleGiftSlides = [
     badge: "Birthday Collection",
     title: "Stylish Birthday Surprises",
     excerpt: "Premium gift boxes and clean setup styling for unforgettable birthday moments.",
-    image: "images/gift_box2.png",
+    image: "images/car_boot2.png",
     alt: "Color 3D gift box",
     cta: "Explore Packages",
     url: "packages.html?filter=birthday"

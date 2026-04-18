@@ -125,3 +125,30 @@ if (authForm) {
         authForm.addEventListener('submit', handleSignupSubmit);
     }
 }
+
+function initAuthBackToTop() {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'auth-back-to-top';
+    button.setAttribute('aria-label', 'Back to top');
+    button.setAttribute('title', 'Back to top');
+    button.innerHTML = "<i class='bx bx-up-arrow-alt' aria-hidden='true'></i>";
+    document.body.appendChild(button);
+
+    function syncVisibility() {
+        const scrollTop = window.scrollY || window.pageYOffset || 0;
+        button.classList.toggle('is-visible', scrollTop > 240);
+    }
+
+    button.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+
+    window.addEventListener('scroll', syncVisibility, { passive: true });
+    syncVisibility();
+}
+
+initAuthBackToTop();
