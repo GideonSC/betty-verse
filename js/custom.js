@@ -2,16 +2,94 @@
     File Name: custom.js
 ---------------------------------------------------------------------*/
 
+(function initGlobalSiteLoader(window, document) {
+	"use strict";
+
+	var loaderId = "site-loader";
+	var removeDelayMs = 650;
+	var fallbackHideDelayMs = 4200;
+
+	function buildLoader() {
+		if (!document.body || document.getElementById(loaderId)) {
+			return null;
+		}
+
+		var loader = document.createElement("div");
+		loader.id = loaderId;
+		loader.className = "site-loader";
+		loader.setAttribute("role", "status");
+		loader.setAttribute("aria-live", "polite");
+		loader.setAttribute("aria-label", "Loading page");
+		loader.innerHTML =
+			'<div class="site-loader__inner">' +
+			'<span class="site-loader__ring site-loader__ring--outer" aria-hidden="true"></span>' +
+			'<span class="site-loader__ring site-loader__ring--inner" aria-hidden="true"></span>' +
+			'<span class="site-loader__dot" aria-hidden="true"></span>' +
+			'<p class="site-loader__label">Loading BettyVerse</p>' +
+			"</div>";
+
+		document.body.appendChild(loader);
+		document.body.classList.add("has-site-loader");
+		return loader;
+	}
+
+	function init() {
+		var loader = buildLoader();
+		if (!loader) {
+			return;
+		}
+
+		var hasHidden = false;
+
+		function hideLoader() {
+			if (hasHidden) {
+				return;
+			}
+			hasHidden = true;
+			loader.classList.add("is-hidden");
+			document.body.classList.remove("has-site-loader");
+
+			window.setTimeout(function () {
+				if (loader && loader.parentNode) {
+					loader.parentNode.removeChild(loader);
+				}
+			}, removeDelayMs);
+		}
+
+		if (document.readyState === "complete") {
+			window.setTimeout(function () {
+				hideLoader();
+			}, 220);
+		} else {
+			window.addEventListener("load", function () {
+				window.setTimeout(function () {
+					hideLoader();
+				}, 220);
+			}, { once: true });
+		}
+
+		window.setTimeout(function () {
+			hideLoader();
+		}, fallbackHideDelayMs);
+	}
+
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", init);
+	} else {
+		init();
+	}
+})(window, document);
+
 $(function () {
 	
 	"use strict";
 	
-	/* Preloader
+	/* Legacy preloader hook (kept for template compatibility)
 	-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */
 	
 	setTimeout(function () {
-		$('.loader_bg').fadeToggle();
-	}, 1500);
+		$('.loader_bg').fadeOut(200);
+	}, 250);
 	
 	/* JQuery Menu
 	-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */
@@ -345,7 +423,7 @@ const simpleGiftSlides = [
     badge: "Birthday Collection",
     title: "Stylish Birthday Surprises",
     excerpt: "Premium gift boxes and clean setup styling for unforgettable birthday moments.",
-    image: "images/gift-box-color.webp",
+    image: "images/gift_box2.png",
     alt: "Color 3D gift box",
     cta: "Explore Packages",
     url: "packages.html?filter=birthday"
@@ -355,7 +433,7 @@ const simpleGiftSlides = [
     badge: "Anniversary Collection",
     title: "Elegant Anniversary Reveals",
     excerpt: "Curated gift-box combinations with refined decor for meaningful celebrations.",
-    image: "images/gift-box-clay.webp",
+       image: "images/gift_box1.png",
     alt: "Clay 3D gift box",
     cta: "View Anniversary",
     url: "packages.html?filter=anniversary"
@@ -365,7 +443,7 @@ const simpleGiftSlides = [
     badge: "Festival Collection",
     title: "Festive Gift Styling",
     excerpt: "Bright, modern gift presentation designed for seasonal and holiday experiences.",
-    image: "images/gift-box-gradient.webp",
+      image: "images/gift_box3.png",
     alt: "Gradient 3D gift box",
     cta: "See Festival Sets",
     url: "packages.html?filter=festival"
@@ -550,10 +628,6 @@ if (document.readyState === "loading") {
 }
 
 function initGlobalNestedPackageMenu() {
-  if (document.body && document.body.classList.contains("packages-page")) {
-    return;
-  }
-
   if (!document.querySelector(".navbar .dropdown-submenu")) {
     return;
   }
@@ -563,6 +637,12 @@ function initGlobalNestedPackageMenu() {
   }
   document.documentElement.dataset.bettyverseMenuInit = "1";
 
+  var desktopQuery = window.matchMedia("(min-width: 992px)");
+
+  function isDesktopView() {
+    return desktopQuery.matches;
+  }
+
   function closeAllDropdowns(except) {
     document.querySelectorAll(".navbar .dropdown.show, .navbar .dropdown-submenu.show").forEach(function (openEl) {
       if (except && (openEl === except || openEl.contains(except))) {
@@ -570,6 +650,86 @@ function initGlobalNestedPackageMenu() {
       }
       openEl.classList.remove("show");
     });
+  }
+
+  function getDirectSubmenuMenu(submenu) {
+    if (!submenu) {
+      return null;
+    }
+
+    for (var i = 0; i < submenu.children.length; i += 1) {
+      var child = submenu.children[i];
+      if (child && child.classList && child.classList.contains("dropdown-menu")) {
+        return child;
+      }
+    }
+    return null;
+  }
+
+  function resolveSubmenuDirection(submenu) {
+    var menu = getDirectSubmenuMenu(submenu);
+    if (!menu) {
+      return;
+    }
+
+    submenu.classList.remove("open-left");
+
+    var wasClosed = !submenu.classList.contains("show");
+    if (wasClosed) {
+      submenu.classList.add("show");
+    }
+
+    var submenuRect = submenu.getBoundingClientRect();
+    var menuRect = menu.getBoundingClientRect();
+    var menuWidth = menuRect.width || parseFloat(window.getComputedStyle(menu).minWidth) || 208;
+    var viewportPadding = 12;
+    var wouldOverflowRight = submenuRect.right + menuWidth + viewportPadding > window.innerWidth;
+
+    if (wouldOverflowRight) {
+      submenu.classList.add("open-left");
+      var wouldOverflowLeft = submenuRect.left - menuWidth - viewportPadding < 0;
+      if (wouldOverflowLeft) {
+        submenu.classList.remove("open-left");
+      }
+    }
+
+    if (wasClosed) {
+      submenu.classList.remove("show");
+    }
+  }
+
+  function resolveSubmenuDirections(root) {
+    if (!root || !isDesktopView()) {
+      return;
+    }
+
+    root.querySelectorAll(".dropdown-submenu").forEach(function (submenu) {
+      resolveSubmenuDirection(submenu);
+    });
+  }
+
+  function closeNestedChildren(dropdown) {
+    if (!dropdown) {
+      return;
+    }
+
+    dropdown.querySelectorAll(".dropdown-submenu.show").forEach(function (submenu) {
+      submenu.classList.remove("show");
+    });
+  }
+
+  function openDropdown(dropdown, keepAncestorsOpen) {
+    if (!dropdown) {
+      return;
+    }
+
+    if (keepAncestorsOpen) {
+      closeAllDropdowns(dropdown);
+    } else {
+      closeAllDropdowns();
+    }
+
+    dropdown.classList.add("show");
   }
 
   document.querySelectorAll(".navbar .dropdown-toggle").forEach(function (toggle) {
@@ -583,8 +743,73 @@ function initGlobalNestedPackageMenu() {
       }
 
       var isOpen = parentDropdown.classList.contains("show");
-      closeAllDropdowns(parentDropdown);
-      parentDropdown.classList.toggle("show", !isOpen);
+      if (isOpen) {
+        parentDropdown.classList.remove("show");
+        closeNestedChildren(parentDropdown);
+        return;
+      }
+
+      openDropdown(parentDropdown, true);
+      if (parentDropdown.classList.contains("dropdown-submenu")) {
+        resolveSubmenuDirection(parentDropdown);
+      } else {
+        resolveSubmenuDirections(parentDropdown);
+      }
+    });
+  });
+
+  document.querySelectorAll(".navbar .nav-item.dropdown").forEach(function (dropdown) {
+    dropdown.addEventListener("mouseenter", function () {
+      if (!isDesktopView()) {
+        return;
+      }
+      openDropdown(dropdown, false);
+      resolveSubmenuDirections(dropdown);
+    });
+
+    dropdown.addEventListener("mouseleave", function () {
+      if (!isDesktopView()) {
+        return;
+      }
+      dropdown.classList.remove("show");
+      closeNestedChildren(dropdown);
+    });
+  });
+
+  document.querySelectorAll(".navbar .dropdown-submenu").forEach(function (submenu) {
+    submenu.addEventListener("mouseenter", function () {
+      if (!isDesktopView()) {
+        return;
+      }
+      resolveSubmenuDirection(submenu);
+      var parentMenu = submenu.parentElement;
+      if (parentMenu) {
+        Array.prototype.forEach.call(parentMenu.children, function (child) {
+          if (child !== submenu && child.classList && child.classList.contains("dropdown-submenu")) {
+            child.classList.remove("show");
+          }
+        });
+      }
+      submenu.classList.add("show");
+    });
+
+    submenu.addEventListener("mouseleave", function () {
+      if (!isDesktopView()) {
+        return;
+      }
+      submenu.classList.remove("show");
+      closeNestedChildren(submenu);
+    });
+  });
+
+  window.addEventListener("resize", function () {
+    if (!isDesktopView()) {
+      closeAllDropdowns();
+      return;
+    }
+
+    document.querySelectorAll(".navbar .nav-item.dropdown.show").forEach(function (openDropdownEl) {
+      resolveSubmenuDirections(openDropdownEl);
     });
   });
 

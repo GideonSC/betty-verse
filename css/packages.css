@@ -2,18 +2,17 @@
    border: none !important;
    box-shadow: 0 20px 50px rgba(2, 26, 84, 0.14) !important;
    display: none;
-   max-height: 0;
-   overflow: hidden;
+   max-height: none;
+   overflow: visible;
    opacity: 0;
    border-radius: 14px;
    background: #ffffff;
-   transition: max-height .25s ease, opacity .25s ease;
+   transition: opacity .2s ease;
 }
 
 .dropdown.show > .dropdown-menu,
 .dropdown-submenu.show > .dropdown-menu {
    display: block;
-   max-height: 1000px;
    opacity: 1;
 }
 
@@ -27,6 +26,11 @@
    left: 100%;
    margin-top: -1px;
    min-width: 13rem;
+}
+
+.dropdown-submenu.open-left > .dropdown-menu {
+   left: auto;
+   right: 100%;
 }
 
 .dropdown-menu .dropdown-item {
@@ -420,6 +424,100 @@
 .package-filter-row {
    gap: 12px;
    margin-bottom: 28px;
+}
+
+.package-back-to-top {
+   position: fixed;
+   right: 22px;
+   bottom: 22px;
+   width: 50px;
+   height: 50px;
+   border: 1px solid rgba(23, 63, 153, 0.35);
+   border-radius: 50%;
+   background: #ffffff;
+   color: #021A54;
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   font-size: 24px;
+   line-height: 1;
+   cursor: pointer;
+   z-index: 1200;
+   opacity: 0;
+   visibility: hidden;
+   transform: translateY(10px);
+   pointer-events: none;
+   box-shadow: 0 14px 30px rgba(16, 45, 110, 0.18);
+   transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.package-back-to-top.is-visible {
+   opacity: 1;
+   visibility: visible;
+   transform: translateY(0);
+   pointer-events: auto;
+}
+
+.package-back-to-top:hover {
+   color: #ffffff;
+   background: linear-gradient(135deg, #021A54, #1749ba);
+   border-color: rgba(93, 53, 239, 0.5);
+}
+
+.package-subfilter-wrap {
+   display: block;
+   margin: -8px 0 28px;
+   padding: 14px 16px;
+   border: 1px solid rgba(20, 56, 135, 0.16);
+   border-radius: 16px;
+   background: rgba(255, 255, 255, 0.9);
+}
+
+.package-subfilter-title {
+   margin: 0 0 10px;
+   color: #3b4f70;
+   font-size: 12px;
+   font-weight: 700;
+   letter-spacing: 0.08em;
+   text-transform: uppercase;
+}
+
+.package-subfilter-links {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 10px;
+}
+
+.package-subfilter-link {
+   display: inline-flex;
+   align-items: center;
+   padding: 8px 14px;
+   border-radius: 999px;
+   border: 1px solid #d5e1f5;
+   background: #f3f7ff;
+   color: #1f396b;
+   font-size: 13px;
+   font-weight: 600;
+   text-decoration: none;
+   transition: all 0.2s ease;
+}
+
+.package-subfilter-link:hover {
+   color: #ffffff;
+   background: #1a4eb5;
+   border-color: #1a4eb5;
+}
+
+.package-subfilter-link.active {
+   color: #ffffff;
+   background: linear-gradient(135deg, #021A54, #1749ba);
+   border-color: #1749ba;
+}
+
+.package-subfilter-link.is-booking {
+   border-color: #f0c88d;
+   background: #fff7ea;
+   color: #8d4f03;
 }
 
 .filter-pill {
@@ -859,6 +957,23 @@
 
    .filter-pill {
       flex: 1 1 100%;
+   }
+
+   .package-back-to-top {
+      right: 14px;
+      bottom: 14px;
+      width: 44px;
+      height: 44px;
+      font-size: 22px;
+   }
+
+   .package-subfilter-wrap {
+      padding: 12px;
+   }
+
+   .package-subfilter-link {
+      width: 100%;
+      justify-content: center;
    }
 
    .package-card-top {

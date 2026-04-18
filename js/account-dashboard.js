@@ -1,10 +1,10 @@
 (function (window, document) {
   "use strict";
 
-  var api = window.BettyVerseAccountApi;
-  if (!api) {
-    return;
-  }
+  var STORAGE_KEYS = {
+    session: "bettyverse-auth-session",
+    accountMock: "bettyverse-account-mock"
+  };
 
   var ALERT_TYPES = {
     info: "is-info",
@@ -25,8 +25,25 @@
     return today.toISOString().split("T")[0];
   }
 
+  function getSession() {
+    try {
+      var raw = window.localStorage.getItem(STORAGE_KEYS.session);
+      return raw ? JSON.parse(raw) : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function clearSession() {
+    try {
+      window.localStorage.removeItem(STORAGE_KEYS.session);
+    } catch (error) {
+      return;
+    }
+  }
+
   function getSessionUserSnapshot() {
-    var session = api.getSession() || {};
+    var session = getSession() || {};
     var user = session.user || {};
 
     return {
@@ -127,10 +144,10 @@
 
   function readMockState() {
     try {
-      var raw = window.localStorage.getItem(api.storageKeys.accountMock);
+      var raw = window.localStorage.getItem(STORAGE_KEYS.accountMock);
       if (!raw) {
         var seeded = getDefaultMockState();
-        window.localStorage.setItem(api.storageKeys.accountMock, JSON.stringify(seeded));
+        window.localStorage.setItem(STORAGE_KEYS.accountMock, JSON.stringify(seeded));
         return seeded;
       }
       return JSON.parse(raw);
@@ -141,7 +158,7 @@
 
   function saveMockState(state) {
     try {
-      window.localStorage.setItem(api.storageKeys.accountMock, JSON.stringify(state));
+      window.localStorage.setItem(STORAGE_KEYS.accountMock, JSON.stringify(state));
     } catch (error) {
       return;
     }
@@ -174,72 +191,55 @@
   }
 
   function buildAdapter() {
-    if (api.config.useMockAccountData) {
-      return {
-        getProfile: function () {
-          return Promise.resolve(clone(readMockState().profile));
-        },
-        updateProfile: function (payload) {
-          var state = readMockState();
-          state.profile = Object.assign({}, state.profile, payload || {});
-          state.profile.updatedAt = new Date().toISOString();
-          saveMockState(state);
-          return Promise.resolve(clone(state.profile));
-        },
-        getOrders: function () {
-          return Promise.resolve(clone(readMockState().orders));
-        },
-        getBookings: function () {
-          return Promise.resolve(clone(readMockState().bookings));
-        },
-        getAddresses: function () {
-          return Promise.resolve(clone(readMockState().addresses));
-        },
-        saveAddress: function (payload) {
-          var state = readMockState();
-          var nextAddress = Object.assign({}, payload);
-          if (!nextAddress.id) {
-            nextAddress.id = createId("addr");
-          }
-
-          if (nextAddress.isDefault) {
-            state.addresses.forEach(function (address) {
-              address.isDefault = false;
-            });
-          }
-
-          var existingIndex = state.addresses.findIndex(function (address) {
-            return address.id === nextAddress.id;
-          });
-
-          if (existingIndex >= 0) {
-            state.addresses[existingIndex] = Object.assign({}, state.addresses[existingIndex], nextAddress);
-          } else {
-            state.addresses.unshift(nextAddress);
-          }
-
-          saveMockState(state);
-          return Promise.resolve(clone(nextAddress));
-        },
-        changePassword: function () {
-          return Promise.resolve({ ok: true });
-        }
-      };
-    }
-
     return {
-      getProfile: api.endpoints.getProfile,
-      updateProfile: api.endpoints.updateProfile,
-      getOrders: api.endpoints.getOrders,
-      getBookings: api.endpoints.getBookings,
-      getAddresses: api.endpoints.getAddresses,
-      saveAddress: function (payload) {
-        if (payload.id) {
-          return api.endpoints.updateAddress(payload.id, payload);
-        }
-        return api.endpoints.createAddress(payload);
+      getProfile: function () {
+        return Promise.resolve(clone(readMockState().profile));
       },
-      changePassword: api.endpoints.changePassword
+      updateProfile: function (payload) {
+        var state = readMockState();
+        state.profile = Object.assign({}, state.profile, payload || {});
+        state.profile.updatedAt = new Date().toISOString();
+        saveMockState(state);
+        return Promise.resolve(clone(state.profile));
+      },
+      getOrders: function () {
+        return Promise.resolve(clone(readMockState().orders));
+      },
+      getBookings: function () {
+        return Promise.resolve(clone(readMockState().bookings));
+      },
+      getAddresses: function () {
+        return Promise.resolve(clone(readMockState().addresses));
+      },
+      saveAddress: function (payload) {
+        var state = readMockState();
+        var nextAddress = Object.assign({}, payload);
+        if (!nextAddress.id) {
+          nextAddress.id = createId("addr");
+        }
+
+        if (nextAddress.isDefault) {
+          state.addresses.forEach(function (address) {
+            address.isDefault = false;
+          });
+        }
+
+        var existingIndex = state.addresses.findIndex(function (address) {
+          return address.id === nextAddress.id;
+        });
+
+        if (existingIndex >= 0) {
+          state.addresses[existingIndex] = Object.assign({}, state.addresses[existingIndex], nextAddress);
+        } else {
+          state.addresses.unshift(nextAddress);
+        }
+
+        saveMockState(state);
+        return Promise.resolve(clone(nextAddress));
+      },
+      changePassword: function () {
+        return Promise.resolve({ ok: true });
+      }
     };
   }
 
@@ -496,7 +496,7 @@
     }
 
     logoutButton.addEventListener("click", function () {
-      api.clearSession();
+      clearSession();
       window.location.href = "login/login_index.html";
     });
   }
@@ -647,7 +647,7 @@
       return;
     }
 
-    if (!api.getSession()) {
+    if (!getSession()) {
       showAlert("info", "Please log in to access your account dashboard.");
       window.setTimeout(function () {
         window.location.href = "login/login_index.html";
