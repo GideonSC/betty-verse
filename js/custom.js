@@ -751,15 +751,40 @@ function initGlobalNestedPackageMenu() {
 
   document.querySelectorAll(".navbar .dropdown-toggle").forEach(function (toggle) {
     toggle.addEventListener("click", function (event) {
-      event.preventDefault();
-      event.stopPropagation();
-
       var parentDropdown = this.closest(".dropdown, .dropdown-submenu");
       if (!parentDropdown) {
         return;
       }
 
+      var href = this.getAttribute("href");
+      var hasNavigableHref = !!href && href !== "#" && href.trim() !== "";
       var isOpen = parentDropdown.classList.contains("show");
+
+      if (hasNavigableHref) {
+        if (isDesktopView()) {
+          closeAllDropdowns();
+          return;
+        }
+
+        if (!isOpen) {
+          event.preventDefault();
+          event.stopPropagation();
+          openDropdown(parentDropdown, true);
+          if (parentDropdown.classList.contains("dropdown-submenu")) {
+            resolveSubmenuDirection(parentDropdown);
+          } else {
+            resolveSubmenuDirections(parentDropdown);
+          }
+          return;
+        }
+
+        closeAllDropdowns();
+        return;
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+
       if (isOpen) {
         parentDropdown.classList.remove("show");
         closeNestedChildren(parentDropdown);
