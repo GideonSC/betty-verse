@@ -617,8 +617,47 @@
 
     .navbar-brand {
         width: auto;
-        max-width: calc(100% - 86px);
+        max-width: calc(100% - 156px);
         padding: 0;
+    }
+
+    .mobile_cart_link {
+        position: relative;
+        width: 48px;
+        height: 48px;
+        margin-left: auto;
+        border: 1px solid rgba(2, 26, 84, 0.10);
+        border-radius: 14px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, #eef4ff 100%);
+        box-shadow: 0 14px 30px rgba(2, 26, 84, 0.10);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #1749ba;
+    }
+
+    .mobile_cart_link:hover,
+    .mobile_cart_link:focus {
+        color: #1749ba;
+        text-decoration: none;
+    }
+
+    .mobile_cart_icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        line-height: 1;
+    }
+
+    .mobile_cart_link .cart_count {
+        min-width: 18px;
+        height: 18px;
+        padding: 0 4px;
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        font-size: 11px;
     }
 
     .brand-mark__icon {
@@ -639,6 +678,7 @@
     .navbar-toggler {
         width: 52px;
         height: 52px;
+        margin-left: 8px;
         padding: 0;
         border: 1px solid rgba(2, 26, 84, 0.10);
         border-radius: 14px;
@@ -820,14 +860,8 @@
         top: 43px;
     }
 
-    .cart_link {
-        width: 100%;
-        justify-content: space-between;
-        margin: 0;
-        padding: 12px 16px;
-        order: 2;
-        border-radius: 12px;
-        background: rgba(23, 73, 186, 0.04);
+    .navbar-collapse .cart_link {
+        display: none;
     }
 
     .login_bt {

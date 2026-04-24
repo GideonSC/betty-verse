@@ -627,15 +627,13 @@
 }
 
 .package-details {
+   margin-top: 0;
    max-height: 0;
    overflow: hidden;
-   opacity: 0;
-   transition: max-height .35s ease, opacity .35s ease, margin-top .35s ease;
+   transition: max-height 0.36s ease, margin-top 0.36s ease;
 }
 
-.package-card.expanded .package-details {
-   max-height: 860px;
-   opacity: 1;
+.package-details.is-open {
    margin-top: 18px;
 }
 
@@ -898,6 +896,14 @@
 }
 
 @media (max-width: 767px) {
+   .package-cards-row > .package-card-item {
+      width: 88%;
+      max-width: 360px;
+      flex: 0 0 88%;
+      margin-left: auto;
+      margin-right: auto;
+   }
+
    .hero-title,
    .section-intro h2,
    .cta-panel h2 {
@@ -973,3 +979,5 @@
       font-size: 24px;
    }
 }
+
+

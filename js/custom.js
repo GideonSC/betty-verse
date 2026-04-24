@@ -874,3 +874,258 @@ if (document.readyState === "loading") {
 } else {
   initGlobalNestedPackageMenu();
 }
+
+function initHomeTestimonialCarousel() {
+  var slider = document.getElementById("main_slider");
+
+  if (!slider || typeof window.jQuery === "undefined") {
+    return;
+  }
+
+  if (slider.dataset.carouselBound === "true") {
+    return;
+  }
+  slider.dataset.carouselBound = "true";
+
+  var $slider = window.jQuery(slider);
+  $slider.carousel({
+    interval: false,
+    ride: false,
+    pause: true,
+    wrap: true
+  });
+
+  var slides = Array.prototype.slice.call(slider.querySelectorAll(".carousel-item"));
+  var box = slider.closest(".testimonial_box");
+  var leftBubble = box ? box.querySelector(".testimonial_avatar_bubble--left") : null;
+  var rightBubble = box ? box.querySelector(".testimonial_avatar_bubble--right") : null;
+  var motionTrail = box ? box.querySelector(".testimonial_motion_trail") : null;
+  var flyAvatar = box ? box.querySelector(".testimonial_avatar_flyin") : null;
+  var flyAvatarImg = flyAvatar ? flyAvatar.querySelector("img") : null;
+  var flyAnimation = null;
+
+  function getAvatarSrcFromSlide(slide) {
+    if (!slide) {
+      return "";
+    }
+    var image = slide.querySelector(".client_img img");
+    return image ? image.getAttribute("src") || "" : "";
+  }
+
+  function getActiveIndex() {
+    for (var i = 0; i < slides.length; i += 1) {
+      if (slides[i].classList.contains("active")) {
+        return i;
+      }
+    }
+    return 0;
+  }
+
+  function setBubbleImage(bubble, src) {
+    if (!bubble) {
+      return;
+    }
+    var image = bubble.querySelector("img");
+    if (!image || !src) {
+      return;
+    }
+    image.setAttribute("src", src);
+  }
+
+  function syncBubbleImagesFromActive() {
+    if (!slides.length) {
+      return;
+    }
+    var activeIndex = getActiveIndex();
+    var prevIndex = (activeIndex - 1 + slides.length) % slides.length;
+    var nextIndex = (activeIndex + 1) % slides.length;
+    setBubbleImage(leftBubble, getAvatarSrcFromSlide(slides[prevIndex]));
+    setBubbleImage(rightBubble, getAvatarSrcFromSlide(slides[nextIndex]));
+  }
+
+  function hideFlyAvatar() {
+    if (!flyAvatar) {
+      return;
+    }
+    flyAvatar.style.opacity = "0";
+    flyAvatar.style.visibility = "hidden";
+    flyAvatar.style.transform = "translate(-9999px, -9999px) scale(0.62)";
+    flyAvatar.style.transition = "";
+  }
+
+  function hideMotionTrail() {
+    if (!motionTrail) {
+      return;
+    }
+    motionTrail.classList.remove("is-active");
+  }
+
+  function runFlyIn(direction, incomingSlide) {
+    if (!box || !flyAvatar || !flyAvatarImg) {
+      return;
+    }
+
+    var sourceBubble = direction === "left" ? rightBubble : leftBubble;
+    if (!sourceBubble) {
+      return;
+    }
+
+    var incomingSrc = getAvatarSrcFromSlide(incomingSlide);
+    if (incomingSrc) {
+      flyAvatarImg.setAttribute("src", incomingSrc);
+    }
+
+    var sourceRect = sourceBubble.getBoundingClientRect();
+    if (!sourceRect.width || !sourceRect.height) {
+      return;
+    }
+    var activeAvatar = slider.querySelector(".carousel-item.active .client_img img");
+    if (!activeAvatar) {
+      return;
+    }
+    var targetRect = activeAvatar.getBoundingClientRect();
+    if (!targetRect.width || !targetRect.height) {
+      return;
+    }
+    var boxRect = box.getBoundingClientRect();
+
+    var startX = sourceRect.left - boxRect.left;
+    var startY = sourceRect.top - boxRect.top;
+    var endX = targetRect.left - boxRect.left;
+    var endY = targetRect.top - boxRect.top;
+    var deltaX = endX - startX;
+    var deltaY = endY - startY;
+    var midX = startX + deltaX * 0.56;
+    var liftY = Math.max(42, Math.abs(deltaX) * 0.1);
+    var midY = Math.min(startY, endY) - liftY;
+    var overshootX = endX + (direction === "left" ? -8 : 8);
+
+    if (flyAnimation) {
+      flyAnimation.cancel();
+      flyAnimation = null;
+    }
+
+    sourceBubble.style.setProperty("--suction-dx", deltaX + "px");
+    sourceBubble.style.setProperty("--suction-dy", deltaY + "px");
+    sourceBubble.classList.add("is-launching");
+
+    if (motionTrail) {
+      var trailX = startX + sourceRect.width * 0.5;
+      var trailY = startY + sourceRect.height * 0.5 - 4;
+      var trailAngle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
+      var trailLength = Math.max(14, Math.hypot(deltaX, deltaY));
+      motionTrail.classList.remove("is-active");
+      motionTrail.style.setProperty("--trail-x", trailX + "px");
+      motionTrail.style.setProperty("--trail-y", trailY + "px");
+      motionTrail.style.setProperty("--trail-angle", trailAngle + "deg");
+      motionTrail.style.setProperty("--trail-length", trailLength + "px");
+      void motionTrail.offsetWidth;
+      motionTrail.classList.add("is-active");
+    }
+
+    flyAvatar.style.visibility = "visible";
+    flyAvatar.style.opacity = "1";
+    flyAvatar.style.transition = "";
+    flyAvatar.style.transform = "translate(" + startX + "px, " + startY + "px) scale(0.62) rotate(" + (direction === "left" ? "-8deg" : "8deg") + ")";
+
+    function cleanupFlyState() {
+      sourceBubble.classList.remove("is-launching");
+      sourceBubble.style.removeProperty("--suction-dx");
+      sourceBubble.style.removeProperty("--suction-dy");
+      hideMotionTrail();
+      hideFlyAvatar();
+      flyAnimation = null;
+    }
+
+    if (typeof flyAvatar.animate === "function") {
+      flyAnimation = flyAvatar.animate(
+        [
+          {
+            transform: "translate(" + startX + "px, " + startY + "px) scale(0.62) rotate(" + (direction === "left" ? "-8deg" : "8deg") + ")",
+            opacity: 0.96,
+            filter: "blur(0px) saturate(1.06)"
+          },
+          {
+            offset: 0.52,
+            transform: "translate(" + midX + "px, " + midY + "px) scale(0.34) rotate(" + (direction === "left" ? "-3deg" : "3deg") + ")",
+            opacity: 0.84,
+            filter: "blur(1.2px) saturate(0.9)"
+          },
+          {
+            offset: 0.7,
+            transform: "translate(" + endX + "px, " + endY + "px) scale(0.08) rotate(0deg)",
+            opacity: 0.28,
+            filter: "blur(2.8px) saturate(0.78)"
+          },
+          {
+            offset: 0.82,
+            transform: "translate(" + overshootX + "px, " + (endY - 5) + "px) scale(1.24) rotate(0deg)",
+            opacity: 1,
+            filter: "blur(0px) saturate(1)"
+          },
+          {
+            transform: "translate(" + endX + "px, " + endY + "px) scale(1) rotate(0deg)",
+            opacity: 1,
+            filter: "blur(0px) saturate(1)"
+          }
+        ],
+        {
+          duration: 860,
+          easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+          fill: "forwards"
+        }
+      );
+
+      flyAnimation.onfinish = cleanupFlyState;
+      flyAnimation.oncancel = cleanupFlyState;
+      return;
+    }
+
+    flyAvatar.style.transition = "transform 860ms cubic-bezier(0.16, 1, 0.3, 1), opacity 860ms ease";
+    requestAnimationFrame(function () {
+      flyAvatar.style.transform = "translate(" + endX + "px, " + endY + "px) scale(1) rotate(0deg)";
+      flyAvatar.style.opacity = "1";
+    });
+
+    setTimeout(function () {
+      cleanupFlyState();
+    }, 900);
+  }
+
+  syncBubbleImagesFromActive();
+  hideMotionTrail();
+  hideFlyAvatar();
+
+  $slider.on("slide.bs.carousel", function (event) {
+    runFlyIn(event.direction, event.relatedTarget);
+  });
+
+  $slider.on("slid.bs.carousel", function () {
+    syncBubbleImagesFromActive();
+  });
+
+  var prevBtn = slider.querySelector(".carousel-control-prev");
+  var nextBtn = slider.querySelector(".carousel-control-next");
+
+  if (prevBtn) {
+    prevBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      $slider.carousel("prev");
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      $slider.carousel("next");
+    });
+  }
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initHomeTestimonialCarousel);
+} else {
+  initHomeTestimonialCarousel();
+}
