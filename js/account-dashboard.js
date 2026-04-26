@@ -11,6 +11,7 @@
     success: "is-success",
     error: "is-error"
   };
+  var DEFAULT_AVATAR = "images/logo.png";
 
   function clone(value) {
     return JSON.parse(JSON.stringify(value));
@@ -49,8 +50,23 @@
     return {
       name: user.name || "BettyVerse Client",
       email: user.email || "client@bettyverse.com",
-      phone: user.phone || "+234 800 000 0000"
+      phone: user.phone || "+234 800 000 0000",
+      avatar: user.avatar || DEFAULT_AVATAR
     };
+  }
+
+  function saveSessionUserPatch(payload) {
+    try {
+      var session = getSession();
+      if (!session || !session.user) {
+        return;
+      }
+
+      session.user = Object.assign({}, session.user, payload || {});
+      window.localStorage.setItem(STORAGE_KEYS.session, JSON.stringify(session));
+    } catch (error) {
+      return;
+    }
   }
 
   function getDefaultMockState() {
@@ -62,6 +78,7 @@
         name: user.name,
         email: user.email,
         phone: user.phone,
+        avatar: user.avatar,
         preferredContact: "email",
         birthday: "",
         eventPreferences: "Birthday, Anniversary",
@@ -458,6 +475,19 @@
     });
   }
 
+  function getProfileAvatar(profile) {
+    return (profile && profile.avatar) || DEFAULT_AVATAR;
+  }
+
+  function updateAvatar(selector, src) {
+    var element = document.querySelector(selector);
+    if (!element) {
+      return;
+    }
+
+    element.setAttribute("src", src || DEFAULT_AVATAR);
+  }
+
   function serializeForm(form) {
     var payload = {};
     if (!form) {
@@ -501,6 +531,68 @@
     });
   }
 
+  function bindAvatarControls(adapter, snapshot) {
+    var input = document.querySelector("[data-profile-avatar-input]");
+    var resetButton = document.querySelector("[data-profile-avatar-reset]");
+
+    if (input) {
+      input.addEventListener("change", function (event) {
+        var file = event.target.files && event.target.files[0];
+        if (!file) {
+          return;
+        }
+
+        if (file.type && file.type.indexOf("image/") !== 0) {
+          showAlert("error", "Please choose an image file for your profile picture.");
+          input.value = "";
+          return;
+        }
+
+        var reader = new window.FileReader();
+        reader.onload = function (loadEvent) {
+          var nextAvatar = loadEvent && loadEvent.target ? loadEvent.target.result : "";
+          if (!nextAvatar) {
+            showAlert("error", "Unable to read that image. Please try another file.");
+            return;
+          }
+
+          adapter
+            .updateProfile({ avatar: nextAvatar })
+            .then(function (profile) {
+              snapshot.profile = Object.assign({}, snapshot.profile, profile);
+              updateAvatar("[data-dashboard-avatar]", getProfileAvatar(snapshot.profile));
+              updateAvatar("[data-profile-avatar-preview]", getProfileAvatar(snapshot.profile));
+              saveSessionUserPatch({ avatar: getProfileAvatar(snapshot.profile) });
+              showAlert("success", "Profile picture updated.");
+              input.value = "";
+            })
+            .catch(function (error) {
+              showAlert("error", error.message || "Unable to update profile picture.");
+            });
+        };
+
+        reader.readAsDataURL(file);
+      });
+    }
+
+    if (resetButton) {
+      resetButton.addEventListener("click", function () {
+        adapter
+          .updateProfile({ avatar: DEFAULT_AVATAR })
+          .then(function (profile) {
+            snapshot.profile = Object.assign({}, snapshot.profile, profile);
+            updateAvatar("[data-dashboard-avatar]", getProfileAvatar(snapshot.profile));
+            updateAvatar("[data-profile-avatar-preview]", getProfileAvatar(snapshot.profile));
+            saveSessionUserPatch({ avatar: DEFAULT_AVATAR });
+            showAlert("success", "Demo logo restored as profile picture.");
+          })
+          .catch(function (error) {
+            showAlert("error", error.message || "Unable to reset profile picture.");
+          });
+      });
+    }
+  }
+
   function initializeDashboard() {
     var adapter = buildAdapter();
     var snapshot = {
@@ -512,6 +604,7 @@
 
     bindTabs();
     bindLogout();
+    bindAvatarControls(adapter, snapshot);
     setActiveTab("overview");
 
     Promise.all([adapter.getProfile(), adapter.getOrders(), adapter.getBookings(), adapter.getAddresses()])
@@ -526,6 +619,8 @@
         updateText("[data-dashboard-tier]", snapshot.profile.loyaltyTier || "Standard");
         updateText("[data-dashboard-member-since]", formatDate(snapshot.profile.memberSince));
         updateText("[data-dashboard-phone]", snapshot.profile.phone || "-");
+        updateAvatar("[data-dashboard-avatar]", getProfileAvatar(snapshot.profile));
+        updateAvatar("[data-profile-avatar-preview]", getProfileAvatar(snapshot.profile));
 
         updateText("[data-dashboard-orders-count]", String(snapshot.orders.length));
         updateText(
@@ -569,6 +664,14 @@
             updateText("[data-dashboard-user-name]", snapshot.profile.name || "BettyVerse Client");
             updateText("[data-dashboard-user-email]", snapshot.profile.email || "client@bettyverse.com");
             updateText("[data-dashboard-phone]", snapshot.profile.phone || "-");
+            updateAvatar("[data-dashboard-avatar]", getProfileAvatar(snapshot.profile));
+            updateAvatar("[data-profile-avatar-preview]", getProfileAvatar(snapshot.profile));
+            saveSessionUserPatch({
+              name: snapshot.profile.name || "BettyVerse Client",
+              email: snapshot.profile.email || "client@bettyverse.com",
+              phone: snapshot.profile.phone || "+234 800 000 0000",
+              avatar: getProfileAvatar(snapshot.profile)
+            });
             showAlert("success", "Profile settings saved.");
           })
           .catch(function (error) {

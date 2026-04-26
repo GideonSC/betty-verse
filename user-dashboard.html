@@ -44,8 +44,6 @@
                                  <div class="dropdown-submenu">
                                     <a class="dropdown-item dropdown-toggle" href="packages.html?filter=surprise">Surprise By Betty At</a>
                                     <div class="dropdown-menu">
-                                       <a class="dropdown-item" href="packages.html?filter=home">Home</a>
-                                       <a class="dropdown-item" href="packages.html?filter=hotel">Hotel</a>
                                        <a class="dropdown-item" href="packages.html?filter=university">University</a>
                                        <a class="dropdown-item" href="packages.html?filter=workplace">Workplace</a>
                                     </div>
@@ -60,7 +58,6 @@
                                     <a class="dropdown-item dropdown-toggle" href="packages.html?filter=anniversary">Anniversary Decorations</a>
                                     <div class="dropdown-menu">
                                                                               <a class="dropdown-item" href="packages.html?filter=anniversary-home">Decoration At Home</a>
-                                       <a class="dropdown-item" href="packages.html?filter=anniversary-hotel">Decoration At Hotel</a>
                                        <a class="dropdown-item" href="packages.html?filter=anniversary-car">Car Boot Decoration</a>
                                     </div>
                                  </div>
@@ -70,7 +67,6 @@
                               <a class="dropdown-item dropdown-toggle" href="packages.html?filter=surprise">Your Occasion</a>
                               <div class="dropdown-menu">
                                  <a class="dropdown-item" href="packages.html?filter=occasion-choice">By Choice</a>
-                                 <a class="dropdown-item" href="packages.html?filter=hall">Hall Occasion</a>
                                  <a class="dropdown-item" href="packages.html?filter=valentine">Valentine's Day</a>
                                  <a class="dropdown-item" href="packages.html?filter=baby-shower">Baby Shower</a>
                                  <a class="dropdown-item" href="packages.html?filter=proposal">Proposal</a>
@@ -121,8 +117,8 @@
                <div class="dashboard-alert is-info" data-dashboard-alert hidden></div>
                <div class="account-summary-panel">
                   <div class="account-summary-main">
-                     <div class="account-avatar">
-                        <i class="fa fa-user" aria-hidden="true"></i>
+                     <div class="account-avatar account-avatar--summary">
+                        <img src="images/logo.png" alt="Profile picture" data-dashboard-avatar>
                      </div>
                      <div class="account-summary-copy">
                         <h2 data-dashboard-user-name>BettyVerse Client</h2>
@@ -186,6 +182,22 @@
                         <div class="dashboard-panel-head">
                            <span class="content_eyebrow"><i class="fa fa-id-card-o icon-inline" aria-hidden="true"></i>Profile</span>
                            <h2 class="content_title">Profile settings</h2>
+                        </div>
+                        <div class="account-profile-media">
+                           <div class="account-avatar account-avatar--profile">
+                              <img src="images/logo.png" alt="Profile picture preview" data-profile-avatar-preview>
+                           </div>
+                           <div class="account-profile-media-copy">
+                              <h3>Profile picture</h3>
+                              <p>Upload a personal photo for your account. For this demo, the BettyVerse logo is the default profile picture.</p>
+                              <div class="account-profile-media-actions">
+                                 <label class="hero-btn secondary account-avatar-upload">
+                                    <input type="file" accept="image/*" data-profile-avatar-input>
+                                    <span>Change Picture</span>
+                                 </label>
+                                 <button type="button" class="hero-btn primary" data-profile-avatar-reset>Use Demo Logo</button>
+                              </div>
+                           </div>
                         </div>
                         <form class="account-form-grid" data-profile-form>
                            <label>
@@ -398,3 +410,4 @@
       <script src="js/custom.js"></script>
    </body>
 </html>
+

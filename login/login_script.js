@@ -59,7 +59,8 @@ function saveSession(payload) {
             id: 'client-local',
             name: payload.name,
             email: payload.email,
-            phone: payload.phone
+            phone: payload.phone,
+            avatar: payload.avatar || '../images/logo.png'
         }
     };
 

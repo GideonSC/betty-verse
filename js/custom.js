@@ -1129,3 +1129,35 @@ if (document.readyState === "loading") {
 } else {
   initHomeTestimonialCarousel();
 }
+
+(function initBlogCardToggles(document) {
+  "use strict";
+
+  function init() {
+    var toggles = document.querySelectorAll("[data-blog-toggle]");
+    if (!toggles.length) {
+      return;
+    }
+
+    toggles.forEach(function (toggle) {
+      var targetId = toggle.getAttribute("aria-controls");
+      var details = targetId ? document.getElementById(targetId) : null;
+      if (!details) {
+        return;
+      }
+
+      toggle.addEventListener("click", function () {
+        var isExpanded = toggle.getAttribute("aria-expanded") === "true";
+        toggle.setAttribute("aria-expanded", isExpanded ? "false" : "true");
+        toggle.textContent = isExpanded ? "Read more" : "Show less";
+        details.hidden = isExpanded;
+      });
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})(document);
