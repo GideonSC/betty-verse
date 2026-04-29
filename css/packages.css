@@ -504,6 +504,8 @@
    height: 100%;
    border-radius: 20px;
    padding: 22px;
+   cursor: pointer;
+   transition: transform 0.22s ease, box-shadow 0.22s ease;
 }
 
 .package-media {
@@ -544,6 +546,12 @@
    gap: 16px;
 }
 
+.package-card-front {
+   display: flex;
+   flex-direction: column;
+   gap: 16px;
+}
+
 .package-card h3 {
    padding-bottom: 0;
    font-size: 24px;
@@ -561,6 +569,26 @@
    background: #eff5ff;
    color: #1749ba;
    font-weight: 800;
+}
+
+.package-rating {
+   display: inline-flex;
+   align-items: center;
+   flex-wrap: wrap;
+   gap: 8px;
+   color: #f0b323;
+   font-size: 14px;
+   line-height: 1;
+}
+
+.package-rating i {
+   font-size: 14px;
+}
+
+.package-rating span {
+   color: #5f7696;
+   font-size: 13px;
+   font-weight: 700;
 }
 
 .package-summary {
@@ -592,17 +620,18 @@
 
 .package-actions .add-cart {
    flex: 1 1 190px;
-   background: transparent;
-   color: #021A54;
+   background: #eef4ff;
+   color: #123f9e;
    padding: 12px 18px;
-   border: 1px solid rgba(23, 63, 153, 0.30);
+   border: 1px solid rgba(23, 73, 186, 0.18);
    border-radius: 999px;
    cursor: pointer;
 }
 
 .package-actions .add-cart:hover {
-   background: rgba(255, 255, 255, 0.62);
-   border-color: rgba(93, 53, 239, 0.44);
+   background: #e3eeff;
+   color: #0d327f;
+   border-color: rgba(23, 73, 186, 0.28);
 }
 
 .package-actions .add-cart.is-added {
@@ -624,6 +653,28 @@
 .details-toggle:hover {
    background: rgba(255, 255, 255, 0.62);
    border-color: rgba(93, 53, 239, 0.44);
+}
+
+.package-card:not(.is-expanded) .package-summary,
+.package-card:not(.is-expanded) .package-highlights,
+.package-card:not(.is-expanded) .details-toggle {
+   display: none;
+}
+
+.package-card:not(.is-expanded) .package-card-top {
+   display: block;
+}
+
+.package-card:not(.is-expanded) .package-card h3 {
+   font-size: 22px;
+}
+
+.package-card:not(.is-expanded) .package-actions {
+   margin-top: 0;
+}
+
+.package-card.is-expanded .package-rating {
+   margin-top: 4px;
 }
 
 .package-details {
@@ -937,6 +988,10 @@
    .package-card-top {
       flex-direction: column;
       align-items: flex-start;
+   }
+
+   .package-card-front {
+      gap: 14px;
    }
 
    .package-addon-copy {

@@ -80,6 +80,66 @@
 	}
 })(window, document);
 
+(function initMobileHeaderViewportLock(window, document) {
+	"use strict";
+
+	var root = document.documentElement;
+	var rafId = 0;
+
+	function updateHeaderMetrics() {
+		rafId = 0;
+
+		if (!root) {
+			return;
+		}
+
+		if (window.innerWidth > 991) {
+			root.style.setProperty("--mobile-vv-top", "0px");
+			root.style.setProperty("--mobile-header-live-height", "var(--header-height-mobile)");
+			return;
+		}
+
+		var header = document.querySelector(".header_section");
+		var viewportTop = 0;
+
+		if (window.visualViewport && typeof window.visualViewport.offsetTop === "number") {
+			viewportTop = Math.max(0, Math.round(window.visualViewport.offsetTop));
+		}
+
+		root.style.setProperty("--mobile-vv-top", viewportTop + "px");
+
+		if (header) {
+			var headerHeight = Math.round(header.getBoundingClientRect().height);
+			if (headerHeight > 0) {
+				root.style.setProperty("--mobile-header-live-height", headerHeight + "px");
+			}
+		}
+	}
+
+	function queueUpdate() {
+		if (rafId) {
+			return;
+		}
+		rafId = window.requestAnimationFrame(updateHeaderMetrics);
+	}
+
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", queueUpdate);
+	} else {
+		queueUpdate();
+	}
+
+	window.addEventListener("load", queueUpdate, { passive: true });
+	window.addEventListener("resize", queueUpdate, { passive: true });
+	window.addEventListener("orientationchange", queueUpdate, { passive: true });
+	window.addEventListener("scroll", queueUpdate, { passive: true });
+
+	if (window.visualViewport) {
+		window.visualViewport.addEventListener("resize", queueUpdate, { passive: true });
+		window.visualViewport.addEventListener("scroll", queueUpdate, { passive: true });
+	}
+})(window, document);
+
 $(function () {
 	
 	"use strict";
@@ -416,20 +476,164 @@ $(function () {
         interval: 5000
      });
 
-     /* Search toggle functionality */
-     window.toggleSearch = function() {
-        var input = document.getElementById('search-input');
-        if (input.classList.contains('active')) {
-            input.classList.remove('active');
-            input.value = '';
-        } else {
-            input.classList.add('active');
-            input.focus();
-        }
-     };
+     initGlobalNavSearch();
 
 
 });
+
+function normalizeNavSearchText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function resolveNavSearchDestination(query) {
+  var normalized = normalizeNavSearchText(query);
+  if (!normalized) {
+    return "";
+  }
+
+  var keywordRoutes = [
+    { terms: ["home", "main"], url: "index.html" },
+    { terms: ["about", "story", "who we are"], url: "about.html" },
+    { terms: ["service", "services"], url: "services.html" },
+    { terms: ["blog", "article", "news"], url: "blog.html" },
+    { terms: ["book", "booking", "consultation"], url: "booking.html" },
+    { terms: ["cart", "checkout", "payment"], url: "cart.html" },
+    { terms: ["login", "sign in", "account"], url: "login/login_index.html" },
+    { terms: ["dashboard", "orders"], url: "user-dashboard.html" }
+  ];
+
+  var packageFilters = [
+    { terms: ["birthday", "kids", "confetti", "car boot", "car-boot"], filter: "birthday" },
+    { terms: ["anniversary"], filter: "anniversary" },
+    { terms: ["proposal", "valentine", "baby shower", "occasion", "surprise"], filter: "surprise" },
+    { terms: ["christmas", "new year", "easter", "festival"], filter: "festival" }
+  ];
+
+  for (var i = 0; i < packageFilters.length; i += 1) {
+    for (var j = 0; j < packageFilters[i].terms.length; j += 1) {
+      if (normalized.indexOf(packageFilters[i].terms[j]) !== -1) {
+        return "packages.html?filter=" + encodeURIComponent(packageFilters[i].filter) + "&q=" + encodeURIComponent(query);
+      }
+    }
+  }
+
+  for (var a = 0; a < keywordRoutes.length; a += 1) {
+    for (var b = 0; b < keywordRoutes[a].terms.length; b += 1) {
+      if (normalized.indexOf(keywordRoutes[a].terms[b]) !== -1) {
+        return keywordRoutes[a].url;
+      }
+    }
+  }
+
+  return "packages.html?q=" + encodeURIComponent(query);
+}
+
+function applyPackagesTextSearch(query) {
+  var normalized = normalizeNavSearchText(query);
+  if (!normalized) {
+    return;
+  }
+
+  var cards = document.querySelectorAll(".package-card-item");
+  if (!cards.length) {
+    return;
+  }
+
+  var terms = normalized.split(" ").filter(Boolean);
+  var visibleCount = 0;
+
+  cards.forEach(function (card) {
+    var cardNode = card.querySelector(".package-card");
+    var haystack = [
+      cardNode ? cardNode.getAttribute("data-package-name") : "",
+      cardNode ? cardNode.getAttribute("data-package-summary") : "",
+      cardNode ? cardNode.getAttribute("data-package-category") : "",
+      card.getAttribute("data-category"),
+      card.getAttribute("data-audience"),
+      card.getAttribute("data-tags")
+    ]
+      .join(" ")
+      .toLowerCase();
+
+    var matches = terms.every(function (term) {
+      return haystack.indexOf(term) !== -1;
+    });
+
+    card.style.display = matches ? "block" : "none";
+    if (matches) {
+      visibleCount += 1;
+    }
+  });
+
+  var noResults = document.querySelector(".no-results");
+  if (noResults) {
+    noResults.textContent = visibleCount
+      ? "No packages match this selection right now. Try another category."
+      : "No packages matched your search. Try another keyword.";
+    noResults.classList.toggle("d-none", visibleCount > 0);
+  }
+}
+
+function initGlobalNavSearch() {
+  var forms = document.querySelectorAll("form.form-inline");
+  if (!forms.length) {
+    return;
+  }
+
+  var urlParams = new URLSearchParams(window.location.search);
+  var queryFromUrl = urlParams.get("q") || "";
+
+  function runSearch(rawQuery) {
+    var query = String(rawQuery || "").trim();
+    if (!query) {
+      return false;
+    }
+    var destination = resolveNavSearchDestination(query);
+    if (!destination) {
+      return false;
+    }
+    window.location.href = destination;
+    return true;
+  }
+
+  forms.forEach(function (form) {
+    var input = form.querySelector(".search-input");
+    if (!input) {
+      return;
+    }
+
+    if (queryFromUrl) {
+      input.value = queryFromUrl;
+    }
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      if (!runSearch(input.value)) {
+        input.focus();
+      }
+    });
+  });
+
+  window.toggleSearch = function () {
+    var input = document.getElementById("search-input");
+    if (!input) {
+      return;
+    }
+    if (!runSearch(input.value)) {
+      input.focus();
+      input.select();
+    }
+  };
+
+  if (window.location.pathname.toLowerCase().indexOf("packages.html") !== -1 && queryFromUrl) {
+    window.setTimeout(function () {
+      applyPackagesTextSearch(queryFromUrl);
+    }, 0);
+  }
+}
 
 
 
@@ -901,15 +1105,26 @@ function initHomeTestimonialCarousel() {
   var rightBubble = box ? box.querySelector(".testimonial_avatar_bubble--right") : null;
   var motionTrail = box ? box.querySelector(".testimonial_motion_trail") : null;
   var flyAvatar = box ? box.querySelector(".testimonial_avatar_flyin") : null;
-  var flyAvatarImg = flyAvatar ? flyAvatar.querySelector("img") : null;
+  var avatarToneClasses = ["avatar-tone-one", "avatar-tone-two", "avatar-tone-three"];
   var flyAnimation = null;
 
-  function getAvatarSrcFromSlide(slide) {
+  function getAvatarToneFromSlide(slide) {
     if (!slide) {
       return "";
     }
-    var image = slide.querySelector(".client_img img");
-    return image ? image.getAttribute("src") || "" : "";
+    return slide.getAttribute("data-avatar-tone") || "";
+  }
+
+  function setAvatarTone(target, tone) {
+    if (!target) {
+      return;
+    }
+    avatarToneClasses.forEach(function (toneClass) {
+      target.classList.remove(toneClass);
+    });
+    if (tone) {
+      target.classList.add("avatar-tone-" + tone);
+    }
   }
 
   function getActiveIndex() {
@@ -921,26 +1136,15 @@ function initHomeTestimonialCarousel() {
     return 0;
   }
 
-  function setBubbleImage(bubble, src) {
-    if (!bubble) {
-      return;
-    }
-    var image = bubble.querySelector("img");
-    if (!image || !src) {
-      return;
-    }
-    image.setAttribute("src", src);
-  }
-
-  function syncBubbleImagesFromActive() {
+  function syncBubbleAvatarsFromActive() {
     if (!slides.length) {
       return;
     }
     var activeIndex = getActiveIndex();
     var prevIndex = (activeIndex - 1 + slides.length) % slides.length;
     var nextIndex = (activeIndex + 1) % slides.length;
-    setBubbleImage(leftBubble, getAvatarSrcFromSlide(slides[prevIndex]));
-    setBubbleImage(rightBubble, getAvatarSrcFromSlide(slides[nextIndex]));
+    setAvatarTone(leftBubble, getAvatarToneFromSlide(slides[prevIndex]));
+    setAvatarTone(rightBubble, getAvatarToneFromSlide(slides[nextIndex]));
   }
 
   function hideFlyAvatar() {
@@ -961,7 +1165,7 @@ function initHomeTestimonialCarousel() {
   }
 
   function runFlyIn(direction, incomingSlide) {
-    if (!box || !flyAvatar || !flyAvatarImg) {
+    if (!box || !flyAvatar) {
       return;
     }
 
@@ -970,16 +1174,13 @@ function initHomeTestimonialCarousel() {
       return;
     }
 
-    var incomingSrc = getAvatarSrcFromSlide(incomingSlide);
-    if (incomingSrc) {
-      flyAvatarImg.setAttribute("src", incomingSrc);
-    }
+    setAvatarTone(flyAvatar, getAvatarToneFromSlide(incomingSlide));
 
     var sourceRect = sourceBubble.getBoundingClientRect();
     if (!sourceRect.width || !sourceRect.height) {
       return;
     }
-    var activeAvatar = slider.querySelector(".carousel-item.active .client_img img");
+    var activeAvatar = slider.querySelector(".carousel-item.active .client_img");
     if (!activeAvatar) {
       return;
     }
@@ -1092,7 +1293,7 @@ function initHomeTestimonialCarousel() {
     }, 900);
   }
 
-  syncBubbleImagesFromActive();
+  syncBubbleAvatarsFromActive();
   hideMotionTrail();
   hideFlyAvatar();
 
@@ -1101,7 +1302,7 @@ function initHomeTestimonialCarousel() {
   });
 
   $slider.on("slid.bs.carousel", function () {
-    syncBubbleImagesFromActive();
+    syncBubbleAvatarsFromActive();
   });
 
   var prevBtn = slider.querySelector(".carousel-control-prev");

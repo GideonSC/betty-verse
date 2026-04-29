@@ -61,7 +61,7 @@
   var paymentMethodContent = {
     card: {
       name: "Card",
-      confirmLabel: "Continue with Card",
+      confirmLabel: "Pay",
       previewClass: "is-card",
       caption:
         "Card checkout preview for frontend mode. Backend gateway wiring can be added later.",
@@ -74,7 +74,7 @@
     },
     paypal: {
       name: "PayPal",
-      confirmLabel: "Continue with PayPal",
+      confirmLabel: "Pay",
       previewClass: "is-paypal",
       caption:
         "PayPal is currently displayed as a frontend UI preview while backend integration is pending.",
@@ -87,7 +87,7 @@
     },
     apple: {
       name: "Apple Pay",
-      confirmLabel: "Continue with Apple Pay",
+      confirmLabel: "Pay",
       previewClass: "is-apple",
       caption:
         "Apple Pay is shown here for layout and interaction preview in frontend-only mode.",
@@ -100,7 +100,7 @@
     },
     google: {
       name: "Google Pay",
-      confirmLabel: "Google Pay Soon",
+      confirmLabel: "Pay",
       previewClass: "is-google",
       caption:
         "Google Pay is included as a UI placeholder and can be connected when backend is ready.",
