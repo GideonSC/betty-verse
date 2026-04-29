@@ -116,37 +116,67 @@
             <div class="container">
                <div class="dashboard-alert is-info" data-dashboard-alert hidden></div>
                <div class="account-summary-panel">
-                  <div class="account-summary-main">
-                     <div class="account-avatar account-avatar--summary">
-                        <img src="images/logo.png" alt="Profile picture" data-dashboard-avatar>
+                  <div class="account-summary-top">
+                     <div class="account-summary-main">
+                        <div class="account-avatar account-avatar--summary">
+                           <img src="images/logo.png" alt="Profile picture" data-dashboard-avatar>
+                        </div>
+                        <div class="account-summary-copy">
+                           <h2 data-dashboard-user-name>BettyVerse Client</h2>
+                           <div class="account-summary-meta">
+                              <span class="account-summary-pill"><i class="fa fa-diamond" aria-hidden="true"></i> Tier: <strong data-dashboard-tier>Standard</strong></span>
+                              <span class="account-summary-pill"><i class="fa fa-calendar-o" aria-hidden="true"></i> Member since <strong data-dashboard-member-since>-</strong></span>
+                           </div>
+                        </div>
                      </div>
-                     <div class="account-summary-copy">
-                        <h2 data-dashboard-user-name>BettyVerse Client</h2>
-                        <p><span data-dashboard-user-email>client@bettyverse.com</span> <strong>|</strong> <span data-dashboard-phone>+234 800 000 0000</span></p>
-                        <small>Tier: <span data-dashboard-tier>Standard</span> | Member since <span data-dashboard-member-since>-</span></small>
+                     <div class="account-summary-actions">
+                        <span>Today: <strong data-dashboard-today>-</strong></span>
+                        <button type="button" class="hero-btn secondary" data-dashboard-logout>Log Out</button>
                      </div>
                   </div>
-                  <div class="account-summary-actions">
-                     <span>Today: <strong data-dashboard-today>-</strong></span>
-                     <button type="button" class="hero-btn secondary" data-dashboard-logout>Log Out</button>
+                  <div class="account-summary-contact-row">
+                     <div class="account-summary-contact-item">
+                        <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                        <div>
+                           <small>Email</small>
+                           <span data-dashboard-user-email>client@bettyverse.com</span>
+                        </div>
+                     </div>
+                     <div class="account-summary-contact-item">
+                        <i class="fa fa-phone" aria-hidden="true"></i>
+                        <div>
+                           <small>Phone</small>
+                           <span data-dashboard-phone>+234 800 000 0000</span>
+                        </div>
+                     </div>
                   </div>
                </div>
 
                <div class="account-metrics-grid">
-                  <article class="account-metric-card">
-                     <span class="card-icon"><i class="fa fa-shopping-bag" aria-hidden="true"></i></span>
-                     <strong data-dashboard-orders-count>0</strong>
-                     <p>Total orders</p>
-                  </article>
-                  <article class="account-metric-card">
-                     <span class="card-icon"><i class="fa fa-calendar-check-o" aria-hidden="true"></i></span>
-                     <strong data-dashboard-active-bookings-count>0</strong>
-                     <p>Active bookings</p>
-                  </article>
-                  <article class="account-metric-card">
-                     <span class="card-icon"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
-                     <strong data-dashboard-default-address-count>0</strong>
-                     <p>Default address on file</p>
+                  <article class="account-metric-card account-metric-card--combined">
+                     <div class="account-metric-list">
+                        <div class="account-metric-item">
+                           <div class="account-metric-main">
+                              <span class="account-metric-icon"><i class="fa fa-shopping-bag" aria-hidden="true"></i></span>
+                              <p class="account-metric-label">Total orders</p>
+                           </div>
+                           <strong data-dashboard-orders-count>0</strong>
+                        </div>
+                        <div class="account-metric-item">
+                           <div class="account-metric-main">
+                              <span class="account-metric-icon"><i class="fa fa-calendar-check-o" aria-hidden="true"></i></span>
+                              <p class="account-metric-label">Active bookings</p>
+                           </div>
+                           <strong data-dashboard-active-bookings-count>0</strong>
+                        </div>
+                        <div class="account-metric-item">
+                           <div class="account-metric-main">
+                              <span class="account-metric-icon"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
+                              <p class="account-metric-label">Default address on file</p>
+                           </div>
+                           <strong data-dashboard-default-address-count>0</strong>
+                        </div>
+                     </div>
                   </article>
                </div>
 
@@ -195,7 +225,6 @@
                                     <input type="file" accept="image/*" data-profile-avatar-input>
                                     <span>Change Picture</span>
                                  </label>
-                                 <button type="button" class="hero-btn primary" data-profile-avatar-reset>Use Demo Logo</button>
                               </div>
                            </div>
                         </div>
