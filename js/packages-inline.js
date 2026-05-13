@@ -159,6 +159,232 @@
                   noResults.classList.toggle('d-none', visibleCount > 0);
                }
             }
+            function normalizeImagePath(value) {
+               return (value || '').toString().trim();
+            }
+            function imageComparable(value) {
+               return normalizeImagePath(value).split('?')[0].toLowerCase();
+            }
+            function hashString(value) {
+               var text = (value || '').toString();
+               var hash = 0;
+               for (var i = 0; i < text.length; i += 1) {
+                  hash = ((hash << 5) - hash) + text.charCodeAt(i);
+                  hash |= 0;
+               }
+               return Math.abs(hash);
+            }
+            function getSecondaryImageForCard(card, primarySrc) {
+               var explicit = normalizeImagePath(card.dataset.packageImage2 || card.dataset.packageImageAlt || '');
+               if (explicit) {
+                  return explicit;
+               }
+               var category = normalizeFilter(card.dataset.category);
+               var pools = {
+                  birthday: ['images/birthday_demo.jpg', 'images/bandc20.jpg', 'images/car_boot1.png', 'images/Nemo_inspired.jpg'],
+                  anniversary: ['images/anniversary_demo.jpeg', 'images/At_home2.jpg', 'images/At_home3.jpg', 'images/At_home1.jpg'],
+                  surprise: ['images/propose_1.jpg', 'images/val_2.jpg', 'images/baby_shower2.jpg', 'images/propose_3.jpg'],
+                  festival: ['images/christmas_demo.jpeg', 'images/festive6.jpeg', 'images/festive7.jpeg', 'images/festive5.jpeg'],
+                  all: ['images/demo1.jpeg', 'images/demo2.jpeg', 'images/demo.jpeg', 'images/banner-img1.png']
+               };
+               var pool = pools[category] || pools.all;
+               var seed = hashString(card.dataset.packageId || card.dataset.packageName || primarySrc || category);
+               for (var offset = 0; offset < pool.length; offset += 1) {
+                  var candidate = pool[(seed + offset) % pool.length];
+                  if (imageComparable(candidate) !== imageComparable(primarySrc)) {
+                     return candidate;
+                  }
+               }
+               return pool[0] || '';
+            }
+            function getEffectivePackagePrice(card) {
+               if (!card) {
+                  return 0;
+               }
+               var base = Number(card.dataset.packageBasePrice || 0);
+               var price = Number(card.dataset.packagePrice || 0);
+               var effectivePrice = 0;
+               if (Number.isFinite(base) && base > 0) {
+                  effectivePrice = base;
+               } else if (Number.isFinite(price) && price > 0) {
+                  effectivePrice = price;
+               } else {
+                  var priceLabel = card.querySelector('.package-price');
+                  effectivePrice = Number((priceLabel ? priceLabel.textContent : '').replace(/[^0-9.]/g, '')) || 0;
+               }
+               return effectivePrice;
+            }
+            function isSingleSlidePriceTier(card) {
+               var effectivePrice = getEffectivePackagePrice(card);
+               return effectivePrice > 0 && effectivePrice <= 149;
+            }
+            function isPremiumSecondSlideTier(card) {
+               var effectivePrice = getEffectivePackagePrice(card);
+               return effectivePrice >= 150;
+            }
+            function getPackageSlideImages(card, primarySrc) {
+               var images = [];
+               var seen = Object.create(null);
+               function pushImage(src) {
+                  var clean = normalizeImagePath(src);
+                  if (!clean) {
+                     return;
+                  }
+                  var key = imageComparable(clean);
+                  if (!key || seen[key]) {
+                     return;
+                  }
+                  seen[key] = true;
+                  images.push(clean);
+               }
+               pushImage(primarySrc);
+               if (isSingleSlidePriceTier(card)) {
+                  return images;
+               }
+               if (isPremiumSecondSlideTier(card)) {
+                  pushImage('images/why_betty.png');
+               }
+               pushImage(card.dataset.packageImage2 || card.dataset.packageImageAlt || '');
+               pushImage(card.dataset.packageImage3 || '');
+               if (images.length < 2) {
+                  pushImage(getSecondaryImageForCard(card, images[0] || primarySrc));
+               }
+               return images;
+            }
+            function setPackageMediaSlide(media, index) {
+               var slides = media.querySelectorAll('.package-media-slide');
+               var dots = media.querySelectorAll('.package-media-dot');
+               var total = slides.length;
+               if (!total) {
+                  return;
+               }
+               var next = ((index % total) + total) % total;
+               media.dataset.mediaSlideIndex = String(next);
+               slides.forEach(function (slide, slideIndex) {
+                  slide.classList.toggle('is-active', slideIndex === next);
+               });
+               dots.forEach(function (dot, dotIndex) {
+                  var isActive = dotIndex === next;
+                  dot.classList.toggle('is-active', isActive);
+                  dot.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+               });
+            }
+            function initPackageMediaSlider() {
+               document.querySelectorAll('.package-card .package-media').forEach(function (media) {
+                  if (media.dataset.sliderReady === '1') {
+                     return;
+                  }
+                  var card = media.closest('.package-card');
+                  var primaryImage = media.querySelector('img');
+                  if (!card || !primaryImage) {
+                     return;
+                  }
+                  var primarySrc = normalizeImagePath(primaryImage.getAttribute('src'));
+                  if (!primarySrc) {
+                     primarySrc = getSecondaryImageForCard(card, '');
+                     if (!primarySrc) {
+                        return;
+                     }
+                     primaryImage.setAttribute('src', primarySrc);
+                  }
+                  var slideImages = getPackageSlideImages(card, primarySrc);
+                  if (slideImages.length < 2) {
+                     return;
+                  }
+                  var primaryAlt = primaryImage.getAttribute('alt') || (card.dataset.packageName || 'Package image');
+                  var track = document.createElement('div');
+                  track.className = 'package-media-track';
+                  slideImages.forEach(function (imageSrc, imageIndex) {
+                     var slide = document.createElement('div');
+                     slide.className = 'package-media-slide' + (imageIndex === 0 ? ' is-active' : '');
+                     if (imageIndex === 0) {
+                        slide.appendChild(primaryImage);
+                     } else {
+                        var extraImg = document.createElement('img');
+                        extraImg.src = imageSrc;
+                        extraImg.alt = primaryAlt + ' view ' + (imageIndex + 1);
+                        extraImg.loading = 'lazy';
+                        slide.appendChild(extraImg);
+                     }
+                     track.appendChild(slide);
+                  });
+                  media.insertBefore(track, media.firstChild);
+
+                  var navPrev = document.createElement('button');
+                  navPrev.type = 'button';
+                  navPrev.className = 'package-media-nav is-prev';
+                  navPrev.setAttribute('aria-label', 'Previous image');
+                  navPrev.textContent = '<';
+                  var navNext = document.createElement('button');
+                  navNext.type = 'button';
+                  navNext.className = 'package-media-nav is-next';
+                  navNext.setAttribute('aria-label', 'Next image');
+                  navNext.textContent = '>';
+                  media.appendChild(navPrev);
+                  media.appendChild(navNext);
+
+                  var dots = document.createElement('div');
+                  dots.className = 'package-media-dots';
+                  for (var i = 0; i < slideImages.length; i += 1) {
+                     var dot = document.createElement('button');
+                     dot.type = 'button';
+                     dot.className = 'package-media-dot' + (i === 0 ? ' is-active' : '');
+                     dot.setAttribute('aria-label', 'Go to image ' + (i + 1));
+                     dot.setAttribute('aria-pressed', i === 0 ? 'true' : 'false');
+                     (function (dotIndex) {
+                        dot.addEventListener('click', function (event) {
+                           event.preventDefault();
+                           event.stopPropagation();
+                           setPackageMediaSlide(media, dotIndex);
+                        });
+                     })(i);
+                     dots.appendChild(dot);
+                  }
+                  media.appendChild(dots);
+
+                  navPrev.addEventListener('click', function (event) {
+                     event.preventDefault();
+                     event.stopPropagation();
+                     var current = Number(media.dataset.mediaSlideIndex || 0);
+                     setPackageMediaSlide(media, current - 1);
+                  });
+                  navNext.addEventListener('click', function (event) {
+                     event.preventDefault();
+                     event.stopPropagation();
+                     var current = Number(media.dataset.mediaSlideIndex || 0);
+                     setPackageMediaSlide(media, current + 1);
+                  });
+                  [navPrev, navNext, dots].forEach(function (element) {
+                     element.addEventListener('click', function (event) {
+                        event.stopPropagation();
+                     });
+                  });
+
+                  var autoplayTimer = null;
+                  function stopAutoplay() {
+                     if (autoplayTimer) {
+                        window.clearInterval(autoplayTimer);
+                        autoplayTimer = null;
+                     }
+                  }
+                  function startAutoplay() {
+                     stopAutoplay();
+                     autoplayTimer = window.setInterval(function () {
+                        var current = Number(media.dataset.mediaSlideIndex || 0);
+                        setPackageMediaSlide(media, current + 1);
+                     }, 4200);
+                  }
+                  startAutoplay();
+                  media.addEventListener('mouseenter', function () {
+                     stopAutoplay();
+                  });
+                  media.addEventListener('mouseleave', function () {
+                     startAutoplay();
+                  });
+                  media.dataset.mediaSlideIndex = '0';
+                  media.dataset.sliderReady = '1';
+               });
+            }
             function setCardDetailsState(card, expanded, immediate) {
                if (!card) {
                   return;
@@ -204,8 +430,10 @@
                      return;
                   }
                   if (!ratingScore) {
-                     var fallbackRatings = ['4.9', '4.8', '5.0', '4.7', '4.9', '4.8', '4.6', '5.0'];
-                     ratingScore = fallbackRatings[index % fallbackRatings.length];
+                     var ratingSeed = hashString((card.dataset.packageId || card.dataset.packageName || String(index)) + '|rating');
+                     var normalizedRating = (ratingSeed % 2401) / 2400; // 0..1
+                     var computedRating = 4.1 + (normalizedRating * 0.9); // 4.1..5.0
+                     ratingScore = computedRating.toFixed(1);
                      card.dataset.packageRating = ratingScore;
                   }
                   if (addToCartButton) {
@@ -217,14 +445,40 @@
                      front.className = 'package-card-front';
                      var rating = document.createElement('div');
                      rating.className = 'package-rating';
-                     rating.setAttribute('aria-label', '5 star rated package');
+                     var numericRating = Number(ratingScore);
+                     if (!Number.isFinite(numericRating)) {
+                        numericRating = 4.8;
+                     }
+                     if (numericRating < 0) {
+                        numericRating = 0;
+                     }
+                     if (numericRating > 5) {
+                        numericRating = 5;
+                     }
+                     var starsHtml = '';
+                     var starIndex = 0;
+                     for (starIndex = 0; starIndex < 5; starIndex += 1) {
+                        var starFill = numericRating - starIndex;
+                        if (starFill < 0) {
+                           starFill = 0;
+                        }
+                        if (starFill > 1) {
+                           starFill = 1;
+                        }
+                        starsHtml +=
+                           '<span class="package-rating-star">' +
+                              '<i class="fa fa-star-o" aria-hidden="true"></i>' +
+                              '<span class="package-rating-star-fill" style="width:' + (starFill * 100).toFixed(2) + '%;">' +
+                                 '<i class="fa fa-star" aria-hidden="true"></i>' +
+                              '</span>' +
+                           '</span>';
+                     }
+                     rating.setAttribute('aria-label', numericRating.toFixed(1) + ' out of 5 stars');
                      rating.innerHTML =
-                        '<i class="fa fa-star" aria-hidden="true"></i>' +
-                        '<i class="fa fa-star" aria-hidden="true"></i>' +
-                        '<i class="fa fa-star" aria-hidden="true"></i>' +
-                        '<i class="fa fa-star" aria-hidden="true"></i>' +
-                        '<i class="fa fa-star" aria-hidden="true"></i>' +
-                        '<span>' + ratingScore + ' rating</span>';
+                        '<span class="package-rating-stars" aria-hidden="true">' +
+                           starsHtml +
+                        '</span>' +
+                        '<span>' + numericRating.toFixed(1) + '</span>';
                      card.insertBefore(front, card.querySelector('.package-summary'));
                      front.appendChild(card.querySelector('.package-card-top'));
                      front.appendChild(rating);
@@ -430,9 +684,11 @@
                   applyFilter(quickLink.dataset.filter);
                });
             }
+            initPackageMediaSlider();
             initPackageDetailsToggle();
             initPackageAddonSelection();
             initWhyFooterTyping();
             applyFilter(normalizeFilter(getUrlFilter()));
          });
       
+

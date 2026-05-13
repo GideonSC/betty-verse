@@ -502,52 +502,71 @@
     }
 }
 
+@media (max-width: 480px) {
+    .home-banner .woofern-slide-row {
+        min-height: 226px;
+        padding: 12px 10px 16px;
+        gap: 8px;
+    }
+    .home-banner .woofern-slide-copy h2 {
+        font-size: 1rem;
+    }
+    .home-banner .woofern-slide-copy p {
+        font-size: 0.74rem;
+        line-height: 1.34;
+    }
+    .home-banner .woofern-slide-media {
+        min-height: 154px;
+    }
+    .home-banner .woofern-slide-media img {
+        height: 100%;
+    }
+}
+
+@media (min-width: 992px) {
+    /* Keep desktop carousel in its best-fit layout. */
+    .home-banner .carousel,
+    .home-banner .home-carousel-shell,
+    .home-banner .woofern-carousel,
+    .home-banner .woofern-carousel .carousel-inner {
+        border-radius: 20px;
+    }
+    .home-banner .woofern-slide-row {
+        min-height: 380px;
+        padding: 40px 40px 40px;
+        gap: 12px;
+        grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
+    }
+    .home-banner .woofern-slide-media {
+        min-height: 320px;
+    }
+}
+
 @media (max-width: 991px) {
-    .home-title {
-        font-size: 46px;
-    }
-    .home-stats {
-        grid-template-columns: 1fr;
-        max-width: 440px;
-        margin: 34px auto 0;
-    }
-    .home-stat + .home-stat {
-        border-left: 0;
-        border-top: 1px solid rgba(2, 26, 84, 0.10);
-    }
-    .home-stat {
-        padding: 16px 18px;
-        text-align: center;
-    }
-    .home-stat .card-icon {
-        margin-left: auto;
-        margin-right: auto;
-        margin-bottom: 10px;
-    }
-    .home-stat strong {
-        font-size: 18px;
-    }
-    .home-stat > span:not(.card-icon) {
-        margin-top: 6px;
-        font-size: 14px;
-        line-height: 1.5;
-    }
-    .home-hero-panel {
-        margin-top: 28px;
-    }
     .home-banner .carousel {
         height: auto;
-        min-height: 500px;
-        border-radius: 24px;
+        min-height: 0;
+        border-radius: 20px;
     }
     .home-banner .home-carousel-shell {
-        border-radius: 24px;
+        border-radius: 20px;
     }
-    .home-banner .controls {
-        left: 14px;
-        right: 14px;
-        bottom: 14px;
-        top: auto;
+    .home-banner .woofern-slide-row {
+        min-height: 236px;
+        padding: 14px 14px 20px;
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    }
+    .home-banner .woofern-slide-copy h2 {
+        font-size: clamp(1.05rem, 2vw, 1.45rem);
+    }
+    .home-banner .woofern-slide-copy p {
+        font-size: 0.79rem;
+    }
+    .home-banner .woofern-slide-media {
+        min-height: 186px;
+    }
+    .home-banner .woofern-slide-media img {
+        height: 100%;
     }
 }
 
@@ -555,66 +574,51 @@
     .home-banner {
         padding-top: 4px;
     }
-    .home-hero {
-        padding-top: 28px;
-    }
-    .home-title {
-        font-size: 34px;
-    }
-    .home-copy {
-        font-size: 16px;
-    }
-    .home-actions .hero-btn {
-        width: 100%;
-    }
-    .overview-lead-card,
-    .home-package-body,
-    .home-stat {
-        padding-left: 20px;
-        padding-right: 20px;
-    }
-    .home-stats {
-        max-width: 360px;
-        margin-top: 28px;
-    }
-    .home-stats .home-stat {
-        padding: 12px 14px;
-    }
     .home-package-media img {
         height: 220px;
     }
     .home-banner .carousel {
         height: auto;
-        min-height: clamp(460px, calc(100dvh - var(--mobile-header-live-height, var(--header-height-mobile)) - 36px), 560px);
-        border-radius: 20px;
+        min-height: 0;
+        border-radius: 18px;
     }
     .home-banner .home-carousel-shell {
-        border-radius: 20px;
+        border-radius: 18px;
     }
-    #carousel .slide {
-        align-items: stretch;
+    .home-banner .woofern-slide-row {
+        min-height: 238px;
+        padding: 12px 10px 18px;
+        gap: 8px;
+        grid-template-columns: 0.9fr 1.1fr;
     }
-    #carousel .simple-banner {
+    .home-banner .woofern-slide-copy {
+        max-width: none;
+    }
+    .home-banner .woofern-slide-kicker {
+        font-size: 10px;
+        padding: 5px 8px;
+    }
+    .home-banner .woofern-slide-copy h2 {
+        margin-top: 9px;
+        font-size: clamp(0.96rem, 4.7vw, 1.12rem);
+        line-height: 1.18;
+    }
+    .home-banner .woofern-slide-copy p {
+        margin-top: 6px;
+        font-size: clamp(0.71rem, 3.1vw, 0.79rem);
+        line-height: 1.33;
+        max-width: 100%;
+    }
+    .home-banner .woofern-caption-btn {
+        margin-top: 7px;
+        padding: 7px 9px;
+        font-size: 10px;
+    }
+    .home-banner .woofern-slide-media {
+        min-height: 170px;
+    }
+    .home-banner .woofern-slide-media img {
         height: 100%;
-        justify-content: space-between;
-        padding-bottom: 72px;
-    }
-    #carousel .simple-copy {
-        max-width: 100%;
-    }
-    #carousel .simple-copy p {
-        max-width: 100%;
-    }
-    #carousel .simple-art {
-        width: 100%;
-        min-width: 0;
-    }
-    .home-banner .controls {
-        top: auto;
-        left: 12px;
-        right: 12px;
-        bottom: 12px;
-        padding: 0;
     }
 }
 

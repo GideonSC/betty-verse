@@ -638,177 +638,59 @@ function initGlobalNavSearch() {
 
 
 /* My edits */
-const simpleGiftSlides = [
-  {
-    theme: "birthday",
-    badge: "Birthday Collection",
-    title: "Stylish Birthday Surprises",
-    excerpt: "Premium gift boxes and clean setup styling for unforgettable birthday moments.",
-    image: "images/car_boot2.png",
-    alt: "Color 3D gift box",
-    cta: "Explore Packages",
-    url: "packages.html?filter=birthday"
-  },
-  {
-    theme: "anniversary",
-    badge: "Anniversary Collection",
-    title: "Elegant Anniversary Reveals",
-    excerpt: "Curated gift-box combinations with refined decor for meaningful celebrations.",
-       image: "images/gift_box1.png",
-    alt: "Clay 3D gift box",
-    cta: "View Anniversary",
-    url: "packages.html?filter=anniversary"
-  },
-  {
-    theme: "festival",
-    badge: "Festival Collection",
-    title: "Festive Gift Styling",
-    excerpt: "Bright, modern gift presentation designed for seasonal and holiday experiences.",
-      image: "images/gift_box3.png",
-    alt: "Gradient 3D gift box",
-    cta: "See Festival Sets",
-    url: "packages.html?filter=festival"
+(function initHomeHeroBootstrapCarousel(window, document) {
+  "use strict";
+
+  var heroCarousel = document.getElementById("carouselExampleIndicators");
+  if (!heroCarousel || typeof window.jQuery === "undefined") {
+    return;
   }
-];
 
-let currentIndex = 0;
-let direction = 1;
-let autoRotateId = null;
-const autoRotateDelayMs = 6000;
-const carousel = document.getElementById("carousel");
-
-function getSimpleBackground(theme) {
-  if (theme === "birthday") {
-    return "linear-gradient(130deg, rgba(248, 252, 255, 0.96) 0%, rgba(235, 244, 255, 0.92) 100%)";
+  if (heroCarousel.dataset.carouselBound === "true") {
+    return;
   }
-  if (theme === "anniversary") {
-    return "linear-gradient(130deg, rgba(250, 253, 255, 0.96) 0%, rgba(238, 246, 255, 0.92) 100%)";
+  heroCarousel.dataset.carouselBound = "true";
+
+  var heroItems = heroCarousel.querySelectorAll(".carousel-item");
+  if (!heroItems.length) {
+    return;
   }
-  return "linear-gradient(130deg, rgba(247, 252, 255, 0.96) 0%, rgba(232, 242, 255, 0.92) 100%)";
-}
 
-function createSlide(post, index) {
-  const slide = document.createElement("div");
-  slide.className = `slide slide-${post.theme}`;
-  if (index === currentIndex) {
-    slide.classList.add("active");
-  }
-  slide.style.background = getSimpleBackground(post.theme);
-
-  slide.innerHTML = `
-    <div class="overlay"></div>
-    <div class="simple-banner">
-      <div class="simple-copy animate__animated animate__fadeInLeft">
-        <span class="simple-badge">${post.badge}</span>
-        <h1>${post.title}</h1>
-        <p>${post.excerpt}</p>
-        <a class="simple-link" href="${post.url}">${post.cta}</a>
-      </div>
-      <div class="simple-art animate__animated animate__fadeInRight">
-        <div class="simple-orb" aria-hidden="true"></div>
-        <img src="${post.image}" alt="${post.alt}" loading="lazy" decoding="async">
-      </div>
-    </div>
-  `;
-
-  return slide;
-}
-
-function updateSlides() {
-  const slides = carousel.querySelectorAll(".slide");
-  slides.forEach((slide, i) => {
-    slide.classList.remove("active", "exit-left", "exit-right");
-    if (i === currentIndex) {
-      slide.classList.add("active");
-    } else if (direction === 1) {
-      slide.classList.add("exit-left");
-    } else {
-      slide.classList.add("exit-right");
+  // Keep a single active slide and remove stale transition classes.
+  var foundActive = false;
+  Array.prototype.forEach.call(heroItems, function (item, index) {
+    item.classList.remove("carousel-item-next", "carousel-item-prev", "carousel-item-left", "carousel-item-right");
+    if (!foundActive && item.classList.contains("active")) {
+      foundActive = true;
+      return;
+    }
+    item.classList.remove("active");
+    if (!foundActive && index === 0) {
+      item.classList.add("active");
+      foundActive = true;
     }
   });
 
-  const dots = carousel.querySelectorAll(".dot");
-  dots.forEach((dot, i) => {
-    dot.classList.toggle("active", i === currentIndex);
-  });
-}
-
-function startAutoRotate() {
-  if (autoRotateId !== null) {
-    clearInterval(autoRotateId);
+  var $heroCarousel = window.jQuery(heroCarousel);
+  var isMobileHero = window.matchMedia && window.matchMedia("(max-width: 767px)").matches;
+  if (isMobileHero) {
+    // On mobile, disable Bootstrap's slide transform animation to avoid
+    // transient duplicate/blank frames during auto-cycling.
+    heroCarousel.classList.remove("slide");
+    heroCarousel.classList.remove("carousel-fade");
+  } else {
+    heroCarousel.classList.add("slide");
+    heroCarousel.classList.remove("carousel-fade");
   }
-  autoRotateId = setInterval(() => {
-    direction = 1;
-    currentIndex = (currentIndex + 1) % simpleGiftSlides.length;
-    updateSlides();
-  }, autoRotateDelayMs);
-}
 
-function renderSlides() {
-  carousel.innerHTML = "";
-
-  simpleGiftSlides.forEach((post, i) => {
-    carousel.appendChild(createSlide(post, i));
+  $heroCarousel.carousel({
+    interval: 4200,
+    pause: "hover",
+    wrap: true,
+    keyboard: false,
+    touch: true
   });
-
-  const controls = document.createElement("div");
-  controls.className = "controls";
-
-  const dots = document.createElement("div");
-  dots.className = "dots";
-
-  simpleGiftSlides.forEach((_, i) => {
-    const dot = document.createElement("button");
-    dot.className = `dot ${i === currentIndex ? "active" : ""}`;
-    dot.type = "button";
-    dot.setAttribute("aria-label", `Go to banner slide ${i + 1}`);
-    dot.addEventListener("click", () => {
-      direction = i > currentIndex ? 1 : -1;
-      currentIndex = i;
-      updateSlides();
-      startAutoRotate();
-    });
-    dots.appendChild(dot);
-  });
-
-  const arrows = document.createElement("div");
-  arrows.className = "arrows";
-
-  const prevBtn = document.createElement("button");
-  prevBtn.className = "arrow-btn";
-  prevBtn.type = "button";
-  prevBtn.setAttribute("aria-label", "Previous banner slide");
-  prevBtn.textContent = "<";
-  prevBtn.addEventListener("click", () => {
-    direction = -1;
-    currentIndex = (currentIndex - 1 + simpleGiftSlides.length) % simpleGiftSlides.length;
-    updateSlides();
-    startAutoRotate();
-  });
-
-  const nextBtn = document.createElement("button");
-  nextBtn.className = "arrow-btn";
-  nextBtn.type = "button";
-  nextBtn.setAttribute("aria-label", "Next banner slide");
-  nextBtn.textContent = ">";
-  nextBtn.addEventListener("click", () => {
-    direction = 1;
-    currentIndex = (currentIndex + 1) % simpleGiftSlides.length;
-    updateSlides();
-    startAutoRotate();
-  });
-
-  arrows.appendChild(prevBtn);
-  arrows.appendChild(nextBtn);
-  controls.appendChild(dots);
-  controls.appendChild(arrows);
-  carousel.appendChild(controls);
-}
-
-if (carousel) {
-  renderSlides();
-  startAutoRotate();
-}
+})(window, document);
 
 function readAccountSession() {
   try {
