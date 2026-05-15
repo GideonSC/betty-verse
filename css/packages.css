@@ -512,8 +512,8 @@
 
 .package-card {
    height: 100%;
-   border-radius: 20px;
-   padding: 12px;
+   border-radius: 21px;
+   padding: 12.6px;
    cursor: pointer;
    transition: transform 0.22s ease, box-shadow 0.22s ease;
 }
@@ -529,7 +529,7 @@
 .package-media-track {
    position: relative;
    width: 100%;
-   height: 180px;
+   height: 189px;
 }
 
 .package-media-slide {
@@ -545,7 +545,7 @@
 
 .package-media img {
    width: 100%;
-   height: 180px;
+   height: 189px;
    object-fit: cover;
 }
 
@@ -1197,8 +1197,8 @@
    .package-card {
       position: relative;
       overflow: visible;
-      padding: 5px;
-      border-radius: 9px;
+      padding: 5.25px;
+      border-radius: 9.45px;
    }
 
    .package-card.is-expanded {
@@ -1236,7 +1236,7 @@
 
    .package-media-track,
    .package-media img {
-      height: 116px;
+      height: 122px;
    }
 
    .package-label {
@@ -1470,7 +1470,7 @@
 @media (max-width: 575px) {
    .package-media-track,
    .package-media img {
-      height: 106px;
+      height: 111px;
    }
 
    .package-card h3 {
