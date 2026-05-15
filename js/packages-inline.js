@@ -573,14 +573,15 @@
                   }
                   var topRow = card.querySelector('.package-card-top');
                   var priceTag = topRow ? topRow.querySelector('.package-price') : null;
-                  if (topRow && priceTag && !topRow.querySelector('.package-price-actions')) {
-                     var priceActions = document.createElement('div');
-                     priceActions.className = 'package-price-actions';
-                     topRow.insertBefore(priceActions, priceTag);
-                     priceActions.appendChild(priceTag);
-                     priceActions.appendChild(toggle);
-                     toggle.classList.add('details-toggle--inline');
+                  var ratingBlock = card.querySelector('.package-rating');
+                  if (topRow && priceTag && ratingBlock && !card.querySelector('.package-meta-grid')) {
+                     var metaGrid = document.createElement('div');
+                     metaGrid.className = 'package-meta-grid';
+                     topRow.insertAdjacentElement('afterend', metaGrid);
+                     metaGrid.appendChild(priceTag);
+                     metaGrid.appendChild(ratingBlock);
                   }
+                  toggle.classList.remove('details-toggle--inline');
                   toggle.setAttribute('aria-controls', details.id);
                   setCardDetailsState(card, false, true);
                   details.addEventListener('transitionend', function (event) {
