@@ -113,6 +113,7 @@
                      <li data-target="#carouselExampleIndicators" data-bs-target="#carouselExampleIndicators" data-slide-to="0" data-bs-slide-to="0" class="active"></li>
                      <li data-target="#carouselExampleIndicators" data-bs-target="#carouselExampleIndicators" data-slide-to="1" data-bs-slide-to="1"></li>
                      <li data-target="#carouselExampleIndicators" data-bs-target="#carouselExampleIndicators" data-slide-to="2" data-bs-slide-to="2"></li>
+                     <li data-target="#carouselExampleIndicators" data-bs-target="#carouselExampleIndicators" data-slide-to="3" data-bs-slide-to="3"></li>
                   </ol>
                   <div class="carousel-inner">
                      <div class="carousel-item active">
@@ -153,6 +154,15 @@
                            <div class="woofern-slide-media">
                               <a href="packages.html?filter=anniversary">
                                  <img src="images/props_demo.png" class="d-block w-100" alt="slider-2">
+                              </a>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="carousel-item">
+                        <div class="woofern-slide-row">
+                           <div class="woofern-slide-media" style="grid-column: 1 / -1;">
+                              <a href="packages.html" aria-label="Open featured package slide">
+                                 <img src="images/4th slide.jpg" class="d-block w-100" alt="slider-3">
                               </a>
                            </div>
                         </div>
@@ -228,34 +238,58 @@
             <div class="row">
                <div class="col-lg-4 col-md-6 mb-4">
                   <article class="home-package-card">
-                     <div class="home-package-media"><img src="images/birthday_demo.jpg" alt="Birthday bliss package"></div>
+                     <button type="button" class="home-package-media home-package-lightbox-trigger" data-package-key="birthday" aria-label="Open Birthday Bliss images">
+                        <img src="images/birthday_demo.jpg" alt="Birthday bliss package">
+                     </button>
                      <div class="home-package-body">
                         <span class="blog_meta">Birthday</span>
                         <h3>Birthday Bliss</h3>
                         <p>Clean birthday decor and a polished reveal.</p>
-                        <a href="packages.html?filter=birthday">View Collection</a>
+                        <div class="home-package-actions">
+                           <button type="button" class="home-package-detail-btn" data-package-detail-target="package_detail_birthday" aria-expanded="false" aria-controls="package_detail_birthday">Details</button>
+                           <a href="packages.html?filter=birthday">View Collection</a>
+                        </div>
+                        <div class="home-package-detail-panel" id="package_detail_birthday" hidden>
+                           <p>Includes custom backdrop styling, table accents, balloon arrangement, and reveal-ready staging for birthday setups.</p>
+                        </div>
                      </div>
                   </article>
                </div>
                <div class="col-lg-4 col-md-6 mb-4">
                   <article class="home-package-card">
-                     <div class="home-package-media"><img src="images/anniversary_demo.jpeg" alt="Anniversary glow package"></div>
+                     <button type="button" class="home-package-media home-package-lightbox-trigger" data-package-key="anniversary" aria-label="Open Anniversary Glow images">
+                        <img src="images/anniversary_demo.jpeg" alt="Anniversary glow package">
+                     </button>
                      <div class="home-package-body">
                         <span class="blog_meta">Anniversary</span>
                         <h3>Anniversary Glow</h3>
                         <p>Elegant room styling for warm anniversary moments.</p>
-                        <a href="packages.html?filter=anniversary">View Collection</a>
+                        <div class="home-package-actions">
+                           <button type="button" class="home-package-detail-btn" data-package-detail-target="package_detail_anniversary" aria-expanded="false" aria-controls="package_detail_anniversary">Details</button>
+                           <a href="packages.html?filter=anniversary">View Collection</a>
+                        </div>
+                        <div class="home-package-detail-panel" id="package_detail_anniversary" hidden>
+                           <p>Includes mood-light decor styling, romantic centerpiece setup, and coordinated finishing props for anniversary reveals.</p>
+                        </div>
                      </div>
                   </article>
                </div>
                <div class="col-lg-4 col-md-6 mb-4">
                   <article class="home-package-card">
-                     <div class="home-package-media"><img src="images/christmas_demo.jpeg" alt="Festival magic set"></div>
+                     <button type="button" class="home-package-media home-package-lightbox-trigger" data-package-key="festival" aria-label="Open Festival Magic Set images">
+                        <img src="images/christmas_demo.jpeg" alt="Festival magic set">
+                     </button>
                      <div class="home-package-body">
                         <span class="blog_meta">Festival</span>
                         <h3>Festival Magic Set</h3>
                         <p>Seasonal decor and gifting with a clean finish.</p>
-                        <a href="packages.html?filter=festival">View Collection</a>
+                        <div class="home-package-actions">
+                           <button type="button" class="home-package-detail-btn" data-package-detail-target="package_detail_festival" aria-expanded="false" aria-controls="package_detail_festival">Details</button>
+                           <a href="packages.html?filter=festival">View Collection</a>
+                        </div>
+                        <div class="home-package-detail-panel" id="package_detail_festival" hidden>
+                           <p>Includes festive-themed arrangement, gift-table styling, and coordinated visual layering for clean seasonal presentation.</p>
+                        </div>
                      </div>
                   </article>
                </div>
@@ -319,12 +353,79 @@
                            <a class="carousel-control-prev" href="#main_slider" role="button" data-slide="prev" aria-label="Previous testimonial"><i class="fa fa-angle-left" aria-hidden="true"></i></a>
                            <a class="carousel-control-next" href="#main_slider" role="button" data-slide="next" aria-label="Next testimonial"><i class="fa fa-angle-right" aria-hidden="true"></i></a>
                         </div>
+                        <div class="testimonial_merabell_strip is-visible" aria-label="Merabell testimonial gallery">
+                           <button type="button" class="testimonial_merabell_thumb" data-testimonial-lightbox-index="0" aria-label="Open testimonial image 1">
+                              <img src="images/testi1.jpeg" alt="Merabell testimonial moment one">
+                           </button>
+                           <button type="button" class="testimonial_merabell_thumb" data-testimonial-lightbox-index="1" aria-label="Open testimonial image 2">
+                              <img src="images/testi2.jpeg" alt="Merabell testimonial moment two">
+                           </button>
+                           <button type="button" class="testimonial_merabell_thumb" data-testimonial-lightbox-index="2" aria-label="Open testimonial image 3">
+                              <img src="images/testi3.jpeg" alt="Merabell testimonial moment three">
+                           </button>
+                        </div>
                      </div>
                   </div>
                </div>
             </div>
          </div>
       </section>
+      <div class="modal fade testimonial-lightbox-modal" id="testimonial_lightbox" tabindex="-1" role="dialog" aria-labelledby="testimonial_lightbox_title" aria-hidden="true">
+         <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title" id="testimonial_lightbox_title">Merabell Gallery</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close gallery">
+                     <span aria-hidden="true">&times;</span>
+                  </button>
+               </div>
+               <div class="modal-body">
+                  <div id="testimonial_lightbox_slider" class="carousel slide" data-interval="false">
+                     <div class="carousel-inner">
+                        <div class="carousel-item active">
+                           <img src="images/testi1.jpeg" class="d-block w-100" alt="Merabell testimonial moment one full image">
+                        </div>
+                        <div class="carousel-item">
+                           <img src="images/testi2.jpeg" class="d-block w-100" alt="Merabell testimonial moment two full image">
+                        </div>
+                        <div class="carousel-item">
+                           <img src="images/testi3.jpeg" class="d-block w-100" alt="Merabell testimonial moment three full image">
+                        </div>
+                     </div>
+                     <a class="carousel-control-prev" href="#testimonial_lightbox_slider" role="button" data-slide="prev" aria-label="Previous image">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                     </a>
+                     <a class="carousel-control-next" href="#testimonial_lightbox_slider" role="button" data-slide="next" aria-label="Next image">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                     </a>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="modal fade testimonial-lightbox-modal package-lightbox-modal" id="package_lightbox" tabindex="-1" role="dialog" aria-labelledby="package_lightbox_title" aria-hidden="true">
+         <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title" id="package_lightbox_title">Featured Collections</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close package gallery">
+                     <span aria-hidden="true">&times;</span>
+                  </button>
+               </div>
+               <div class="modal-body">
+                  <div id="package_lightbox_slider" class="carousel slide" data-interval="false">
+                     <div class="carousel-inner"></div>
+                     <a class="carousel-control-prev" href="#package_lightbox_slider" role="button" data-slide="prev" aria-label="Previous package image">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                     </a>
+                     <a class="carousel-control-next" href="#package_lightbox_slider" role="button" data-slide="next" aria-label="Next package image">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                     </a>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
 
       <section class="home-contact-cta">
          <div class="container">
