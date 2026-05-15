@@ -513,7 +513,7 @@
 .package-card {
    height: 100%;
    border-radius: 21px;
-   padding: 12.6px;
+   padding: 5px;
    cursor: pointer;
    transition: transform 0.22s ease, box-shadow 0.22s ease;
 }
@@ -522,14 +522,14 @@
    position: relative;
    overflow: hidden;
    border-radius: 10px;
-   margin-bottom: 10px;
+   margin-bottom: 4px;
    background: linear-gradient(180deg, #edf5ff 0%, #ffffff 100%);
 }
 
 .package-media-track {
    position: relative;
    width: 100%;
-   height: 189px;
+   height: 205px;
 }
 
 .package-media-slide {
@@ -545,7 +545,7 @@
 
 .package-media img {
    width: 100%;
-   height: 189px;
+   height: 205px;
    object-fit: cover;
 }
 
@@ -629,12 +629,12 @@
 .package-card-front {
    display: flex;
    flex-direction: column;
-   gap: 8px;
+   gap: 3px;
 }
 
 .package-card h3 {
    padding-bottom: 0;
-   font-size: 17px;
+   font-size: 16px;
    font-weight: 700;
    color: #021A54;
    line-height: 1.2;
@@ -643,28 +643,28 @@
 .package-price {
    display: inline-flex;
    align-items: center;
-   justify-content: center;
+   justify-content: flex-start;
    min-width: 0;
-   padding: 7px 10px;
+   padding: 4px 6px;
    border-radius: 0;
    background: transparent;
    color: #1749ba;
    font-weight: 800;
-   font-size: 12px;
+   font-size: 13px;
    border: 0;
 }
 
 .package-meta-grid {
    display: grid;
    grid-template-columns: repeat(2, minmax(0, 1fr));
-   gap: 8px;
-   margin-top: 8px;
+   gap: 3px;
+   margin-top: 3px;
 }
 
 .package-meta-grid .package-price,
 .package-meta-grid .package-rating {
    width: 100%;
-   min-height: 34px;
+   min-height: 24px;
 }
 
 .package-rating {
@@ -683,7 +683,7 @@
    display: inline-flex;
    align-items: center;
    gap: 2px;
-   font-size: 16px;
+   font-size: 14px;
    line-height: 1;
 }
 
@@ -698,7 +698,7 @@
 }
 
 .package-rating-star > .fa {
-   font-size: 16px;
+   font-size: 14px;
    line-height: 1;
 }
 
@@ -723,19 +723,19 @@
 
 .package-rating > span:last-child {
    color: #5f7696;
-   font-size: 13px;
+   font-size: 11px;
    font-weight: 700;
 }
 
 .package-summary {
-   margin: 10px 0 0;
+   margin: 6px 0 0;
    color: #536a88;
    font-size: 12px;
    line-height: 1.35;
 }
 
 .package-highlights {
-   margin-top: 10px;
+   margin-top: 6px;
    font-size: 12px;
    line-height: 1.35;
 }
@@ -743,8 +743,8 @@
 .package-actions {
    display: grid;
    grid-template-columns: repeat(2, minmax(0, 1fr));
-   gap: 8px;
-   margin-top: 10px;
+   gap: 4px;
+   margin-top: 6px;
 }
 
 .package-actions .add-cart,
@@ -752,7 +752,7 @@
    display: inline-flex;
    align-items: center;
    justify-content: center;
-   min-height: 40px;
+   min-height: 24px;
    border-radius: 10px;
    font-weight: 700;
    font-size: 13px;
@@ -762,7 +762,7 @@
    flex: none;
    background: #eef4ff;
    color: #123f9e;
-   padding: 9px 13px;
+   padding: 4px 6px;
    border: 1px solid rgba(23, 73, 186, 0.18);
    border-radius: 8px;
    cursor: pointer;
@@ -782,7 +782,7 @@
 
 .details-toggle {
    min-width: 0;
-   padding: 9px 13px;
+   padding: 4px 6px;
    background: transparent;
    color: #021A54;
    border: 1px solid rgba(23, 63, 153, 0.30);
@@ -800,7 +800,7 @@
    min-height: 32px;
    padding: 5px 8px;
    border-radius: 8px;
-   font-size: 11px;
+   font-size: 13px;
    line-height: 1.1;
    white-space: nowrap;
 }
@@ -811,11 +811,15 @@
 }
 
 .package-gallery-lightbox #packages_lightbox_slider .carousel-item img {
-   max-height: min(34vh, 240px);
+   max-height: min(41vh, 288px);
    object-fit: contain;
-   width: 100%;
+   width: 110%;
+   max-width: 110%;
    border-radius: 0;
    display: block;
+   margin: 0 auto;
+   transform: scaleY(1.2);
+   transform-origin: center center;
 }
 
 .package-gallery-lightbox #packages_lightbox_slider .carousel-control-prev,
@@ -1197,7 +1201,7 @@
    .package-card {
       position: relative;
       overflow: visible;
-      padding: 5.25px;
+      padding: 3.2px;
       border-radius: 9.45px;
    }
 
@@ -1231,12 +1235,12 @@
 
    .package-media {
       border-radius: 5px;
-      margin-bottom: 5px;
+      margin-bottom: 3px;
    }
 
    .package-media-track,
    .package-media img {
-      height: 122px;
+      height: 133px;
    }
 
    .package-label {
@@ -1285,13 +1289,13 @@
    }
 
    .package-meta-grid {
-      gap: 4px;
-      margin-top: 6px;
+      gap: 3px;
+      margin-top: 4px;
    }
 
    .package-meta-grid .package-price,
    .package-meta-grid .package-rating {
-      min-height: 22px;
+      min-height: 18px;
       padding: 2px 4px;
    }
 
@@ -1307,33 +1311,33 @@
 
    .package-rating-stars {
       gap: 1px;
-      font-size: 10px;
+      font-size: 9px;
    }
 
    .package-rating-star > .fa {
-      font-size: 10px;
+      font-size: 9px;
    }
 
    .package-rating > span:last-child {
-      font-size: 9px;
+      font-size: 8px;
    }
 
    .package-actions {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 4px;
-      margin-top: 6px;
+      gap: 3px;
+      margin-top: 4px;
    }
 
    .package-card:not(.is-expanded) .package-actions {
-      margin-top: 6px;
+      margin-top: 4px;
    }
 
    .package-actions .add-cart,
    .details-toggle:not(.details-toggle--inline) {
       width: 100%;
-      min-height: 22px;
-      padding: 2px 5px;
+      min-height: 18px;
+      padding: 2px 4px;
       font-size: 7px;
       line-height: 1.1;
    }
@@ -1372,17 +1376,23 @@
       min-width: 64px;
       min-height: 26px;
       padding: 3px 6px;
-      font-size: 9px;
+      font-size: 10px;
    }
 
    .package-card-front {
-      gap: 10px;
+      gap: 4px;
    }
 
    .package-gallery-lightbox #packages_lightbox_slider .carousel-control-prev,
    .package-gallery-lightbox #packages_lightbox_slider .carousel-control-next {
       width: 38px;
       height: 38px;
+   }
+
+   .package-gallery-lightbox #packages_lightbox_slider .carousel-item img {
+      max-height: min(41vh, 288px);
+      transform: scale(1.1, 1.2);
+      transform-origin: center center;
    }
 
    .package-gallery-lightbox #packages_lightbox_slider .carousel-control-prev {
@@ -1470,7 +1480,7 @@
 @media (max-width: 575px) {
    .package-media-track,
    .package-media img {
-      height: 111px;
+      height: 121px;
    }
 
    .package-card h3 {
@@ -1514,14 +1524,14 @@
 
    .package-actions .add-cart,
    .details-toggle:not(.details-toggle--inline) {
-      min-height: 20px;
-      font-size: 6px;
+      min-height: 18px;
+      font-size: 7px;
       padding: 2px 4px;
    }
 
    .package-price {
       min-width: 0;
-      font-size: 7px;
+      font-size: 8px;
       padding: 2px 4px;
    }
 }

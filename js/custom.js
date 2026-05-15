@@ -1356,7 +1356,6 @@ function initHomePackageLightbox() {
   var sliderInner = slider ? slider.querySelector(".carousel-inner") : null;
   var modalTitle = modal ? modal.querySelector("#package_lightbox_title") : null;
   var triggers = Array.prototype.slice.call(document.querySelectorAll(".home-package-lightbox-trigger[data-package-key]"));
-  var detailButtons = Array.prototype.slice.call(document.querySelectorAll(".home-package-detail-btn[data-package-detail-target]"));
 
   if (!modal || !slider || !sliderInner || !triggers.length) {
     return;
@@ -1431,20 +1430,6 @@ function initHomePackageLightbox() {
 
     return true;
   }
-
-  detailButtons.forEach(function (button) {
-    button.addEventListener("click", function () {
-      var targetId = button.getAttribute("data-package-detail-target");
-      var detailPanel = targetId ? document.getElementById(targetId) : null;
-      if (!detailPanel) {
-        return;
-      }
-
-      var isExpanded = button.getAttribute("aria-expanded") === "true";
-      button.setAttribute("aria-expanded", isExpanded ? "false" : "true");
-      detailPanel.hidden = isExpanded;
-    });
-  });
 
   triggers.forEach(function (trigger) {
     trigger.addEventListener("click", function (event) {
