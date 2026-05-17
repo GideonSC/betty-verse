@@ -289,6 +289,10 @@
 
   function getCardData(button) {
     var card = button.closest(".package-card");
+    var sourceId = button.dataset.packageSourceId || "";
+    if (!card && sourceId) {
+      card = document.querySelector('.package-card[data-package-id="' + sourceId.replace(/"/g, '\\"') + '"]');
+    }
     if (!card) {
       return null;
     }
