@@ -385,6 +385,31 @@
                var titleText = titleNode ? titleNode.textContent.trim() : '';
                return titleText || card.dataset.packageName || 'Package';
             }
+            function ensurePackageGalleryCloseBehavior(galleryModal) {
+               if (!galleryModal || typeof window.jQuery === 'undefined' || galleryModal.dataset.outsideCloseReady === '1') {
+                  return;
+               }
+               galleryModal.addEventListener('click', function (event) {
+                  if (event.target.closest('.package-gallery-close')) {
+                     window.jQuery(galleryModal).modal('hide');
+                     return;
+                  }
+                  if (event.target.closest('#packages_lightbox_slider img, .carousel-control-prev, .carousel-control-next, .modal-header .close')) {
+                     return;
+                  }
+                  window.jQuery(galleryModal).modal('hide');
+               });
+               document.addEventListener('click', function (event) {
+                  if (!galleryModal.classList.contains('show')) {
+                     return;
+                  }
+                  if (!event.target.classList.contains('modal-backdrop')) {
+                     return;
+                  }
+                  window.jQuery(galleryModal).modal('hide');
+               });
+               galleryModal.dataset.outsideCloseReady = '1';
+            }
             function initPackageLightboxModal() {
                if (typeof window.jQuery === 'undefined') {
                   return;
@@ -404,6 +429,7 @@
                   pause: true,
                   wrap: true
                });
+               ensurePackageGalleryCloseBehavior(modal);
                function renderSlides(images, packageName) {
                   sliderInner.innerHTML = '';
                   images.forEach(function (src, index) {
@@ -528,6 +554,7 @@
                   if (galleryTitle) {
                      galleryTitle.textContent = title.textContent || 'Package Gallery';
                   }
+                  ensurePackageGalleryCloseBehavior(galleryModal);
                   window.jQuery(galleryModal).one('shown.bs.modal', function () {
                      window.jQuery(gallerySlider).carousel(startIndex || 0);
                   });
