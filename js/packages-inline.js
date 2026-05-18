@@ -377,6 +377,14 @@
                   return [];
                }
             }
+            function getPackageDisplayName(card) {
+               if (!card) {
+                  return '';
+               }
+               var titleNode = card.querySelector('.package-card-top h3, h3');
+               var titleText = titleNode ? titleNode.textContent.trim() : '';
+               return titleText || card.dataset.packageName || 'Package';
+            }
             function initPackageLightboxModal() {
                if (typeof window.jQuery === 'undefined') {
                   return;
@@ -423,7 +431,7 @@
                      if (!card) {
                         return;
                      }
-                     var packageName = card.dataset.packageName || '';
+                     var packageName = getPackageDisplayName(card);
                      var images = parseJsonArray(card.dataset.packageSlideImages);
                      if (!images.length) {
                         var fallbackSrc = normalizeImagePath(card.dataset.packageImage || '');
@@ -463,12 +471,32 @@
                var $slider = window.jQuery(slider);
                var currentQuickViewImages = [];
                var currentQuickViewName = '';
+               var quickViewViewportReady = false;
                $slider.carousel({
                   interval: false,
                   ride: false,
                   pause: true,
                   wrap: true
                });
+               function updateQuickViewViewport() {
+                  var viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+                  if (window.visualViewport) {
+                     viewportHeight = Math.max(320, Math.round(window.visualViewport.height || viewportHeight));
+                  }
+                  modal.style.setProperty('--package-qv-height', viewportHeight + 'px');
+               }
+               function ensureQuickViewViewportListeners() {
+                  if (quickViewViewportReady) {
+                     return;
+                  }
+                  quickViewViewportReady = true;
+                  window.addEventListener('resize', updateQuickViewViewport, { passive: true });
+                  window.addEventListener('orientationchange', updateQuickViewViewport, { passive: true });
+                  if (window.visualViewport) {
+                     window.visualViewport.addEventListener('resize', updateQuickViewViewport, { passive: true });
+                     window.visualViewport.addEventListener('scroll', updateQuickViewViewport, { passive: true });
+                  }
+               }
                function openQuickViewGallery(startIndex) {
                   var galleryModal = document.getElementById('packages_lightbox');
                   var galleryTitle = document.getElementById('packages_lightbox_title');
@@ -515,7 +543,7 @@
                   window.jQuery(galleryModal).modal('show');
                }
                function renderQuickViewSlides(card) {
-                  var packageName = card.dataset.packageName || 'Package';
+                  var packageName = getPackageDisplayName(card);
                   var images = parseJsonArray(card.dataset.packageSlideImages);
                   if (!images.length) {
                      var fallbackSrc = normalizeImagePath(card.dataset.packageImage || '');
@@ -586,7 +614,9 @@
                   if (!card) {
                      return;
                   }
-                  title.textContent = card.dataset.packageName || 'Package details';
+                  var displayName = getPackageDisplayName(card);
+                  title.textContent = displayName || 'Package details';
+                  card.dataset.packageName = displayName || card.dataset.packageName || '';
                   if (category) {
                      category.textContent = card.dataset.packageCategory || '';
                   }
@@ -598,7 +628,15 @@
                   renderQuickViewOverview(card);
                   renderQuickViewAddons(card);
                   syncQuickViewTotals(card);
+                  ensureQuickViewViewportListeners();
+                  updateQuickViewViewport();
+                  modal.scrollTop = 0;
+                  var quickViewContent = modal.querySelector('.package-quickview-content');
+                  if (quickViewContent) {
+                     quickViewContent.scrollTop = 0;
+                  }
                   $modal.one('shown.bs.modal', function () {
+                     updateQuickViewViewport();
                      $slider.carousel(0);
                   });
                   $modal.modal('show');

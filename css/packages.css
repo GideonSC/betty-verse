@@ -997,11 +997,28 @@
    display: none;
 }
 
+.package-quickview-modal {
+   padding: 0 !important;
+   overflow: hidden !important;
+}
+
 .package-quickview-modal .modal-dialog {
-   width: 100%;
-   max-width: 100%;
-   min-height: 100vh;
-   margin: 0;
+   position: fixed;
+   top: 0;
+   left: 0;
+   right: 0;
+   width: 100vw;
+   max-width: 100vw;
+   height: var(--package-qv-height, 100dvh);
+   min-height: var(--package-qv-height, 100dvh);
+   margin: 0 !important;
+   padding: 0;
+}
+
+.package-quickview-modal.fade .modal-dialog,
+.package-quickview-modal.show .modal-dialog {
+   transform: none;
+   transition: none;
 }
 
 .package-quickview-modal .modal-content {
@@ -1011,14 +1028,15 @@
    border-radius: 0;
    background: #ffffff;
    box-shadow: none;
-   min-height: 100vh;
+   min-height: 100%;
+   height: 100%;
 }
 
 .package-quickview-close {
    position: absolute;
-   top: 22px;
-   right: 24px;
-   z-index: 5;
+   top: max(14px, env(safe-area-inset-top));
+   right: max(16px, env(safe-area-inset-right));
+   z-index: 1105;
    width: 44px;
    height: 44px;
    border: 0;
@@ -1032,12 +1050,13 @@
 
 .package-quickview-grid {
    display: grid;
-   grid-template-columns: minmax(0, 58vw) minmax(380px, 1fr);
-   min-height: 100vh;
+   grid-template-columns: minmax(0, 56vw) minmax(0, 44vw);
+   min-height: 100%;
+   height: 100%;
 }
 
 .package-quickview-media {
-   min-height: 100vh;
+   min-height: 100%;
    background: #edf5ff;
 }
 
@@ -1049,7 +1068,7 @@
 
 .package-quickview-media img {
    width: 100%;
-   height: 100vh;
+   height: 100%;
    object-fit: cover;
    cursor: zoom-in;
 }
@@ -1074,9 +1093,12 @@
 }
 
 .package-quickview-content {
-   max-height: 100vh;
-   overflow: auto;
-   padding: 72px 54px 34px;
+   min-height: 0;
+   height: 100%;
+   overflow-y: auto;
+   overflow-x: hidden;
+   -webkit-overflow-scrolling: touch;
+   padding: 68px 34px 22px;
 }
 
 .package-quickview-category {
@@ -1139,15 +1161,12 @@
 }
 
 .package-quickview-actions {
-   position: sticky;
-   bottom: -34px;
+   position: static;
    display: grid;
    grid-template-columns: minmax(120px, 0.48fr) minmax(150px, 1fr);
    gap: 10px;
-   margin: 28px -54px -34px;
-   padding: 18px 54px 24px;
-   background: rgba(255, 255, 255, 0.94);
-   border-top: 1px solid rgba(2, 26, 84, 0.08);
+   margin: 20px 0 0;
+   padding: 10px 0 calc(16px + env(safe-area-inset-bottom));
 }
 
 .package-gallery-lightbox {
@@ -1348,27 +1367,71 @@
 }
 
 @media (max-width: 767px) {
+   .package-quickview-modal {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100vw !important;
+      height: var(--package-qv-height, 100dvh) !important;
+      max-height: var(--package-qv-height, 100dvh) !important;
+      overflow: hidden !important;
+      overflow-x: hidden !important;
+      overscroll-behavior: contain;
+   }
+
    .package-quickview-modal .modal-dialog {
-      max-width: 100%;
-      margin: 0;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      width: 100vw !important;
+      max-width: 100vw !important;
+      height: var(--package-qv-height, 100dvh) !important;
+      min-height: var(--package-qv-height, 100dvh) !important;
+      margin: 0 !important;
+      padding: 0 !important;
+   }
+
+   .package-quickview-modal .modal-content {
+      width: 100vw;
+      height: 100% !important;
+      min-height: 100% !important;
+      overflow: hidden !important;
    }
 
    .package-quickview-grid {
       grid-template-columns: 1fr;
-      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      height: 100% !important;
+      min-height: 100% !important;
    }
 
    .package-quickview-media {
-      min-height: 42vh;
+      min-height: 0;
+      flex: 0 0 42dvh;
+   }
+
+   .package-quickview-media .carousel,
+   .package-quickview-media .carousel-inner,
+   .package-quickview-media .carousel-item {
+      height: 42dvh;
    }
 
    .package-quickview-media img {
-      height: 42vh;
+      height: 42dvh;
    }
 
    .package-quickview-content {
-      max-height: 58vh;
-      padding: 24px 18px 22px;
+      flex: 1 1 auto;
+      min-height: 0;
+      max-height: 100%;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      -webkit-overflow-scrolling: touch;
+      padding: 24px 16px calc(20px + env(safe-area-inset-bottom));
    }
 
    .package-quickview-content h3 {
@@ -1376,16 +1439,22 @@
    }
 
    .package-quickview-close {
-      top: 12px;
-      right: 12px;
-      width: 38px;
-      height: 38px;
+      position: absolute !important;
+      top: max(10px, env(safe-area-inset-top)) !important;
+      right: max(12px, env(safe-area-inset-right)) !important;
+      width: 42px;
+      height: 42px;
+      z-index: 2147483647 !important;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
    }
 
    .package-quickview-actions {
+      position: static !important;
       grid-template-columns: 1fr;
-      margin: 20px -18px -22px;
-      padding: 14px 18px 18px;
+      margin: 14px 0 0;
+      padding: 10px 0 0;
    }
 
    .package-showcase .container {
