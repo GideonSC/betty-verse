@@ -624,15 +624,15 @@
 
 @media (max-width: 991px) {
     body {
-        padding-top: calc(var(--mobile-header-live-height, var(--header-height-mobile)) + var(--mobile-vv-top, 0px));
+        padding-top: 0;
         background-attachment: scroll;
     }
 
     .header_section {
-        position: fixed;
-        top: max(env(safe-area-inset-top), var(--mobile-vv-top, 0px));
-        left: 0;
-        right: 0;
+        position: relative;
+        top: auto;
+        left: auto;
+        right: auto;
         width: 100%;
         padding-top: 0;
         backdrop-filter: none;

@@ -834,7 +834,14 @@ button {
 
 @media (max-width: 991px) {
     body {
-        padding-top: var(--header-height-mobile);
+        padding-top: 0;
+    }
+
+    .header_section {
+        position: relative;
+        top: auto;
+        left: auto;
+        right: auto;
     }
 
     .navbar .form-inline {

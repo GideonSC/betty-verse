@@ -410,6 +410,72 @@
                });
                galleryModal.dataset.outsideCloseReady = '1';
             }
+            function collectPackageDetailData(card) {
+               var displayName = getPackageDisplayName(card);
+               var overview = card.querySelector('.package-details-overview');
+               var summaryNode = overview ? overview.querySelector('.package-summary') : card.querySelector('.package-summary');
+               var highlightsNode = overview ? overview.querySelector('.package-highlights') : card.querySelector('.package-highlights');
+               var images = parseJsonArray(card.dataset.packageSlideImages);
+               if (!images.length && card.dataset.packageImage) {
+                  images = [card.dataset.packageImage];
+               }
+               return {
+                  id: card.dataset.packageId || '',
+                  name: displayName || card.dataset.packageName || 'Package',
+                  category: card.dataset.packageCategory || '',
+                  price: Number(card.dataset.packageFinalPrice || card.dataset.packagePrice || card.dataset.packageBasePrice || 0),
+                  basePrice: Number(card.dataset.packageBasePrice || card.dataset.packagePrice || 0),
+                  addonTotal: Number(card.dataset.packageAddonTotal || 0),
+                  selectedAddons: parseSelectedAddons(card),
+                  image: card.dataset.packageImage || (images[0] || ''),
+                  images: images,
+                  summary: card.dataset.packageSummary || (summaryNode ? summaryNode.textContent.trim() : ''),
+                  highlights: highlightsNode ? Array.prototype.slice.call(highlightsNode.querySelectorAll('li')).map(function (item) {
+                     return item.textContent.trim();
+                  }).filter(Boolean) : [],
+                  addons: Array.prototype.slice.call(card.querySelectorAll('.package-addon-input')).map(function (input) {
+                     return {
+                        name: input.dataset.addonName || 'Add-on',
+                        price: Number(input.dataset.addonPrice || 0)
+                     };
+                  }).filter(function (addon) {
+                     return addon.name;
+                  })
+               };
+            }
+            function openPackageDetailPage(card) {
+               if (!card) {
+                  return;
+               }
+               var detailData = collectPackageDetailData(card);
+               try {
+                  window.localStorage.setItem('bettyverse-selected-package', JSON.stringify(detailData));
+               } catch (error) {
+                  // Navigation still works; the detail page will show its fallback state.
+               }
+               window.location.href = 'package-detail.html?id=' + encodeURIComponent(detailData.id);
+            }
+            function initPackageDetailNavigation() {
+               document.querySelectorAll('.package-card').forEach(function (card) {
+                  card.addEventListener('click', function (event) {
+                     if (event.target.closest('.package-media-nav, .package-media-dots, .package-media-dot, .add-cart, .package-addon-input, .package-addon-option')) {
+                        return;
+                     }
+                     event.preventDefault();
+                     openPackageDetailPage(card);
+                  });
+                  card.querySelectorAll('.package-media, .package-card-front, .package-label').forEach(function (element) {
+                     element.setAttribute('tabindex', '0');
+                     element.addEventListener('keydown', function (event) {
+                        if (event.key !== 'Enter' && event.key !== ' ') {
+                           return;
+                        }
+                        event.preventDefault();
+                        openPackageDetailPage(card);
+                     });
+                  });
+               });
+            }
             function initPackageLightboxModal() {
                if (typeof window.jQuery === 'undefined') {
                   return;
@@ -1077,7 +1143,7 @@
             initPackageMediaSlider();
             initPackageDetailsToggle();
             initPackageAddonSelection();
-            initPackageDetailOverlay();
+            initPackageDetailNavigation();
             initWhyFooterTyping();
             applyFilter(normalizeFilter(getUrlFilter()));
          });

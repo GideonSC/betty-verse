@@ -601,7 +601,7 @@
   }
 
   document.addEventListener("DOMContentLoaded", function () {
-    var packageCards = document.querySelectorAll(".package-card");
+    var packageCards = document.querySelectorAll(".package-card:not([data-detail-card])");
     if (packageCards.length) {
       savePackageCatalog(buildPackageCatalogFromCards());
     }
