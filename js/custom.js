@@ -217,7 +217,7 @@ $(function () {
 			button.type = "button";
 			button.setAttribute("aria-label", "Back to top");
 			button.setAttribute("title", "Back to top");
-			button.innerHTML = '<i class="fa fa-angle-up" aria-hidden="true"></i>';
+			button.innerHTML = '<i class="fa fa-arrow-up" aria-hidden="true"></i>';
 			document.body.appendChild(button);
 		}
 

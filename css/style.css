@@ -1537,10 +1537,10 @@ textarea#comment.update_mail::placeholder {
     bottom: 22px;
     width: 50px;
     height: 50px;
-    border: 2px solid rgba(23, 63, 153, 0.55);
+    border: 2px solid #021A54;
     border-radius: 50%;
-    background: transparent;
-    color: #021A54;
+    background: #021A54;
+    color: #ffffff;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1552,9 +1552,7 @@ textarea#comment.update_mail::placeholder {
     visibility: hidden;
     transform: translateY(10px);
     pointer-events: none;
-    box-shadow: 0 14px 30px rgba(16, 45, 110, 0.16);
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
+    box-shadow: 0 14px 30px rgba(16, 45, 110, 0.24);
     transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
@@ -1566,9 +1564,9 @@ textarea#comment.update_mail::placeholder {
 }
 
 .site-back-to-top:hover {
-    color: #021A54;
-    background: rgba(2, 26, 84, 0.08);
-    border-color: rgba(23, 63, 153, 0.8);
+    color: #ffffff;
+    background: #173F99;
+    border-color: #173F99;
 }
 
 @media (max-width: 991px) {
@@ -3712,6 +3710,7 @@ textarea#comment.update_mail::placeholder {
 }
 
 .home-shell {
+    --header-height: 112px;
     background:
         linear-gradient(var(--grid-line) 1px, transparent 1px),
         linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
@@ -3726,7 +3725,7 @@ textarea#comment.update_mail::placeholder {
 }
 
 .home-banner {
-    padding: 6px 0 10px;
+    padding: 0 0 10px;
 }
 
 .home-title {

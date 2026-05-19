@@ -65,15 +65,65 @@
     }
   }
 
+  function openLightbox(data, index) {
+    var lightbox = document.querySelector("[data-detail-lightbox]");
+    var image = document.querySelector("[data-detail-lightbox-image]");
+    if (!lightbox || !image) {
+      return;
+    }
+    var safeIndex = Math.max(0, Math.min(index, data.images.length - 1));
+    image.src = data.images[safeIndex] || data.image;
+    image.alt = data.name + " image preview";
+    lightbox.hidden = false;
+    lightbox.setAttribute("aria-hidden", "false");
+    document.body.classList.add("package-detail-lightbox-open");
+    var closeButton = lightbox.querySelector("[data-detail-lightbox-close]");
+    if (closeButton) {
+      closeButton.focus();
+    }
+  }
+
+  function closeLightbox() {
+    var lightbox = document.querySelector("[data-detail-lightbox]");
+    var image = document.querySelector("[data-detail-lightbox-image]");
+    if (!lightbox || lightbox.hidden) {
+      return;
+    }
+    lightbox.hidden = true;
+    lightbox.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("package-detail-lightbox-open");
+    if (image) {
+      image.removeAttribute("src");
+      image.alt = "";
+    }
+  }
+
+  function bindLightboxControls() {
+    document.querySelectorAll("[data-detail-lightbox-close]").forEach(function (control) {
+      control.addEventListener("click", closeLightbox);
+    });
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        closeLightbox();
+      }
+    });
+  }
+
   function renderGallery(data) {
     var mainImage = document.querySelector("[data-detail-main-image]");
     var thumbs = document.querySelector("[data-detail-thumbs]");
+    var lightboxButton = document.querySelector("[data-detail-lightbox-open]");
     if (!mainImage || !thumbs) {
       return;
     }
+    var activeIndex = 0;
     function setImage(src, index) {
+      activeIndex = index;
       mainImage.src = src;
       mainImage.alt = data.name + " image " + (index + 1);
+      if (lightboxButton) {
+        lightboxButton.setAttribute("aria-label", "Open " + data.name + " image " + (index + 1));
+      }
       thumbs.querySelectorAll("button").forEach(function (button, buttonIndex) {
         var active = buttonIndex === index;
         button.classList.toggle("is-active", active);
@@ -96,6 +146,11 @@
       });
       thumbs.appendChild(button);
     });
+    if (lightboxButton) {
+      lightboxButton.addEventListener("click", function () {
+        openLightbox(data, activeIndex);
+      });
+    }
     setImage(data.images[0] || data.image, 0);
   }
 
@@ -242,6 +297,7 @@
   }
 
   document.addEventListener("DOMContentLoaded", function () {
+    bindLightboxControls();
     var data = findPackageData();
     var page = document.querySelector("[data-package-detail-page]");
     var fallback = document.querySelector("[data-package-detail-empty]");

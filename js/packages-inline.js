@@ -269,6 +269,55 @@
                   dot.setAttribute('aria-pressed', isActive ? 'true' : 'false');
                });
             }
+            function initPackageMediaSwipe(media) {
+               var touchStartX = 0;
+               var touchStartY = 0;
+               var touchCurrentX = 0;
+               var touchCurrentY = 0;
+               var isTracking = false;
+               var swipeThreshold = 42;
+               function rememberSwipe() {
+                  media.dataset.lastSwipeAt = String(Date.now());
+               }
+               media.addEventListener('touchstart', function (event) {
+                  if (event.touches.length !== 1 || event.target.closest('.package-media-nav, .package-media-dots, .package-media-dot, .package-label')) {
+                     isTracking = false;
+                     return;
+                  }
+                  touchStartX = event.touches[0].clientX;
+                  touchStartY = event.touches[0].clientY;
+                  touchCurrentX = touchStartX;
+                  touchCurrentY = touchStartY;
+                  isTracking = true;
+               }, { passive: true });
+               media.addEventListener('touchmove', function (event) {
+                  if (!isTracking || event.touches.length !== 1) {
+                     return;
+                  }
+                  touchCurrentX = event.touches[0].clientX;
+                  touchCurrentY = event.touches[0].clientY;
+               }, { passive: true });
+               media.addEventListener('touchend', function () {
+                  if (!isTracking) {
+                     return;
+                  }
+                  isTracking = false;
+                  var deltaX = touchCurrentX - touchStartX;
+                  var deltaY = touchCurrentY - touchStartY;
+                  if (Math.abs(deltaX) < swipeThreshold || Math.abs(deltaX) < Math.abs(deltaY) * 1.25) {
+                     return;
+                  }
+                  var current = Number(media.dataset.mediaSlideIndex || 0);
+                  setPackageMediaSlide(media, deltaX < 0 ? current + 1 : current - 1);
+                  rememberSwipe();
+               }, { passive: true });
+               media.addEventListener('touchcancel', function () {
+                  isTracking = false;
+               }, { passive: true });
+            }
+            function wasRecentPackageMediaSwipe(media) {
+               return !!media && Date.now() - Number(media.dataset.lastSwipeAt || 0) < 450;
+            }
             function initPackageMediaSlider() {
                document.querySelectorAll('.package-card .package-media').forEach(function (media) {
                   if (media.dataset.sliderReady === '1') {
@@ -362,6 +411,7 @@
                      });
                   });
 
+                  initPackageMediaSwipe(media);
                   media.dataset.mediaSlideIndex = '0';
                   media.dataset.sliderReady = '1';
                });
@@ -461,6 +511,11 @@
                      if (event.target.closest('.package-media-nav, .package-media-dots, .package-media-dot, .add-cart, .package-addon-input, .package-addon-option')) {
                         return;
                      }
+                     var swipedMedia = event.target.closest('.package-media');
+                     if (wasRecentPackageMediaSwipe(swipedMedia)) {
+                        event.preventDefault();
+                        return;
+                     }
                      event.preventDefault();
                      openPackageDetailPage(card);
                   });
@@ -515,6 +570,11 @@
                document.querySelectorAll('.package-card .package-media').forEach(function (media) {
                   media.addEventListener('click', function (event) {
                      if (event.target.closest('.package-media-nav, .package-media-dots, .package-media-dot, .package-label')) {
+                        return;
+                     }
+                     if (wasRecentPackageMediaSwipe(media)) {
+                        event.preventDefault();
+                        event.stopPropagation();
                         return;
                      }
                      event.preventDefault();
