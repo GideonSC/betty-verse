@@ -1553,6 +1553,7 @@ body.package-detail-lightbox-open {
    display: flex;
    align-items: center;
    justify-content: center;
+   touch-action: pan-y;
 }
 
 .package-detail-lightbox-frame img {

@@ -4,6 +4,10 @@
   var SELECTED_KEY = "bettyverse-selected-package";
   var BOOKING_KEY = "bettyverse-booking-package";
   var CATALOG_KEY = "bettyverse-package-catalog";
+  var lightboxState = {
+    data: null,
+    index: 0
+  };
 
   function formatPounds(value) {
     var amount = Number(value || 0);
@@ -65,6 +69,19 @@
     }
   }
 
+  function setLightboxImage(index) {
+    var image = document.querySelector("[data-detail-lightbox-image]");
+    var data = lightboxState.data;
+    if (!image || !data || !data.images.length) {
+      return;
+    }
+    var total = data.images.length;
+    var next = ((index % total) + total) % total;
+    lightboxState.index = next;
+    image.src = data.images[next] || data.image;
+    image.alt = data.name + " image preview " + (next + 1) + " of " + total;
+  }
+
   function openLightbox(data, index) {
     var lightbox = document.querySelector("[data-detail-lightbox]");
     var image = document.querySelector("[data-detail-lightbox-image]");
@@ -72,8 +89,9 @@
       return;
     }
     var safeIndex = Math.max(0, Math.min(index, data.images.length - 1));
-    image.src = data.images[safeIndex] || data.image;
-    image.alt = data.name + " image preview";
+    lightboxState.data = data;
+    lightboxState.index = safeIndex;
+    setLightboxImage(safeIndex);
     lightbox.hidden = false;
     lightbox.setAttribute("aria-hidden", "false");
     document.body.classList.add("package-detail-lightbox-open");
@@ -92,19 +110,85 @@
     lightbox.hidden = true;
     lightbox.setAttribute("aria-hidden", "true");
     document.body.classList.remove("package-detail-lightbox-open");
+    lightboxState.data = null;
+    lightboxState.index = 0;
     if (image) {
       image.removeAttribute("src");
       image.alt = "";
     }
   }
 
+  function moveLightboxImage(step) {
+    if (!lightboxState.data || lightboxState.data.images.length < 2) {
+      return;
+    }
+    setLightboxImage(lightboxState.index + step);
+  }
+
   function bindLightboxControls() {
+    var lightbox = document.querySelector("[data-detail-lightbox]");
+    var frame = document.querySelector(".package-detail-lightbox-frame");
+    var touchStartX = 0;
+    var touchStartY = 0;
+    var touchCurrentX = 0;
+    var touchCurrentY = 0;
+    var isTracking = false;
+
     document.querySelectorAll("[data-detail-lightbox-close]").forEach(function (control) {
       control.addEventListener("click", closeLightbox);
     });
+    if (lightbox) {
+      lightbox.addEventListener("click", function (event) {
+        if (event.target === lightbox || event.target.classList.contains("package-detail-lightbox-backdrop")) {
+          closeLightbox();
+        }
+      });
+    }
+    if (frame) {
+      frame.addEventListener("click", function (event) {
+        event.stopPropagation();
+      });
+      frame.addEventListener("touchstart", function (event) {
+        if (event.touches.length !== 1 || !lightboxState.data || lightboxState.data.images.length < 2) {
+          isTracking = false;
+          return;
+        }
+        touchStartX = event.touches[0].clientX;
+        touchStartY = event.touches[0].clientY;
+        touchCurrentX = touchStartX;
+        touchCurrentY = touchStartY;
+        isTracking = true;
+      }, { passive: true });
+      frame.addEventListener("touchmove", function (event) {
+        if (!isTracking || event.touches.length !== 1) {
+          return;
+        }
+        touchCurrentX = event.touches[0].clientX;
+        touchCurrentY = event.touches[0].clientY;
+      }, { passive: true });
+      frame.addEventListener("touchend", function () {
+        if (!isTracking) {
+          return;
+        }
+        isTracking = false;
+        var deltaX = touchCurrentX - touchStartX;
+        var deltaY = touchCurrentY - touchStartY;
+        if (Math.abs(deltaX) < 42 || Math.abs(deltaX) < Math.abs(deltaY) * 1.25) {
+          return;
+        }
+        moveLightboxImage(deltaX < 0 ? 1 : -1);
+      }, { passive: true });
+      frame.addEventListener("touchcancel", function () {
+        isTracking = false;
+      }, { passive: true });
+    }
     document.addEventListener("keydown", function (event) {
       if (event.key === "Escape") {
         closeLightbox();
+      } else if (event.key === "ArrowRight") {
+        moveLightboxImage(1);
+      } else if (event.key === "ArrowLeft") {
+        moveLightboxImage(-1);
       }
     });
   }
