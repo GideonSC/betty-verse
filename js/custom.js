@@ -1062,9 +1062,11 @@ function initHomeTestimonialCarousel() {
   var slides = Array.prototype.slice.call(slider.querySelectorAll(".carousel-item"));
   var box = slider.closest(".testimonial_box");
   var merabellStrip = box ? box.querySelector(".testimonial_merabell_strip") : null;
+  var merabellProgress = box ? box.querySelector(".testimonial_merabell_progress") : null;
   var lightboxModal = document.getElementById("testimonial_lightbox");
   var lightboxSlider = document.getElementById("testimonial_lightbox_slider");
   var lightboxTriggers = merabellStrip ? Array.prototype.slice.call(merabellStrip.querySelectorAll("[data-testimonial-lightbox-index]")) : [];
+  var stripProgressButtons = merabellProgress ? Array.prototype.slice.call(merabellProgress.querySelectorAll("[data-testimonial-strip-index]")) : [];
   var leftBubble = box ? box.querySelector(".testimonial_avatar_bubble--left") : null;
   var rightBubble = box ? box.querySelector(".testimonial_avatar_bubble--right") : null;
   var motionTrail = box ? box.querySelector(".testimonial_motion_trail") : null;
@@ -1121,6 +1123,74 @@ function initHomeTestimonialCarousel() {
 
     merabellStrip.classList.toggle("is-visible", shouldShow);
     merabellStrip.setAttribute("aria-hidden", shouldShow ? "false" : "true");
+    if (merabellProgress) {
+      merabellProgress.hidden = !shouldShow;
+    }
+  }
+
+  function setMerabellStripProgress(index) {
+    if (!stripProgressButtons.length) {
+      return;
+    }
+    stripProgressButtons.forEach(function (button, buttonIndex) {
+      button.classList.toggle("is-active", buttonIndex === index);
+      button.setAttribute("aria-pressed", buttonIndex === index ? "true" : "false");
+    });
+  }
+
+  function getClosestMerabellThumbIndex() {
+    if (!merabellStrip || !lightboxTriggers.length) {
+      return 0;
+    }
+    var stripRect = merabellStrip.getBoundingClientRect();
+    var stripCenter = stripRect.left + stripRect.width / 2;
+    var closestIndex = 0;
+    var closestDistance = Infinity;
+    lightboxTriggers.forEach(function (trigger, index) {
+      var rect = trigger.getBoundingClientRect();
+      var center = rect.left + rect.width / 2;
+      var distance = Math.abs(center - stripCenter);
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestIndex = index;
+      }
+    });
+    return closestIndex;
+  }
+
+  function bindMerabellStripProgress() {
+    if (!merabellStrip || merabellStrip.dataset.progressBound === "true") {
+      return;
+    }
+    merabellStrip.dataset.progressBound = "true";
+    var scrollTimer = null;
+
+    merabellStrip.addEventListener("scroll", function () {
+      window.clearTimeout(scrollTimer);
+      scrollTimer = window.setTimeout(function () {
+        setMerabellStripProgress(getClosestMerabellThumbIndex());
+      }, 70);
+    }, { passive: true });
+
+    lightboxTriggers.forEach(function (trigger, index) {
+      trigger.addEventListener("focus", function () {
+        setMerabellStripProgress(index);
+      });
+    });
+
+    stripProgressButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        var targetIndex = parseInt(button.getAttribute("data-testimonial-strip-index"), 10);
+        var target = lightboxTriggers[targetIndex];
+        if (!target) {
+          return;
+        }
+        target.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+        setMerabellStripProgress(targetIndex);
+      });
+    });
+
+    setMerabellStripProgress(0);
   }
 
   function initMerabellLightbox() {
@@ -1137,6 +1207,64 @@ function initHomeTestimonialCarousel() {
       pause: true,
       wrap: true
     });
+
+    var lightboxTouch = {
+      startX: 0,
+      startY: 0,
+      currentX: 0,
+      currentY: 0,
+      tracking: false
+    };
+
+    function bindLightboxSwipe() {
+      if (lightboxSlider.dataset.swipeBound === "true") {
+        return;
+      }
+      lightboxSlider.dataset.swipeBound = "true";
+
+      lightboxSlider.addEventListener("touchstart", function (event) {
+        if (!event.touches || event.touches.length !== 1) {
+          lightboxTouch.tracking = false;
+          return;
+        }
+        lightboxTouch.startX = event.touches[0].clientX;
+        lightboxTouch.startY = event.touches[0].clientY;
+        lightboxTouch.currentX = lightboxTouch.startX;
+        lightboxTouch.currentY = lightboxTouch.startY;
+        lightboxTouch.tracking = true;
+      }, { passive: true });
+
+      lightboxSlider.addEventListener("touchmove", function (event) {
+        if (!lightboxTouch.tracking || !event.touches || event.touches.length !== 1) {
+          return;
+        }
+        lightboxTouch.currentX = event.touches[0].clientX;
+        lightboxTouch.currentY = event.touches[0].clientY;
+      }, { passive: true });
+
+      lightboxSlider.addEventListener("touchend", function () {
+        if (!lightboxTouch.tracking) {
+          return;
+        }
+        lightboxTouch.tracking = false;
+        var deltaX = lightboxTouch.currentX - lightboxTouch.startX;
+        var deltaY = lightboxTouch.currentY - lightboxTouch.startY;
+        if (Math.abs(deltaX) < 42 || Math.abs(deltaX) < Math.abs(deltaY) * 1.25) {
+          return;
+        }
+        if (deltaX < 0) {
+          $lightboxSlider.carousel("next");
+        } else {
+          $lightboxSlider.carousel("prev");
+        }
+      }, { passive: true });
+
+      lightboxSlider.addEventListener("touchcancel", function () {
+        lightboxTouch.tracking = false;
+      }, { passive: true });
+    }
+
+    bindLightboxSwipe();
 
     lightboxTriggers.forEach(function (trigger) {
       trigger.addEventListener("click", function (event) {
@@ -1307,6 +1435,7 @@ function initHomeTestimonialCarousel() {
 
   syncBubbleAvatarsFromActive();
   syncMerabellStrip();
+  bindMerabellStripProgress();
   initMerabellLightbox();
   hideMotionTrail();
   hideFlyAvatar();
@@ -1458,6 +1587,295 @@ if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initHomePackageLightbox);
 } else {
   initHomePackageLightbox();
+}
+
+function initHomeTrendingCarousel() {
+  var root = document.querySelector("[data-home-trending]");
+  if (!root) {
+    return;
+  }
+
+  var track = root.querySelector("[data-trending-track]");
+  var prevButton = root.querySelector("[data-trending-prev]");
+  var nextButton = root.querySelector("[data-trending-next]");
+  var progress = root.querySelector("[data-trending-progress]");
+
+  if (!track || !progress) {
+    return;
+  }
+
+  var cards = Array.prototype.slice.call(track.querySelectorAll(".home-trending-card"));
+  if (!cards.length) {
+    return;
+  }
+
+  var autoTimer = null;
+  var resumeTimer = null;
+  var activeIndex = 0;
+  var currentMonth = new Date().getMonth();
+
+  var seasonalKeywords = [
+    ["new-year", "winter", "january"],
+    ["valentine", "romance", "february"],
+    ["spring", "easter", "march"],
+    ["spring", "easter", "april"],
+    ["summer", "birthday", "may"],
+    ["summer", "birthday", "june"],
+    ["summer", "birthday", "july"],
+    ["summer", "birthday", "august"],
+    ["autumn", "anniversary", "september"],
+    ["autumn", "anniversary", "october"],
+    ["autumn", "anniversary", "november"],
+    ["christmas", "festive", "december"]
+  ][currentMonth] || [];
+
+  cards
+    .map(function (card, index) {
+      var seasons = (card.getAttribute("data-season") || "").toLowerCase();
+      var score = seasonalKeywords.reduce(function (total, keyword) {
+        return total + (seasons.indexOf(keyword) !== -1 ? 1 : 0);
+      }, 0);
+
+      return {
+        card: card,
+        index: index,
+        score: score
+      };
+    })
+    .sort(function (a, b) {
+      if (b.score !== a.score) {
+        return b.score - a.score;
+      }
+
+      return a.index - b.index;
+    })
+    .forEach(function (item) {
+      track.appendChild(item.card);
+    });
+
+  cards = Array.prototype.slice.call(track.querySelectorAll(".home-trending-card"));
+
+  function hashTrendingString(value) {
+    var text = (value || "").toString();
+    var hash = 0;
+    var index = 0;
+
+    for (index = 0; index < text.length; index += 1) {
+      hash = ((hash << 5) - hash) + text.charCodeAt(index);
+      hash |= 0;
+    }
+
+    return Math.abs(hash);
+  }
+
+  function buildRatingStars(score) {
+    var numericRating = Number(score);
+    var starsHtml = "";
+    var starIndex = 0;
+
+    if (!Number.isFinite(numericRating)) {
+      numericRating = 4.8;
+    }
+
+    numericRating = Math.max(0, Math.min(5, numericRating));
+
+    for (starIndex = 0; starIndex < 5; starIndex += 1) {
+      var starFill = Math.max(0, Math.min(1, numericRating - starIndex));
+      starsHtml +=
+        '<span class="package-rating-star">' +
+          '<i class="fa fa-star-o" aria-hidden="true"></i>' +
+          '<span class="package-rating-star-fill" style="width:' + (starFill * 100).toFixed(2) + '%;">' +
+            '<i class="fa fa-star" aria-hidden="true"></i>' +
+          '</span>' +
+        '</span>';
+    }
+
+    return {
+      label: numericRating.toFixed(1),
+      html: starsHtml
+    };
+  }
+
+  function enhancePackageCardMeta() {
+    cards.forEach(function (card, index) {
+      var topRow = card.querySelector(".package-card-top");
+      var priceTag = topRow ? topRow.querySelector(".package-price") : null;
+      var rating = card.querySelector(".package-rating");
+      var ratingScore = card.getAttribute("data-package-rating");
+
+      if (!topRow || !priceTag) {
+        return;
+      }
+
+      if (!rating) {
+        if (!ratingScore) {
+          ratingScore = (4.1 + ((hashTrendingString((card.getAttribute("data-package-id") || card.getAttribute("data-package-name") || String(index)) + "|rating") % 2401) / 2400) * 0.9).toFixed(1);
+          card.setAttribute("data-package-rating", ratingScore);
+        }
+
+        var ratingStars = buildRatingStars(ratingScore);
+        rating = document.createElement("div");
+        rating.className = "package-rating";
+        rating.setAttribute("aria-label", ratingStars.label + " out of 5 stars");
+        rating.innerHTML =
+          '<span class="package-rating-stars" aria-hidden="true">' +
+            ratingStars.html +
+          '</span>' +
+          '<span>' + ratingStars.label + '</span>';
+      }
+
+      if (!card.querySelector(".package-meta-grid")) {
+        var metaGrid = document.createElement("div");
+        metaGrid.className = "package-meta-grid";
+        topRow.insertAdjacentElement("afterend", metaGrid);
+        metaGrid.appendChild(priceTag);
+        metaGrid.appendChild(rating);
+      }
+    });
+  }
+
+  function buildProgress() {
+    progress.innerHTML = "";
+
+    cards.forEach(function (_card, index) {
+      var dot = document.createElement("button");
+      dot.type = "button";
+      dot.setAttribute("aria-label", "Show trending package " + (index + 1));
+      dot.addEventListener("click", function () {
+        pauseAuto();
+        scrollToCard(index);
+        scheduleResume();
+      });
+      progress.appendChild(dot);
+    });
+  }
+
+  function getCardLeft(index) {
+    var target = cards[index];
+    if (!target) {
+      return 0;
+    }
+
+    return target.offsetLeft - track.offsetLeft;
+  }
+
+  function scrollToCard(index) {
+    if (!cards.length) {
+      return;
+    }
+
+    activeIndex = (index + cards.length) % cards.length;
+    track.scrollTo({
+      left: getCardLeft(activeIndex),
+      behavior: "smooth"
+    });
+    updateProgress(activeIndex);
+  }
+
+  function getNearestIndex() {
+    var nearestIndex = 0;
+    var nearestDistance = Infinity;
+
+    cards.forEach(function (card, index) {
+      var distance = Math.abs((card.offsetLeft - track.offsetLeft) - track.scrollLeft);
+      if (distance < nearestDistance) {
+        nearestDistance = distance;
+        nearestIndex = index;
+      }
+    });
+
+    return nearestIndex;
+  }
+
+  function updateProgress(index) {
+    var dots = Array.prototype.slice.call(progress.querySelectorAll("button"));
+
+    dots.forEach(function (dot, dotIndex) {
+      var isActive = dotIndex === index;
+      dot.classList.toggle("is-active", isActive);
+      dot.setAttribute("aria-current", isActive ? "true" : "false");
+    });
+  }
+
+  function goNext() {
+    scrollToCard(activeIndex + 1);
+  }
+
+  function goPrevious() {
+    scrollToCard(activeIndex - 1);
+  }
+
+  function pauseAuto() {
+    if (autoTimer) {
+      clearInterval(autoTimer);
+      autoTimer = null;
+    }
+    if (resumeTimer) {
+      clearTimeout(resumeTimer);
+      resumeTimer = null;
+    }
+  }
+
+  function startAuto() {
+    pauseAuto();
+    autoTimer = setInterval(goNext, 3600);
+  }
+
+  function scheduleResume() {
+    if (resumeTimer) {
+      clearTimeout(resumeTimer);
+    }
+    resumeTimer = setTimeout(startAuto, 5200);
+  }
+
+  var scrollTicking = false;
+  track.addEventListener("scroll", function () {
+    if (scrollTicking) {
+      return;
+    }
+
+    scrollTicking = true;
+    window.requestAnimationFrame(function () {
+      activeIndex = getNearestIndex();
+      updateProgress(activeIndex);
+      scrollTicking = false;
+    });
+  });
+
+  ["pointerdown", "touchstart", "focusin"].forEach(function (eventName) {
+    track.addEventListener(eventName, pauseAuto, { passive: true });
+  });
+
+  ["pointerup", "touchend", "focusout"].forEach(function (eventName) {
+    track.addEventListener(eventName, scheduleResume, { passive: true });
+  });
+
+  if (prevButton) {
+    prevButton.addEventListener("click", function () {
+      pauseAuto();
+      goPrevious();
+      scheduleResume();
+    });
+  }
+
+  if (nextButton) {
+    nextButton.addEventListener("click", function () {
+      pauseAuto();
+      goNext();
+      scheduleResume();
+    });
+  }
+
+  enhancePackageCardMeta();
+  buildProgress();
+  updateProgress(0);
+  startAuto();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initHomeTrendingCarousel);
+} else {
+  initHomeTrendingCarousel();
 }
 
 (function initBlogCardToggles(document) {

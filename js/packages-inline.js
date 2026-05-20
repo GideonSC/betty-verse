@@ -222,6 +222,9 @@
                var effectivePrice = getEffectivePackagePrice(card);
                return effectivePrice >= 150;
             }
+            function isHomeTrendingPackageCard(card) {
+               return !!(card && card.closest('[data-home-trending]'));
+            }
             function getPackageSlideImages(card, primarySrc) {
                var images = [];
                var seen = Object.create(null);
@@ -238,10 +241,13 @@
                   images.push(clean);
                }
                pushImage(primarySrc);
+               if (isHomeTrendingPackageCard(card)) {
+                  return images;
+               }
                if (isSingleSlidePriceTier(card)) {
                   return images;
                }
-               if (isPremiumSecondSlideTier(card)) {
+               if (isPremiumSecondSlideTier(card) && !isHomeTrendingPackageCard(card)) {
                   pushImage('images/why_betty.png');
                }
                pushImage(card.dataset.packageImage2 || card.dataset.packageImageAlt || '');
@@ -460,12 +466,112 @@
                });
                galleryModal.dataset.outsideCloseReady = '1';
             }
+            var packageDetailFallbacks = {
+               'finding-nemo-inspired-package': {
+                  addons: [
+                     { name: 'Grass flooring', price: 20 },
+                     { name: 'Personalised name sign', price: 25 },
+                     { name: 'LED number display', price: 20 },
+                     { name: 'BettyVerse branded signage', price: 20 },
+                     { name: 'Cake plinth display', price: 25 },
+                     { name: 'Extra balloon styling', price: 30 },
+                     { name: 'Photographer', price: 60 }
+                  ]
+               },
+               'sofia-the-first-inspired': {
+                  addons: [
+                     { name: 'Personalised name sign', price: 25 },
+                     { name: 'LED number display', price: 20 },
+                     { name: 'Candy cart styling', price: 35 },
+                     { name: 'Cake plinth display', price: 25 },
+                     { name: 'Private photographer', price: 60 }
+                  ]
+               },
+               'mickey-mouse-themed-package': {
+                  addons: [
+                     { name: 'Personalised name sign', price: 25 },
+                     { name: 'Additional LED numbers', price: 15 },
+                     { name: 'Cake plinth display', price: 25 },
+                     { name: 'Extra balloon styling', price: 30 },
+                     { name: 'Themed party favours setup', price: 40 },
+                     { name: 'Private photographer', price: 80 }
+                  ]
+               },
+               'spider-man-themed-package': {
+                  addons: [
+                     { name: 'Personalised name sign', price: 25 },
+                     { name: 'Additional LED numbers', price: 15 },
+                     { name: 'Cake plinth display', price: 25 },
+                     { name: 'Extra balloon styling', price: 30 },
+                     { name: 'Themed party favours setup', price: 40 },
+                     { name: 'Private photographer', price: 80 }
+                  ]
+               },
+               'betty-confetti-neon-luxe-arch': {
+                  addons: [
+                     { name: 'Custom Name Neon Sign', price: 30 },
+                     { name: 'Ceiling drop down balloon', price: 15 }
+                  ]
+               },
+               'car-boot-luxe-boot-reveal': {
+                  addons: [
+                     { name: 'Personalized photo prints', price: 30 },
+                     { name: 'Premium gift wrapping', price: 25 },
+                     { name: 'Extra florals or balloons', price: 45 }
+                  ]
+               },
+               'anniversary-home-intimate-living-room-experience': {
+                  addons: [
+                     { name: 'Flower bouquet', price: 50 },
+                     { name: 'Custom message sign', price: 30 },
+                     { name: 'Extra balloons', price: 45 }
+                  ]
+               },
+               'anniversary-home-luxe-bedscape': {
+                  addons: [
+                     { name: 'Neon signage', price: 50 },
+                     { name: 'Fresh florals', price: 50 },
+                     { name: 'Personalized message balloons', price: 30 }
+                  ]
+               },
+               'valentine-cupids-luxury-suite': {
+                  addons: [
+                     { name: 'Custom-made acrylic cake box', price: 35 },
+                     { name: 'Personalized name vinyl on balloons', price: 25 },
+                     { name: 'Chilled bottle of premium Champagne', price: 60 },
+                     { name: 'Heart-shaped chocolate truffle box', price: 20 }
+                  ]
+               },
+               'christmas-dummy-1': {
+                  addons: [
+                     { name: 'Larger tree upgrade', price: 70 },
+                     { name: 'Custom colour theme', price: 50 },
+                     { name: 'Fireplace styling', price: 60 },
+                     { name: 'Extra decor pieces', price: 40 }
+                  ]
+               }
+            };
+            function getPackageDetailFallback(card) {
+               if (!card) {
+                  return {};
+               }
+               return packageDetailFallbacks[card.dataset.packageId || ''] || {};
+            }
             function collectPackageDetailData(card) {
                var displayName = getPackageDisplayName(card);
+               var fallback = getPackageDetailFallback(card);
                var overview = card.querySelector('.package-details-overview');
                var summaryNode = overview ? overview.querySelector('.package-summary') : card.querySelector('.package-summary');
                var highlightsNode = overview ? overview.querySelector('.package-highlights') : card.querySelector('.package-highlights');
                var images = parseJsonArray(card.dataset.packageSlideImages);
+               var addons = Array.prototype.slice.call(card.querySelectorAll('.package-addon-input')).map(function (input) {
+                  return {
+                     name: input.dataset.addonName || 'Add-on',
+                     price: Number(input.dataset.addonPrice || 0)
+                  };
+               }).filter(function (addon) {
+                  return addon.name;
+               });
                if (!images.length && card.dataset.packageImage) {
                   images = [card.dataset.packageImage];
                }
@@ -483,14 +589,7 @@
                   highlights: highlightsNode ? Array.prototype.slice.call(highlightsNode.querySelectorAll('li')).map(function (item) {
                      return item.textContent.trim();
                   }).filter(Boolean) : [],
-                  addons: Array.prototype.slice.call(card.querySelectorAll('.package-addon-input')).map(function (input) {
-                     return {
-                        name: input.dataset.addonName || 'Add-on',
-                        price: Number(input.dataset.addonPrice || 0)
-                     };
-                  }).filter(function (addon) {
-                     return addon.name;
-                  })
+                  addons: addons.length ? addons : (fallback.addons || [])
                };
             }
             function openPackageDetailPage(card) {

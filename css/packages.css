@@ -79,10 +79,10 @@
    display: inline-flex;
    align-items: center;
    gap: 8px;
-   padding: 8px 14px;
+   padding: 2px 0;
    border-radius: 999px;
-   border: 1px solid rgba(2, 26, 84, 0.12);
-   background: rgba(255, 255, 255, 0.9);
+   border: 0;
+   background: transparent;
    color: #1749ba;
    font-size: 13px;
    font-weight: 700;
@@ -91,7 +91,7 @@
 }
 
 .hero-title {
-   margin-top: 24px;
+   margin-top: 18px;
    padding-bottom: 0;
    font-size: 56px;
    line-height: 1.08;
@@ -380,7 +380,7 @@
 
 .overview-card h2 {
    padding-bottom: 0;
-   margin-top: 18px;
+   margin-top: 14px;
    font-size: 30px;
    line-height: 1.2;
    font-weight: 700;
@@ -414,7 +414,7 @@
 
 .section-intro h2 {
    padding-bottom: 0;
-   margin-top: 18px;
+   margin-top: 14px;
    font-size: 42px;
    line-height: 1.18;
    font-weight: 800;
@@ -1642,13 +1642,13 @@ body.package-detail-lightbox-open {
 }
 
 .cta-panel .section-tag {
-   background: rgba(255, 255, 255, 0.12);
-   border-color: rgba(255, 255, 255, 0.18);
+   background: transparent;
+   border-color: transparent;
 }
 
 .cta-panel h2 {
    padding-bottom: 0;
-   margin-top: 18px;
+   margin-top: 14px;
    font-size: 38px;
    line-height: 1.15;
    font-weight: 800;
@@ -1861,6 +1861,21 @@ body.package-detail-lightbox-open {
       max-width: 100%;
       padding-left: 0;
       padding-right: 0;
+   }
+
+   .package-showcase .section-intro,
+   .package-showcase .package-filter-row,
+   .package-showcase .package-subfilter-wrap {
+      margin-left: 14px;
+      margin-right: 14px;
+   }
+
+   .package-showcase .section-intro {
+      margin-bottom: 18px;
+   }
+
+   .package-showcase .section-intro h2 {
+      margin-top: 10px;
    }
 
    .package-cards-row {
@@ -2194,6 +2209,25 @@ body.package-detail-lightbox-open {
 }
 
 @media (max-width: 575px) {
+   .hero-title,
+   .section-intro h2,
+   .cta-panel h2 {
+      margin-top: 10px;
+   }
+
+   .hero-copy,
+   .section-intro p,
+   .cta-panel p {
+      margin-top: 10px;
+   }
+
+   .package-showcase .section-intro,
+   .package-showcase .package-filter-row,
+   .package-showcase .package-subfilter-wrap {
+      margin-left: 12px;
+      margin-right: 12px;
+   }
+
    .package-media-track,
    .package-media img {
       height: 140px;
